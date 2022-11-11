@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const PostSchema = new Schema({
-    title: {
+const SecretaryshipSchema = new Schema({
+    name: {
         type: String,
         required: true
     },
-    content: {
+    description: {
         type: String,
         required: true
     },
@@ -18,16 +18,12 @@ const PostSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    tags: [
+    posts: [
         {
-            type: String,
-            required: false
+            type: Schema.Types.ObjectId,
+            ref: 'Post'
         }
-    ],
-    secretaryship: {
-        type: Schema.Types.ObjectId,
-        ref: 'Secretaryship',
-    }
+    ]
 });
 
-module.exports = mongoose.model('Post', PostSchema);
+module.exports = mongoose.model('Secretaryship', SecretaryshipSchema);

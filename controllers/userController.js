@@ -37,38 +37,33 @@ const signInUser = async (req, res) => {
             }
         )
         const token = authService.createToken(result);
-        console.log(result, token);
         res.status(201).send({user: result, token});
     }catch(error){
         res.status(400).send(error);
     }
 };
 
-const deleteUser = (req, res) => {
-    const {userId} = req.body;
-    User.findByIdAndDelete(userId, (error, user) => {
-        if(error){
-            return res.status(500).send({message: 'Something went wrong', error});
-        }
-        if(!user){
-            return res.status(404).send({message: 'User not found', error});
-        }
-        res.status(200).send({message: 'User deleted successfully'});
-    });
+const deleteUser = async (req, res) => {
+    let result;
+    try{
+        const { userId } = req.params;
+        result = await userService.deleteUser(userId);
+        res.status(200).send({message: 'User deleted', user: result});
+    }catch(error){
+        res.status(400).send(error);
+    }
 };
 
 const updateUser = async (req, res) => {
-    const {userId} = req.params
-    console.log(userId);
-    User.findByIdAndUpdate(userId, req.body, {new: true}, (error, user) => {
-        if(error){
-            return res.status(500).send({message: 'Something went wrong', error});
-        }
-        if(!user){
-            return res.status(404).send({message: 'User not found', error});
-        }
-        res.status(200).send({token: authService.createToken(user)});
-    });
+    let result;
+    try{
+        const { userId } = req.params;
+        const { username, password, email, role } = req.body;
+        result = await userService.updateUser(userId, username, password, email, role);
+        res.status(200).send({message: 'User updated', user: result});
+    }catch(error){
+        res.status(400).send(error);
+    }
 }
 
 

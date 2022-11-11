@@ -19,9 +19,9 @@ const UserSchema = new Schema({
         required: true
     },
     role: {
-        type: String,
-        enum: ['user', 'admin'],
-        default: 'user'
+        type: Schema.Types.ObjectId,
+        ref: 'Role',
+        required: true
     },
     date: {
         type: Date,

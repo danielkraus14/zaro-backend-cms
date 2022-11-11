@@ -1,26 +1,21 @@
-const jwt = require('jwt-simple');
+const jwt = require('jsonwebtoken');
 const {DateTime} = require('luxon');
 
 
 const createToken = (user) => {
     const payload = {
-        sub: user._id,
-        iat: DateTime.now().toMillis(),
-        exp: DateTime.now().plus({days: 14}).toMillis()
+        sub: user._id
     }
-    return jwt.encode(payload, process.env.SECRET_KEY);
-}
+    return jwt.sign(payload, process.env.SECRET_KEY, {expiresIn: '1h'});
+};
 
 const decodeToken = (token) => {
     try {
-        const payload = jwt.decode(token, process.env.SECRET_KEY);
-        if(payload.exp <= DateTime.now().toMillis()){
-            return {
-                status: 401,
-                message: 'Token has expired'
-            }
+        if(!token){
+            return res.status(403).send({message: 'You are not authorized'});
         }
-            return  payload.sub
+        const payload = jwt.verify(token, process.env.SECRET_KEY);
+        return  payload.sub
     } catch (error) {
         return {
             status: 500,

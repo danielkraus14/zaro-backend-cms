@@ -7,7 +7,7 @@ const isAuth = async (req, res, next) => {
         }
         const token = req.headers.authorization.split(' ')[1];
         const response = await authService.decodeToken(token)
-        req.user = response;
+        req.userId = response;
         next();
     }
     catch (error) {
