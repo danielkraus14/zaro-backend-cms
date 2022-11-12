@@ -23,7 +23,7 @@ const signUpUser = async (email, username, password, role) => {
                 const roleFound = await Role.findOne({name: role});
                 candidateUser.role = roleFound._id;
             }else{
-                const roleFound = await Role.findOne({name: 'comertial'});
+                const roleFound = await Role.findOne({name: 'editor'});
                 candidateUser.role = roleFound._id;
             }
         result = await candidateUser.save();

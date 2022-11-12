@@ -27,6 +27,10 @@ const PostSchema = new Schema({
     secretaryship: {
         type: Schema.Types.ObjectId,
         ref: 'Secretaryship',
+    },
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
     }
 });
 

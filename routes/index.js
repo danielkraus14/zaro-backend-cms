@@ -5,7 +5,8 @@ const routes = express.Router();
 const { 
     userController,
     postController,
-    secretaryshipController
+    secretaryshipController,
+    categoryController
 } = require('../controllers');
 
 // Import Middlewares
@@ -13,7 +14,7 @@ const {
     isAuth,
     isAdmin,
     isDirective,
-    isEditor
+    isComertial
 } = require('../middlewares');
 
 // Schema validation
@@ -29,7 +30,18 @@ routes.put('/update/:userId', isAuth, isDirective , userController.updateUser);
 
 // Secretaryships
 routes.get('/secretaryships', isAuth, secretaryshipController.getSecretaryships);
-routes.post('/secretaryships/create', isAuth, secretaryshipController.createSecretaryship);
+routes.get('/secretaryship/:secretaryshipId', isAuth, secretaryshipController.getSecretaryshipById);
+routes.post('/secretaryships/create', isAuth, isAdmin, secretaryshipController.createSecretaryship);
+routes.put('/secretaryships/update/:secretaryshipId', isAuth, isAdmin, secretaryshipController.updateSecretaryship);
+routes.delete('/secretaryships/delete/:secretaryshipId', isAuth, isAdmin, secretaryshipController.deleteSecretaryship);
+
+// Categories
+
+routes.get('/categories', isAuth, categoryController.getCategories);
+routes.get('/categories/:categoryId', isAuth, categoryController.getCategoryById);
+routes.post('/categories/create', isAuth, isAdmin, categoryController.createCategory);
+routes.put('/categories/update/:categoryId', isAuth, isAdmin, categoryController.updateCategory);
+routes.post('/categories/delete/:categoryId', isAuth, isAdmin, categoryController.deleteCategory);
 
 // Posts
 routes.get('/posts', isAuth , postController.getPosts);

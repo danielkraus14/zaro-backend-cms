@@ -1,12 +1,12 @@
 const isAuth = require('../middlewares/isAuth');
 const isAdmin = require('../middlewares/auth/isAdmin');
 const isDirective = require('../middlewares/auth/isDirective');
-const isEditor = require('../middlewares/auth/isEditor');
+const isComertial = require('../middlewares/auth/isComertial');
 
 module.exports = {
     isAuth,
     isAdmin,
     isDirective,
-    isEditor
+    isComertial
 }
 
