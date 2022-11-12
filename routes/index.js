@@ -25,8 +25,8 @@ const { userSchema } = require('../controllers/schemas');
 // Users
 routes.post('/signup', userSchema, userController.signUpUser);
 routes.post('/signin', userSchema, userController.signInUser);
-routes.post('/delete/:userId', isAuth, isAdmin , userController.deleteUser);
 routes.put('/update/:userId', isAuth, isDirective , userController.updateUser);
+routes.delete('/delete/:userId', isAuth, isAdmin , userController.deleteUser);
 
 // Secretaryships
 routes.get('/secretaryships', isAuth, secretaryshipController.getSecretaryships);
@@ -41,10 +41,14 @@ routes.get('/categories', isAuth, categoryController.getCategories);
 routes.get('/categories/:categoryId', isAuth, categoryController.getCategoryById);
 routes.post('/categories/create', isAuth, isAdmin, categoryController.createCategory);
 routes.put('/categories/update/:categoryId', isAuth, isAdmin, categoryController.updateCategory);
-routes.post('/categories/delete/:categoryId', isAuth, isAdmin, categoryController.deleteCategory);
+routes.delete('/categories/delete/:categoryId', isAuth, isAdmin, categoryController.deleteCategory);
 
 // Posts
-routes.get('/posts', isAuth , postController.getPosts);
-routes.post('/posts/new', isAuth , postController.createPost);
+routes.get('/posts', postController.getPosts);
+routes.get('/posts/:secretaryshipId', postController.getPostsBySecretaryship);
+routes.get('/posts/:categoryId', postController.getPostsByCategory);
+routes.post('/posts/new', isAuth , isComertial, postController.createPost);
+routes.put('/posts/update/:postId', isAuth, isComertial, postController.updatePost);
+routes.delete('/posts/delete/:postId', isAuth, isComertial, postController.deletePost);
 
 module.exports = routes;
