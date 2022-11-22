@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const routes = require('./routes');
 
 // Initial Setup
-const { createRoles } = require('./libs/initialSetup');
+const { createRoles, createStatus } = require('./libs/initialSetup');
 
 // Load env vars
 
@@ -13,6 +13,7 @@ dotenv.config();
 //Init express
 const app = express();
 createRoles();
+createStatus();
 
 // Middlewares to handle data
 app.use(express.urlencoded({ extended: true }));

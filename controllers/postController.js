@@ -29,8 +29,7 @@ const getPostsByCategory = async (req, res) => {
 
 const createPost = async (req, res) => {
     try{
-        const { title, content, image, secretaryship, category} = req.body;
-        const result = await postService.createPost(title, content, image, secretaryship, category);
+        const result = await postService.createPost(req.body);
         res.status(201).send({post: result});
     }catch(error){
         res.status(400).send({error, message: "Something went wrong"});
@@ -39,8 +38,7 @@ const createPost = async (req, res) => {
 
 const updatePost = async (req, res) => {
     try{
-        const { title, content, image, secretaryship, category} = req.body;
-        const result = await postService.updatePost(req.params.postId, title, content, image, secretaryship, category);
+        const result = await postService.updatePost(req.params.postId, req.body);
         res.status(200).send({post: result});
     }catch(error){
         res.status(400).send({error, message: "Something went wrong"});

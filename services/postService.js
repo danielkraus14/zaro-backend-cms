@@ -1,12 +1,12 @@
 const Post = require('../models/post');
 const Secretaryship = require('../models/secretaryship');
 const Category = require('../models/category');
+const Status = require('../models/status');
 
 const getPosts = async () => {
     let result;
     try{
-
-        const posts = await Post.find().populate('secretaryship').populate('category');
+        const posts = await Post.find().populate('secretaryship').populate('category').populate('status');
         result = posts;
     }catch(error){
         throw error;
@@ -17,7 +17,7 @@ const getPosts = async () => {
 const getPostsBySecretaryship = async (secretaryshipId) => {
     let result;
     try{
-        const posts = await Post.find({secretaryship: secretaryshipId}).populate('secretaryship').populate('category');
+        const posts = await Post.find({secretaryship: secretaryshipId}).populate('secretaryship').populate('category').populate('status');
         if(posts.length > 0){
             result = posts;
         }else{
@@ -32,7 +32,7 @@ const getPostsBySecretaryship = async (secretaryshipId) => {
 const getPostsByCategory = async (categoryId) => {
     let result;
     try{
-        const posts = await Post.find({category: categoryId}).populate('secretaryship').populate('category');
+        const posts = await Post.find({category: categoryId}).populate('secretaryship').populate('category').populate('status');
         if(posts.length > 0){
             result = posts;
         }else{
@@ -45,16 +45,22 @@ const getPostsByCategory = async (categoryId) => {
     return result;
 };
 
-const createPost = async (title, content, image, secretaryship, category) => {
+const createPost = async (newPost) => {
     let result;
     try{
-
-        const post = new Post({ title, content, image, secretaryship, category });
+        
+        if(!newPost.status){
+            const statusFound = await Status.findOne({name: 'draft'});
+            newPost.status = statusFound._id;
+        }
+        const { title, content, image, secretaryship, category, status } = newPost;
+        const post = new Post({ title, content, image, secretaryship, category, status });
         const secretaryshipFound = await Secretaryship.findById(secretaryship);
         const categoryFound = await Category.findById(category);
 
         if(!secretaryshipFound) throw new Error('Secretaryship not found');
         if(!categoryFound) throw new Error('Category not found');
+
 
         secretaryshipFound.posts.push(post._id);
         categoryFound.posts.push(post._id);
@@ -67,9 +73,10 @@ const createPost = async (title, content, image, secretaryship, category) => {
     return result;
 }
 
-const updatePost = async (postId, title, content, image, secretaryship, category) => {
+const updatePost = async (postId, newPost) => {
     let result;
     try{
+        const { title, content, image, secretaryship, category, status } = newPost;
         const post = await Post.findById(postId);
         if(!post) throw new Error('Post not found');
 
@@ -99,6 +106,7 @@ const updatePost = async (postId, title, content, image, secretaryship, category
                 await oldCategory.save();
                 post.category = category;}
         };
+        if(status)post.status = status;
 
         result = await post.save();
     }catch(error){
