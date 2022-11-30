@@ -6,7 +6,8 @@ const {
     userController,
     postController,
     secretaryshipController,
-    categoryController
+    categoryController,
+    tagController
 } = require('../controllers');
 
 // Import Auth Middlewares
@@ -47,8 +48,13 @@ routes.delete('/categories/delete/:categoryId', categoryController.deleteCategor
 routes.get('/posts', postController.getPosts);
 routes.get('/posts/:secretaryshipId', postController.getPostsBySecretaryship);
 routes.get('/posts/:categoryId', postController.getPostsByCategory);
-routes.post('/posts/new',  postController.createPost);
+routes.post('/posts/create',  postController.createPost);
 routes.put('/posts/update/:postId', postController.updatePost);
 routes.delete('/posts/delete/:postId', postController.deletePost);
+
+// Tags
+routes.get('/tags', tagController.getTags);
+routes.get('/tags/:tagId', tagController.getTagsById);
+routes.post('/tags/create', tagController.createTag);
 
 module.exports = routes;

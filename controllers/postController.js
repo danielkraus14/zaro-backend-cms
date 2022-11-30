@@ -29,8 +29,8 @@ const getPostsByCategory = async (req, res) => {
 
 const createPost = async (req, res) => {
     try{
-        const { title, content, image, secretaryship, category} = req.body;
-        const result = await postService.createPost(title, content, image, secretaryship, category);
+        const {userId, title, subtitle, content, image, secretaryship, category, tags} = req.body;
+        const result = await postService.createPost(userId, title, subtitle, content, image, secretaryship, category, tags);
         res.status(201).send({post: result});
     }catch(error){
         res.status(400).send({error, message: "Something went wrong"});
@@ -39,8 +39,8 @@ const createPost = async (req, res) => {
 
 const updatePost = async (req, res) => {
     try{
-        const { title, content, image, secretaryship, category} = req.body;
-        const result = await postService.updatePost(req.params.postId, title, content, image, secretaryship, category);
+        const { userId, title, subtitle, content, image, secretaryship, category, tags} = req.body;
+        const result = await postService.updatePost(req.params.postId, userId, title, subtitle, content, image, secretaryship, category, tags);
         res.status(200).send({post: result});
     }catch(error){
         res.status(400).send({error, message: "Something went wrong"});
@@ -49,7 +49,8 @@ const updatePost = async (req, res) => {
 
 const deletePost = async (req, res) => {
     try{
-        const result = await postService.deletePost(req.params.postId);
+        const userId = req.body.userId;
+        const result = await postService.deletePost(req.params.postId, userId);
         res.status(200).send({post: result});
     }catch(error){
         res.status(400).send({error, message: "Something went wrong"});
