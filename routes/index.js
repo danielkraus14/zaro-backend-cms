@@ -37,7 +37,6 @@ routes.put('/secretaryships/update/:secretaryshipId', secretaryshipController.up
 routes.delete('/secretaryships/delete/:secretaryshipId', secretaryshipController.deleteSecretaryship);
 
 // Categories
-
 routes.get('/categories', categoryController.getCategories);
 routes.get('/categories/:categoryId', categoryController.getCategoryById);
 routes.post('/categories/create', categoryController.createCategory);
@@ -45,6 +44,8 @@ routes.put('/categories/update/:categoryId', categoryController.updateCategory);
 routes.delete('/categories/delete/:categoryId', categoryController.deleteCategory);
 
 // Posts
+//TODO: microquerys para 15 post
+//TODO: find by content
 routes.get('/posts', postController.getPosts);
 routes.get('/posts/:secretaryshipId', postController.getPostsBySecretaryship);
 routes.get('/posts/:categoryId', postController.getPostsByCategory);
@@ -52,6 +53,9 @@ routes.post('/posts/create',  postController.createPost);
 routes.put('/posts/update/:postId', postController.updatePost);
 routes.delete('/posts/delete/:postId', postController.deletePost);
 
+ // Media
+ routes.get('/media/:fileName', postController.getMediaById)
+routes.post('/media/upload', postController.uploadMedia);
 // Tags
 routes.get('/tags', tagController.getTags);
 routes.get('/tags/:tagId', tagController.getTagsById);

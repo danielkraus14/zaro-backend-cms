@@ -1,4 +1,5 @@
 const { postService } = require('../services');
+const {uploadFile, readFile} = require('../s3');
 
 const getPosts = async (req, res) => {
     try{
@@ -57,11 +58,31 @@ const deletePost = async (req, res) => {
     }
 };
 
+const uploadMedia = async (req, res) => {
+    try{
+        const result = await uploadFile(req.files.file);
+        res.status(200).send({message: "Media uploaded", file: result});
+    }catch(error){
+        res.status(400).send({error, message: "Something went wrong when uploading media"});
+    }
+};
+
+const getMediaById = async (req, res) => {
+    try{
+        const result = await readFile(req.params.fileName);
+        res.status(200).send(result);
+    }catch(error){
+        res.status(400).send({error, message: "Something went wrong when getting media"});
+    }
+};
+
 module.exports = {
     getPosts,
     getPostsBySecretaryship,
     getPostsByCategory,
     createPost,
     updatePost,
-    deletePost
+    deletePost,
+    uploadMedia,
+    getMediaById
 }
