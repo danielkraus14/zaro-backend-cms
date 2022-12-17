@@ -44,11 +44,10 @@ routes.put('/categories/update/:categoryId', categoryController.updateCategory);
 routes.delete('/categories/delete/:categoryId', categoryController.deleteCategory);
 
 // Posts
-//TODO: microquerys para 15 post
-//TODO: find by content
 routes.get('/posts', postController.getPosts);
-routes.get('/posts/:secretaryshipId', postController.getPostsBySecretaryship);
-routes.get('/posts/:categoryId', postController.getPostsByCategory);
+routes.get('/posts/search', postController.searchPosts);
+routes.get('/posts/secretaryship/:secretaryshipId', postController.getPostsBySecretaryship);
+routes.get('/posts/category/:categoryId', postController.getPostsByCategory);
 routes.post('/posts/create',  postController.createPost);
 routes.put('/posts/update/:postId', postController.updatePost);
 routes.delete('/posts/delete/:postId', postController.deletePost);

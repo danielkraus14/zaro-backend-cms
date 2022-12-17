@@ -76,6 +76,16 @@ const getMediaById = async (req, res) => {
     }
 };
 
+const searchPosts = async (req, res) => {
+    try{
+        const result = await postService.searchPosts(req.query);
+        res.status(200).send(result);
+    }catch(error){
+        res.status(400).send({error, message: "Something went wrong when searching posts"});
+    }
+};
+
+
 module.exports = {
     getPosts,
     getPostsBySecretaryship,
@@ -84,5 +94,6 @@ module.exports = {
     updatePost,
     deletePost,
     uploadMedia,
-    getMediaById
+    getMediaById,
+    searchPosts
 }

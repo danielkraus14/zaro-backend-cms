@@ -1,6 +1,7 @@
 const dotenv = require('dotenv');
 const {S3Client, PutObjectCommand, GetObjectCommand} = require('@aws-sdk/client-s3');
 const fs = require('fs');
+const dateFns = require('date-fns');
 
 const AWS_BUCKET_NAME=process.env.AWS_BUCKET_NAME
 const AWS_BUCKET_REGION=process.env.AWS_BUCKET_REGION
@@ -19,9 +20,17 @@ async function uploadFile(file) {
 
     const stream = fs.createReadStream(file.tempFilePath);
 
+    const year = dateFns.format(new Date(), 'yyyy');
+    const month = dateFns.format(new Date(), 'MM');
+    const day = dateFns.format(new Date(), 'dd');
+
+    //replace spaces with underscores
+    const nameFormat = file.name.replace(/ /g, '_');
+    const fileName = `${year}/${month}/${day}_${nameFormat}`;
+
     const params = {
         Bucket: AWS_BUCKET_NAME,
-        Key: file.name,
+        Key: fileName,
         Body: stream
     };
 

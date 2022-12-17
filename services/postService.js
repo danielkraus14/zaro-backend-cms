@@ -4,11 +4,21 @@ const Secretaryship = require("../models/secretaryship");
 const Category = require("../models/category");
 const Tag = require("../models/tag");
 
+const paginateOptions = {
+  page: 1,
+  limit: 15,
+  sort: { date: -1 },
+}
+
 const getPosts = async () => {
   let result;
   try {
-    const posts = await Post.find().populate("tags")
-    result = posts;
+    await Post.paginate({}, paginateOptions, function(err, res){
+      if (err) {
+        throw err;
+      }
+      result = res;
+    })
   } catch (error) {
     throw error;
   }
@@ -18,12 +28,12 @@ const getPosts = async () => {
 const getPostsBySecretaryship = async (secretaryshipId) => {
   let result;
   try {
-    const posts = await Post.find({ secretaryship: secretaryshipId }).populate('secretaryship');
-    if (posts.length > 0) {
-      result = posts;
-    } else {
-      result = "No posts found";
-    }
+    await Post.paginate({ secretaryship: secretaryshipId }, paginateOptions, function(err, res){
+      if (err) {
+        throw err;
+      }
+      result = res;
+    })
   } catch (error) {
     throw error;
   }
@@ -33,12 +43,34 @@ const getPostsBySecretaryship = async (secretaryshipId) => {
 const getPostsByCategory = async (categoryId) => {
   let result;
   try {
-    const posts = await Post.find({ category: categoryId }).populate("category")
-    if (posts.length > 0) {
-      result = posts;
-    } else {
-      result = "No posts found";
+    await Post.paginate({ category: categoryId }, paginateOptions, function(err, res){
+      if (err) {
+        throw err;
+      }
+      result = res;
+    })
+  } catch (error) {
+    throw error;
+  }
+  return result;
+};
+
+const searchPosts = async (search) => {
+  let result;
+  try {
+    let query = {};
+    if (search.title) {
+      query.title = { $regex: new RegExp(search.title), $options: "i" };
     }
+    if(search.content){
+      query.content = { $regex: new RegExp(search.content), $options: "i" };
+    }
+    await Post.paginate(query, paginateOptions, function(err, res){
+      if (err) {
+        throw err;
+      }
+      result = res;
+    })
   } catch (error) {
     throw error;
   }
@@ -213,6 +245,7 @@ const deletePost = async (postId, userId) => {
 module.exports = {
   getPosts,
   createPost,
+  searchPosts,
   getPostsBySecretaryship,
   getPostsByCategory,
   updatePost,
