@@ -4,7 +4,7 @@
   "description": "Zaro CMS backend",
   "main": "index.js",
   "scripts": {
-    "start": "dotenv/config index.js",
+    "start": "node -r dotenv/config index.js",
     "dev": "nodemon -r dotenv/config index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
