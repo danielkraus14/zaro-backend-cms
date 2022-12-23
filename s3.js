@@ -1,5 +1,6 @@
 const dotenv = require('dotenv');
-const {S3Client, PutObjectCommand, GetObjectCommand} = require('@aws-sdk/client-s3');
+const {S3Client, PutObjectCommand, GetObjectCommand, ListObjectsCommand} = require('@aws-sdk/client-s3');
+const {getSignedUrl} = require('@aws-sdk/s3-request-presigner')
 const fs = require('fs');
 const dateFns = require('date-fns');
 
@@ -15,6 +16,14 @@ const client = new S3Client({
         secretAccessKey: AWS_SECRET_KEY,
     }
 });
+
+async function getFiles() {
+    const params = {
+        Bucket: AWS_BUCKET_NAME,
+    };
+    const data = await client.send(new ListObjectsCommand(params));
+    return data.Contents;
+}
 
 async function uploadFile(file) {
 
@@ -33,8 +42,10 @@ async function uploadFile(file) {
         Key: fileName,
         Body: stream
     };
+    await client.send(new PutObjectCommand(params));
 
-    return await client.send(new PutObjectCommand(params));
+    return fileName;
+    
 };
 
 async function readFile(fileName) {
@@ -44,11 +55,15 @@ async function readFile(fileName) {
     };
 
     const command = new GetObjectCommand(params);
-    const data = await client.send(command);
-    data.Body.pipe(fs.createWriteStream(`./uploads/images/${fileName}`));
+    const data = await getSignedUrl(client, command, { expiresIn: 36000 });
+    console.log(data)
+    return data;
+    //data.Body.pipe(fs.createWriteStream(`./uploads/images/${fileName}`));
+
 }
 
 module.exports = {
+    getFiles,
     uploadFile,
     readFile
 };

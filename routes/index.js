@@ -53,7 +53,8 @@ routes.put('/posts/update/:postId', postController.updatePost);
 routes.delete('/posts/delete/:postId', postController.deletePost);
 
  // Media
- routes.get('/media/:fileName', postController.getMediaById)
+ routes.get('/media', postController.getMedia)
+ routes.get('/media/get', postController.getMediaByName)
 routes.post('/media/upload', postController.uploadMedia);
 // Tags
 routes.get('/tags', tagController.getTags);

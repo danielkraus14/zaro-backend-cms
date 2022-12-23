@@ -208,7 +208,6 @@ const updatePost = async (
         
     }
 
-    console.log(post.tags);
 
     result = await post.save();
   } catch (error) {
