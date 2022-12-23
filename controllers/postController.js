@@ -1,4 +1,5 @@
 const { postService } = require('../services');
+const {uploadFile, readFile, getFiles} = require('../s3');
 
 const getPosts = async (req, res) => {
     try{
@@ -29,7 +30,8 @@ const getPostsByCategory = async (req, res) => {
 
 const createPost = async (req, res) => {
     try{
-        const result = await postService.createPost(req.body);
+        const {userId, title, subtitle, content, image, secretaryship, category, tags} = req.body;
+        const result = await postService.createPost(userId, title, subtitle, content, image, secretaryship, category, tags);
         res.status(201).send({post: result});
     }catch(error){
         res.status(400).send({error, message: "Something went wrong"});
@@ -38,7 +40,8 @@ const createPost = async (req, res) => {
 
 const updatePost = async (req, res) => {
     try{
-        const result = await postService.updatePost(req.params.postId, req.body);
+        const { userId, title, subtitle, content, image, secretaryship, category, tags} = req.body;
+        const result = await postService.updatePost(req.params.postId, userId, title, subtitle, content, image, secretaryship, category, tags);
         res.status(200).send({post: result});
     }catch(error){
         res.status(400).send({error, message: "Something went wrong"});
@@ -47,12 +50,52 @@ const updatePost = async (req, res) => {
 
 const deletePost = async (req, res) => {
     try{
-        const result = await postService.deletePost(req.params.postId);
+        const userId = req.body.userId;
+        const result = await postService.deletePost(req.params.postId, userId);
         res.status(200).send({post: result});
     }catch(error){
         res.status(400).send({error, message: "Something went wrong"});
     }
 };
+
+const getMedia = async (req, res) => {
+    try{
+        const result = await getFiles();
+        res.status(200).send(result);
+    }catch(error){
+        res.status(400).send({error, message: "Something went wrong when getting media"});
+    }
+};
+
+const uploadMedia = async (req, res) => {
+    try{
+        console.log(req.files);
+        const result = await uploadFile(req.files.file);
+        res.status(200).send({message: "Media uploaded", file: result});
+    }catch(error){
+        res.status(400).send({error, message: "Something went wrong when uploading media"});
+    }
+};
+
+const getMediaByName = async (req, res) => {
+    try{
+        console.log(req.query);
+        const result = await readFile(req.query.fileName);
+        res.status(200).send(result);
+    }catch(error){
+        res.status(400).send({error, message: "Something went wrong when getting media"});
+    }
+};
+
+const searchPosts = async (req, res) => {
+    try{
+        const result = await postService.searchPosts(req.query);
+        res.status(200).send(result);
+    }catch(error){
+        res.status(400).send({error, message: "Something went wrong when searching posts"});
+    }
+};
+
 
 module.exports = {
     getPosts,
@@ -60,5 +103,9 @@ module.exports = {
     getPostsByCategory,
     createPost,
     updatePost,
-    deletePost
+    deletePost,
+    getMedia,
+    uploadMedia,
+    getMediaByName,
+    searchPosts
 }

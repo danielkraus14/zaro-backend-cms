@@ -20,7 +20,7 @@ const signUpUser = async (email, username, password, role) => {
                 }
             })
             if(role){
-                const roleFound = await Role.findOne({name: role});
+                const roleFound = await Role.findOne({_id: role});
                 candidateUser.role = roleFound._id;
             }else{
                 const roleFound = await Role.findOne({name: 'editor'});

@@ -4,7 +4,8 @@
   "description": "Zaro CMS backend",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon -r dotenv/config index.js",
+    "start": "node -r dotenv/config index.js",
+    "dev": "nodemon -r dotenv/config index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,15 +19,23 @@
   },
   "homepage": "https://github.com/danielkraus14/zaro-backend-cms#readme",
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.231.0",
+    "@aws-sdk/client-s3": "^3.231.0",
+    "@aws-sdk/s3-request-presigner": "^3.236.0",
     "bcrypt-nodejs": "^0.0.3",
+    "cors": "^2.8.5",
+    "date-fns": "^2.29.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "express-fileupload": "^1.4.0",
     "express-validator": "^6.14.2",
+    "fs": "*",
     "helmet": "^6.0.0",
     "jsonwebtoken": "^8.5.1",
     "jwt-simple": "^0.5.6",
     "luxon": "^3.1.0",
-    "mongoose": "^6.7.2"
+    "mongoose": "^6.7.2",
+    "mongoose-paginate-v2": "^1.7.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"

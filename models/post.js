@@ -1,10 +1,15 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const PostSchema = new Schema({
     title: {
         type: String,
         required: true
+    },
+    subtitle: {
+        type: String,
+        required: false
     },
     content: {
         type: String,
@@ -37,5 +42,7 @@ const PostSchema = new Schema({
         ref: 'Status',
     },
 });
+
+PostSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('Post', PostSchema);

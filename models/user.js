@@ -27,7 +27,7 @@ const UserSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    postedNews: [
+    posts: [
         {
             type: Schema.Types.ObjectId,
             ref: 'Post'
