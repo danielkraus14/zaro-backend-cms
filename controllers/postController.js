@@ -10,9 +10,9 @@ const getPosts = async (req, res) => {
     }
 };
 
-const getPostsBySecretaryship = async (req, res) => {
+const getPostsBySection = async (req, res) => {
     try{
-        const posts = await postService.getPostsBySecretaryship(req.params.secretaryshipId);
+        const posts = await postService.getPostsBySection(req.params.sectionId);
         res.status(200).send(posts);
     }catch(error){
         res.status(400).send({error, message: "Something went wrong"});
@@ -30,8 +30,8 @@ const getPostsByCategory = async (req, res) => {
 
 const createPost = async (req, res) => {
     try{
-        const {userId, title, subtitle, content, image, secretaryship, category, tags} = req.body;
-        const result = await postService.createPost(userId, title, subtitle, content, image, secretaryship, category, tags);
+        const {userId, title, subtitle, content, image, section, category, tags} = req.body;
+        const result = await postService.createPost(userId, title, subtitle, content, image, section, category, tags);
         res.status(201).send({post: result});
     }catch(error){
         res.status(400).send({error, message: "Something went wrong"});
@@ -40,8 +40,8 @@ const createPost = async (req, res) => {
 
 const updatePost = async (req, res) => {
     try{
-        const { userId, title, subtitle, content, image, secretaryship, category, tags} = req.body;
-        const result = await postService.updatePost(req.params.postId, userId, title, subtitle, content, image, secretaryship, category, tags);
+        const { userId, title, subtitle, content, image, section, category, tags} = req.body;
+        const result = await postService.updatePost(req.params.postId, userId, title, subtitle, content, image, section, category, tags);
         res.status(200).send({post: result});
     }catch(error){
         res.status(400).send({error, message: "Something went wrong"});
@@ -99,7 +99,7 @@ const searchPosts = async (req, res) => {
 
 module.exports = {
     getPosts,
-    getPostsBySecretaryship,
+    getPostsBySection,
     getPostsByCategory,
     createPost,
     updatePost,

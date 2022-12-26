@@ -1,6 +1,6 @@
 const User = require("../models/user");
 const Post = require("../models/post");
-const Secretaryship = require("../models/secretaryship");
+const Section = require("../models/section");
 const Category = require("../models/category");
 const Tag = require("../models/tag");
 
@@ -25,10 +25,10 @@ const getPosts = async () => {
   return result;
 };
 
-const getPostsBySecretaryship = async (secretaryshipId) => {
+const getPostsBySection = async (sectionId) => {
   let result;
   try {
-    await Post.paginate({ secretaryship: secretaryshipId }, paginateOptions, function(err, res){
+    await Post.paginate({ section: sectionId }, paginateOptions, function(err, res){
       if (err) {
         throw err;
       }
@@ -83,7 +83,7 @@ const createPost = async (
   subtitle,
   content,
   image,
-  secretaryship,
+  section,
   category,
   tags
 ) => {
@@ -95,13 +95,13 @@ const createPost = async (
       subtitle,
       content,
       image,
-      secretaryship,
+      section,
       category,
     });
     const userFound = await User.findById(userId);
     if (!userFound) throw new Error("User not found");
 
-    const secretaryshipFound = await Secretaryship.findById(secretaryship);
+    const sectionFound = await Section.findById(section);
     const categoryFound = await Category.findById(category);
     if (tags) {
       tags.map(async (tag) => {
@@ -119,14 +119,14 @@ const createPost = async (
       });
     }
 
-    if (!secretaryshipFound) throw new Error("Secretaryship not found");
+    if (!sectionFound) throw new Error("Section not found");
     if (!categoryFound) throw new Error("Category not found");
 
     userFound.posts.push(post._id);
-    secretaryshipFound.posts.push(post._id);
+    sectionFound.posts.push(post._id);
     categoryFound.posts.push(post._id);
     await userFound.save();
-    await secretaryshipFound.save();
+    await sectionFound.save();
     await categoryFound.save();
     result = await post.save();
   } catch (error) {
@@ -142,7 +142,7 @@ const updatePost = async (
   subtitle,
   content,
   image,
-  secretaryship,
+  section,
   category,
   tags
 ) => {
@@ -155,18 +155,18 @@ const updatePost = async (
     if (subtitle) post.subtitle = subtitle;
     if (content) post.content = content;
     if (image) post.image = image;
-    if (secretaryship) {
-      if (post.secretaryship != secretaryship) {
-        const oldSecretaryship = await Secretaryship.findById(
-          post.secretaryship
+    if (section) {
+      if (post.section != section) {
+        const oldSection = await Section.findById(
+          post.section
         );
-        const newSecretaryship = await Secretaryship.findById(secretaryship);
-        if (!newSecretaryship) throw new Error("Secretaryship not found");
-        newSecretaryship.posts.push(post._id);
-        await newSecretaryship.save();
-        oldSecretaryship.posts.pull(post._id);
-        await oldSecretaryship.save();
-        post.secretaryship = secretaryship;
+        const newSection = await Section.findById(section);
+        if (!newSection) throw new Error("Section not found");
+        newSection.posts.push(post._id);
+        await newSection.save();
+        oldSection.posts.pull(post._id);
+        await oldSection.save();
+        post.section = section;
       }
     }
     if (category) {
@@ -226,10 +226,10 @@ const deletePost = async (postId, userId) => {
     if (!userFound) throw new Error("User not found");
     userFound.posts.pull(post._id);
     await userFound.save();
-    //Find the secretaryship and delete the post._id from the secretaryship's posts array
-    const secretaryshipFound = await Secretaryship.findById(post.secretaryship);
-    secretaryshipFound.posts.pull(post._id);
-    await secretaryshipFound.save();
+    //Find the section and delete the post._id from the section's posts array
+    const sectionFound = await Section.findById(post.section);
+    sectionFound.posts.pull(post._id);
+    await sectionFound.save();
     //Find the category and delete the post._id from the category's posts array
     const categoryFound = await Category.findById(post.category);
     categoryFound.posts.pull(post._id);
@@ -245,7 +245,7 @@ module.exports = {
   getPosts,
   createPost,
   searchPosts,
-  getPostsBySecretaryship,
+  getPostsBySection,
   getPostsByCategory,
   updatePost,
   deletePost,

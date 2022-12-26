@@ -29,9 +29,9 @@ const PostSchema = new Schema({
             required: false
         }
     ],
-    secretaryship: {
+    section: {
         type: Schema.Types.ObjectId,
-        ref: 'Secretaryship',
+        ref: 'Section',
     },
     category: {
         type: Schema.Types.ObjectId,

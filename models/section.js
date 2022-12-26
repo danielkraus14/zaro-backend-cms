@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const SecretaryshipSchema = new Schema({
+const SectionSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -26,4 +26,4 @@ const SecretaryshipSchema = new Schema({
     ]
 });
 
-module.exports = mongoose.model('Secretaryship', SecretaryshipSchema);
+module.exports = mongoose.model('Section', SectionSchema);

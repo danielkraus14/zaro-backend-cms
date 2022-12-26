@@ -5,7 +5,7 @@ const routes = express.Router();
 const { 
     userController,
     postController,
-    secretaryshipController,
+    sectionController,
     categoryController,
     tagController
 } = require('../controllers');
@@ -29,12 +29,12 @@ routes.post('/signin', userSchema, userController.signInUser);
 routes.put('/update/:userId', userController.updateUser);
 routes.delete('/delete/:userId',  userController.deleteUser);
 
-// Secretaryships
-routes.get('/secretaryships', secretaryshipController.getSecretaryships);
-routes.get('/secretaryship/:secretaryshipId', secretaryshipController.getSecretaryshipById);
-routes.post('/secretaryships/create', secretaryshipController.createSecretaryship);
-routes.put('/secretaryships/update/:secretaryshipId', secretaryshipController.updateSecretaryship);
-routes.delete('/secretaryships/delete/:secretaryshipId', secretaryshipController.deleteSecretaryship);
+// Sections
+routes.get('/sections', sectionController.getSections);
+routes.get('/section/:sectionId', sectionController.getSectionById);
+routes.post('/sections/create', sectionController.createSection);
+routes.put('/sections/update/:sectionId', sectionController.updateSection);
+routes.delete('/sections/delete/:sectionId', sectionController.deleteSection);
 
 // Categories
 routes.get('/categories', categoryController.getCategories);
@@ -46,7 +46,7 @@ routes.delete('/categories/delete/:categoryId', categoryController.deleteCategor
 // Posts
 routes.get('/posts', postController.getPosts);
 routes.get('/posts/search', postController.searchPosts);
-routes.get('/posts/secretaryship/:secretaryshipId', postController.getPostsBySecretaryship);
+routes.get('/posts/section/:sectionId', postController.getPostsBySection);
 routes.get('/posts/category/:categoryId', postController.getPostsByCategory);
 routes.post('/posts/create',  postController.createPost);
 routes.put('/posts/update/:postId', postController.updatePost);
