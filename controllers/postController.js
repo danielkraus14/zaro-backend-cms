@@ -4,6 +4,9 @@ const {uploadFile, readFile, getFiles} = require('../s3');
 const getPosts = async (req, res) => {
     try{
         const posts = await postService.getPosts();
+        posts.map(async (post) =>  {
+            post.image = await readFile(post.image)
+        })
         res.status(200).send(posts);
     }catch(error){
         res.status(400).send({error, message: "Something went wrong"});
