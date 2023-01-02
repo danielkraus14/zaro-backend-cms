@@ -33,7 +33,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Manage files uploads
-app.use(fileUpload())
+app.use(fileUpload({
+    useTempFiles: true,
+    tempFileDir: './uploads/tmp',
+}))
 
 // Routes
 app.use('/api', routes);

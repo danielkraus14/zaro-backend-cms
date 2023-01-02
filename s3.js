@@ -4,10 +4,10 @@ const {getSignedUrl} = require('@aws-sdk/s3-request-presigner')
 const fs = require('fs');
 const dateFns = require('date-fns');
 
-const AWS_BUCKET_NAME=process.env.AWS_BUCKET_NAME
-const AWS_BUCKET_REGION=process.env.AWS_BUCKET_REGION
-const AWS_PUBLICK_KEY=process.env.AWS_PUBLICK_KEY
-const AWS_SECRET_KEY=process.env.AWS_SECRET_KEY
+const AWS_BUCKET_NAME=process.env.BUCKET_NAME_AWS
+const AWS_BUCKET_REGION=process.env.BUCKET_REGION_AWS
+const AWS_PUBLICK_KEY=process.env.PUBLICK_KEY_AWS
+const AWS_SECRET_KEY=process.env.SECRET_KEY_AWS
 
 const client = new S3Client({
     region: AWS_BUCKET_REGION,
