@@ -4,6 +4,9 @@ const Section = require("../models/section");
 const Category = require("../models/category");
 const Tag = require("../models/tag");
 
+const {uploadFile, readFile, getFiles, deleteFile} = require('../s3');
+
+
 const paginateOptions = {
   page: 1,
   limit: 15,
@@ -234,6 +237,11 @@ const deletePost = async (postId, userId) => {
     const categoryFound = await Category.findById(post.category);
     categoryFound.posts.pull(post._id);
     await categoryFound.save();
+    //Delete image from S3 server
+    if (post.image) {
+      await deleteImage(post.image);
+    }
+
     result = await post.remove();
   } catch (error) {
     throw error;

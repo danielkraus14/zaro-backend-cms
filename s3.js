@@ -1,5 +1,5 @@
 const dotenv = require('dotenv');
-const {S3Client, PutObjectCommand, GetObjectCommand, ListObjectsCommand} = require('@aws-sdk/client-s3');
+const {S3Client, PutObjectCommand, GetObjectCommand, ListObjectsCommand, DeleteObjectCommand} = require('@aws-sdk/client-s3');
 const {getSignedUrl} = require('@aws-sdk/s3-request-presigner')
 const fs = require('fs');
 const dateFns = require('date-fns');
@@ -62,8 +62,19 @@ async function readFile(fileName) {
 
 }
 
+async function deleteFile(fileName) {
+    const params = {
+        Bucket: AWS_BUCKET_NAME,
+        Key: fileName,
+    };
+    const data = await client.send(new DeleteObjectCommand(params));
+    return data;
+}
+
+
 module.exports = {
     getFiles,
     uploadFile,
-    readFile
+    readFile,
+    deleteFile
 };

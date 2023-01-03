@@ -1,12 +1,10 @@
 const { postService } = require('../services');
-const {uploadFile, readFile, getFiles} = require('../s3');
+const {uploadFile, readFile, getFiles, deleteFile} = require('../s3');
+const fs = require('fs-extra');
 
 const getPosts = async (req, res) => {
     try{
         const posts = await postService.getPosts();
-        posts.map(async (post) =>  {
-            post.image = await readFile(post.image)
-        })
         res.status(200).send(posts);
     }catch(error){
         res.status(400).send({error, message: "Something went wrong"});
@@ -70,11 +68,25 @@ const getMedia = async (req, res) => {
     }
 };
 
+const searchPosts = async (req, res) => {
+    try{
+        const result = await postService.searchPosts(req.query);
+        res.status(200).send(result);
+    }catch(error){
+        res.status(400).send({error, message: "Something went wrong when searching posts"});
+    }
+};
+
+//Media controller
+
 const uploadMedia = async (req, res) => {
     try{
         console.log(req.files);
         const result = await uploadFile(req.files.file);
+        await fs.unlink(req.files.file.tempFilePath)
+
         res.status(200).send({message: "Media uploaded", file: result});
+
     }catch(error){
         res.status(400).send({error, message: "Something went wrong when uploading media"});
     }
@@ -90,14 +102,15 @@ const getMediaByName = async (req, res) => {
     }
 };
 
-const searchPosts = async (req, res) => {
+const deleteMedia = async (req, res) => {
     try{
-        const result = await postService.searchPosts(req.query);
+        const result = await deleteFile(req.query.fileName);
         res.status(200).send(result);
     }catch(error){
-        res.status(400).send({error, message: "Something went wrong when searching posts"});
+        res.status(400).send({error, message: "Something went wrong when deleting media"});
     }
 };
+
 
 
 module.exports = {
@@ -108,7 +121,8 @@ module.exports = {
     updatePost,
     deletePost,
     getMedia,
+    searchPosts,
     uploadMedia,
     getMediaByName,
-    searchPosts
+    deleteMedia,
 }

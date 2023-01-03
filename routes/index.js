@@ -56,6 +56,7 @@ routes.delete('/posts/delete/:postId', postController.deletePost);
  routes.get('/media', postController.getMedia)
  routes.get('/media/get', postController.getMediaByName)
 routes.post('/media/upload', postController.uploadMedia);
+routes.delete('/media/delete', postController.deleteMedia);
 // Tags
 routes.get('/tags', tagController.getTags);
 routes.get('/tags/:tagId', tagController.getTagsById);
