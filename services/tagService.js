@@ -10,10 +10,10 @@ const getTags = async () => {
     return result;
 }
 
-const getTagsById = async (tagId) => {
+const getTagsByName = async (tagName) => {
     let result;
     try{
-        result = await Tag.findById(tagId).populate('posts');
+        result = await Tag.findOne({ name: tagName }).populate('posts');
     }catch(error){
         throw error;
     }
@@ -37,6 +37,6 @@ const createTag = async (name) => {
 
 module.exports = {
     getTags,
-    getTagsById,
+    getTagsByName,
     createTag
 }

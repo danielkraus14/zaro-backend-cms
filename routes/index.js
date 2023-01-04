@@ -59,7 +59,7 @@ routes.post('/media/upload', postController.uploadMedia);
 routes.delete('/media/delete', postController.deleteMedia);
 // Tags
 routes.get('/tags', tagController.getTags);
-routes.get('/tags/:tagId', tagController.getTagsById);
+routes.get('/tags/:tagName', tagController.getTagsByName);
 routes.post('/tags/create', tagController.createTag);
 
 module.exports = routes;

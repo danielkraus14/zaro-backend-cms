@@ -92,12 +92,13 @@ const createPost = async (
 ) => {
   let result;
   try {
+    const imagePath = `https://${process.env.BUCKET_NAME_AWS}.s3.${process.env.BUCKET_REGION_AWS}.amazonaws.com/${image}`
     const post = new Post({
       userId,
       title,
       subtitle,
       content,
-      image,
+      image: imagePath,
       section,
       category,
     });
@@ -157,7 +158,10 @@ const updatePost = async (
     if (title) post.title = title;
     if (subtitle) post.subtitle = subtitle;
     if (content) post.content = content;
-    if (image) post.image = image;
+    if (image) {
+      const imagePath = `https://${process.env.BUCKET_NAME_AWS}.s3.${process.env.BUCKET_REGION_AWS}.amazonaws.com/${image}`
+      post.image = imagePath;
+    }
     if (section) {
       if (post.section != section) {
         const oldSection = await Section.findById(
@@ -239,7 +243,7 @@ const deletePost = async (postId, userId) => {
     await categoryFound.save();
     //Delete image from S3 server
     if (post.image) {
-      await deleteImage(post.image);
+      await deleteFile(post.image);
     }
 
     result = await post.remove();

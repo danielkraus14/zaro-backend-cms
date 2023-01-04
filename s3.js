@@ -56,7 +56,6 @@ async function readFile(fileName) {
 
     const command = new GetObjectCommand(params);
     const data = await getSignedUrl(client, command, { expiresIn: 36000 });
-    console.log(data)
     return data;
     //data.Body.pipe(fs.createWriteStream(`./uploads/images/${fileName}`));
 
