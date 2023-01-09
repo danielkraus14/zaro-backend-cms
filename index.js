@@ -5,7 +5,6 @@ const routes = require('./routes');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const fs = require('fs');
-const http = require('http');
 const https = require('https');
 
 // Initial Setup
@@ -55,8 +54,12 @@ const cred = {
     cert: cert
 }
 
-const httpServer = http.createServer(app);
 const httpsServer = https.createServer(cred, app);
+
+app.get('/.well-known/pki-validation/DE08D5B05F58F1B5AD3FB65FFB15CA44.txt', (req, res) => {
+    res.sendFile('/home/ubuntu/projects/zaro-backend-cms/certificates/DE08D5B05F58F1B5AD3FB65FFB15CA44.txt');
+    
+})
 
 
 // Connect to DB and Server
@@ -65,11 +68,9 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
         console.log(error);
     } else {
         console.log('Connected to DB');
-        //Connect to http server
-        httpServer.listen(process.env.PORT, () => {
+        app.listen(process.env.PORT, () => {
             console.log(`Server running on port ${process.env.PORT}`);
         })
-
         // Connect to https server
         httpsServer.listen(process.env.HTTPS_PORT, () => {
             console.log(`Server running on port ${process.env.HTTPS_PORT}`);
