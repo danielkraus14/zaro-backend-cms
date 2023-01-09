@@ -46,11 +46,16 @@ app.use('/api', routes);
 // Media files
 app.use(express.static('uploads/images'));
 
-const certificate = fs.readFileSync('./certificates/D37AF9A4ABE39D45867209822A67AAA2.txt');
+const cert = fs.readFileSync('./certificates/certificate.crt');
+const key = fs.readFileSync('./certificates/private.key');
 
-app.get('/.well-known/pki-validation/D37AF9A4ABE39D45867209822A67AAA2.txt', (req, res) => {
-    res.send('D:\Zaro\zaro-backend-cms\certificates\D37AF9A4ABE39D45867209822A67AAA2.txt')
-})
+const cred = {
+    key: key,
+    cert: cert
+}
+
+const httpsServer = https.createServer(cred, app);
+
 
 // Connect to DB and Server
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true }, error =>{
@@ -62,7 +67,8 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
             console.log(`Server running on port ${process.env.PORT}`);
         })
         // Connect to https server
-        //const httpsServer = https.createServer({
-
+        httpsServer.listen(process.env.HTTPS_PORT, () => {
+            console.log(`Server running on port ${process.env.HTTPS_PORT}`);
+        })
     }
 })
