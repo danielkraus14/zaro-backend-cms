@@ -83,7 +83,7 @@ const uploadMedia = async (req, res) => {
     try{
         console.log(req.files);
         const result = await uploadFile(req.files.file);
-        await fs.unlink(req.files.file.tempFilePath)
+        //await fs.unlink(req.files.file.tempFilePath)
 
         res.status(200).send({message: "Media uploaded", file: result});
 
