@@ -1,0 +1,28 @@
+service: zaro-backend-cms
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  memorySize: 2048
+  stage: production
+  timeout: 15
+  region: us-east-1
+  lambdaHashingVersion: 20201221
+
+functions:
+  api:
+    handler: index.handler
+    events:
+      - httpApi: '*'
+    environment:
+      PORT: 8080
+      HTTPS_PORT: 8043
+      SECRET_KEY: "insert_secret_key_here"
+      #MONGO_URI:'mongodb://127.0.0.1/zaro-cms'
+      MONGO_URI: 'mongodb+srv://zaro:ZaroMONGO22@cluster0.g5ljm2i.mongodb.net/?retryWrites=true&w=majority'
+      #S3 config
+      BUCKET_NAME_AWS: cms-fatun
+      BUCKET_REGION_AWS: us-east-1
+      PUBLICK_KEY_AWS: AKIA52OXKCLUKKVSVSFO
+      SECRET_KEY_AWS: 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

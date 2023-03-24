@@ -23,7 +23,7 @@ async function getFiles() {
     };
     const data = await client.send(new ListObjectsCommand(params));
     return data.Contents;
-}
+};
 
 async function uploadFile(file) {
 
@@ -45,7 +45,6 @@ async function uploadFile(file) {
     await client.send(new PutObjectCommand(params));
 
     return fileName;
-    
 };
 
 async function readFile(fileName) {
@@ -58,8 +57,7 @@ async function readFile(fileName) {
     const data = await getSignedUrl(client, command, { expiresIn: 36000 });
     return data;
     //data.Body.pipe(fs.createWriteStream(`./uploads/images/${fileName}`));
-
-}
+};
 
 async function deleteFile(fileName) {
     const params = {
@@ -68,7 +66,7 @@ async function deleteFile(fileName) {
     };
     const data = await client.send(new DeleteObjectCommand(params));
     return data;
-}
+};
 
 
 module.exports = {
