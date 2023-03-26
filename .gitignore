@@ -6,6 +6,7 @@
 
 # serverless
 .serverless
+serverless.yml
 
 # temp uploads
 /uploads

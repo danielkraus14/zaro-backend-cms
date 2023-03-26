@@ -59,15 +59,6 @@ const deletePost = async (req, res) => {
     }
 };
 
-const getMedia = async (req, res) => {
-    try{
-        const result = await getFiles();
-        res.status(200).send(result);
-    } catch(error) {
-        res.status(400).send({error, message: "Something went wrong when getting media"});
-    }
-};
-
 const searchPosts = async (req, res) => {
     try{
         const result = await postService.searchPosts(req.query);
@@ -79,12 +70,19 @@ const searchPosts = async (req, res) => {
 
 //Media controller
 
+const getMedia = async (req, res) => {
+    try{
+        const result = await getFiles();
+        res.status(200).send(result);
+    } catch(error) {
+        res.status(400).send({error, message: "Something went wrong when getting media"});
+    }
+};
+
 const uploadMedia = async (req, res) => {
     try{
-        console.log(req.files);
         const file = req.files.file;
         const result = await uploadFile(file);
-        //await fs.unlink(req.files.file.tempFilePath)
 
         res.status(200).send({message: "Media uploaded", file: result});
 
