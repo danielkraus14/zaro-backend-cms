@@ -31,8 +31,8 @@ const getPostsByCategory = async (req, res) => {
 
 const createPost = async (req, res) => {
     try{
-        const {userId, title, subtitle, content, image, section, category, tags} = req.body;
-        const result = await postService.createPost(userId, title, subtitle, content, image, section, category, tags);
+        const {userId, title, subtitle, flywheel, content, type, position, comments, image, section, category, tags} = req.body;
+        const result = await postService.createPost(userId, title, subtitle, flywheel, content, type, position, comments, image, section, category, tags);
         res.status(201).send({post: result});
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});

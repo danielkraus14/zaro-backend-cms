@@ -84,7 +84,11 @@ const createPost = async (
   userId,
   title,
   subtitle,
+  flywheel,
   content,
+  type,
+  position,
+  comments,
   image,
   section,
   category,
@@ -97,7 +101,11 @@ const createPost = async (
       userId,
       title,
       subtitle,
+      flywheel,
       content,
+      type,
+      position,
+      comments,
       image: imagePath,
       section,
       category,
@@ -208,11 +216,10 @@ const updatePost = async (
                 if (tagFound) {
                     tagFound.posts.pull(post._id);
                     await tagFound.save();
-                }     
+                }
             }
         });
         post.tags = tags;
-        
     }
 
 
