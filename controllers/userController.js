@@ -6,7 +6,7 @@ const signUpUser = async (req, res) => {
     try{
         const resulValidationReq = validationResult(req);
         const isValidReq = resulValidationReq.isEmpty();
-        
+
         if(!isValidReq){
             return res.status(400).send({message: 'Invalid request', error: resulValidationReq.array()});
         }
@@ -29,7 +29,7 @@ const signInUser = async (req, res) => {
         if(!isValidReq){
             return res.status(400).send({message: 'Invalid request', error: resulValidationReq.array()});
         }
-    
+
         const { email, username, password} = req.body;
         result =  await userService.signInUser(email, username, password).catch(
             error => {

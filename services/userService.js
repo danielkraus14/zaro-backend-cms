@@ -5,11 +5,11 @@ const signUpUser = async (email, username, password, role) => {
     let result;
     try{
         const candidateUser = new User( {
-            email, 
-            username, 
-            password, 
+            email,
+            username,
+            password,
             role} );
-            
+
             User.findOne({email: candidateUser.email, username: candidateUser.username}, (error, user) => {
                 if(error){
                     throw error;

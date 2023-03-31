@@ -33,6 +33,12 @@ const UserSchema = new Schema({
             ref: 'Post'
         }
     ],
+    funeralNotices: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'FuneralNotice'
+        }
+    ],
 });
 
 UserSchema.pre("save", function(next) {

@@ -2,12 +2,13 @@ const express = require('express');
 const routes = express.Router();
 
 // Import controllers
-const { 
+const {
     userController,
     postController,
     sectionController,
     categoryController,
-    tagController
+    tagController,
+    funeralNoticeController
 } = require('../controllers');
 
 // Import Auth Middlewares
@@ -52,14 +53,25 @@ routes.post('/posts/create',  postController.createPost);
 routes.put('/posts/update/:postId', postController.updatePost);
 routes.delete('/posts/delete/:postId', postController.deletePost);
 
- // Media
+// Media
 routes.get('/media', postController.getMedia)
 routes.get('/media/get', postController.getMediaByName)
 routes.post('/media/upload', postController.uploadMedia);
 routes.delete('/media/delete', postController.deleteMedia);
+
 // Tags
 routes.get('/tags', tagController.getTags);
 routes.get('/tags/:tagName', tagController.getTagsByName);
 routes.post('/tags/create', tagController.createTag);
+
+// Funeral Notices
+routes.get('/funeral-notices', funeralNoticeController.getFuneralNotices);
+routes.get('/funeral-notices/search', funeralNoticeController.searchFuneralNotice);
+routes.get('/funeral-notices/:religion', funeralNoticeController.getFuneralNoticesByReligion);
+routes.get('/funeral-notices/:date', funeralNoticeController.getFuneralNoticesByDate);
+routes.get('/funeral-notices/:status', funeralNoticeController.getFuneralNoticesByStatus);
+routes.post('/funeral-notices/create',  funeralNoticeController.createFuneralNotice);
+routes.put('/funeral-notices/update/:funeralNoticeId', funeralNoticeController.updateFuneralNotice);
+routes.delete('/funeral-notices/delete/:funeralNoticeId', funeralNoticeController.deleteFuneralNotice);
 
 module.exports = routes;
