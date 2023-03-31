@@ -1,3 +1,4 @@
+const serverless = require('serverless-http');
 const express = require('express');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
@@ -35,10 +36,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Manage files uploads
-app.use(fileUpload({
-    useTempFiles: true,
-    tempFileDir: './uploads/tmp',
-}))
+app.use(fileUpload())
 
 // Routes
 app.use('/api', routes);
@@ -58,8 +56,7 @@ const httpsServer = https.createServer(cred, app);
 
 app.get('/.well-known/pki-validation/DE08D5B05F58F1B5AD3FB65FFB15CA44.txt', (req, res) => {
     res.sendFile('/home/ubuntu/projects/zaro-backend-cms/certificates/DE08D5B05F58F1B5AD3FB65FFB15CA44.txt');
-    
-})
+});
 
 
 // Connect to DB and Server
@@ -76,4 +73,6 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
             console.log(`Server running on port ${process.env.HTTPS_PORT}`);
         })
     }
-})
+});
+
+module.exports.handler = serverless(app);
