@@ -1,8 +1,12 @@
 # dependencies
 /node_modules
 
+# environment
 .env
 
+# serverless
+.serverless
+*.yml
 
-#temp uploads
+# temp uploads
 /uploads
