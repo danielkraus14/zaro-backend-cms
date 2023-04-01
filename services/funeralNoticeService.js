@@ -163,7 +163,7 @@ const deleteFuneralNotice = async (funeralNoticeId, userId) => {
   try {
     const funeralNotice = await FuneralNotice.findById(funeralNoticeId);
     if (!funeralNotice) throw new Error("Funeral notice not found");
-    //Find the user and delete the funeralNotice._id from the user's posts array
+    //Find the user and delete the funeralNotice._id from the user's funeral notices array
     const userFound = await User.findById(userId);
     if (!userFound) throw new Error("User not found");
     userFound.funeralNotices.pull(funeralNotice._id);
