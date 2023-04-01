@@ -57,8 +57,8 @@ const createPrintEdition = async (
     const newsletterPDFPath = `https://${process.env.BUCKET_NAME_AWS}.s3.${process.env.BUCKET_REGION_AWS}.amazonaws.com/${newsletterPDF}`
     const printEdition = new PrintEdition({
       date,
-      frontPage,
-      newsletterPDF,
+      frontPage: frontPagePath,
+      newsletterPDF: newsletterPDFPath,
       body,
     });
     if (tags) {
