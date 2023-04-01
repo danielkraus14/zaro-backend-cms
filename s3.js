@@ -55,6 +55,56 @@ const uploadFile = async (file) => {
     }
 };
 
+const uploadFrontPage = async (file) => {
+    try {
+        const year = dateFns.format(new Date(), 'yyyy');
+        const month = dateFns.format(new Date(), 'MM');
+        const day = dateFns.format(new Date(), 'dd');
+
+        //replace spaces with underscores
+        const nameFormat = file.name.replace(/ /g, '_');
+        const fileName = `print_edition/${year}/${month}/${day}_fp_${nameFormat}`;
+
+        const params = {
+            Bucket: AWS_BUCKET_NAME,
+            Key: fileName,
+            Body: file.data
+        };
+        const command = new PutObjectCommand(params);
+        const response = await s3.send(command);
+        console.log(`File uploaded successfully to ${response.Location}`);
+        return response;
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+
+const uploadNewsletterPDF = async (file) => {
+    try {
+        const year = dateFns.format(new Date(), 'yyyy');
+        const month = dateFns.format(new Date(), 'MM');
+        const day = dateFns.format(new Date(), 'dd');
+
+        //replace spaces with underscores
+        const nameFormat = file.name.replace(/ /g, '_');
+        const fileName = `print_edition/${year}/${month}/${day}_pdf_${nameFormat}`;
+
+        const params = {
+            Bucket: AWS_BUCKET_NAME,
+            Key: fileName,
+            Body: file.data
+        };
+        const command = new PutObjectCommand(params);
+        const response = await s3.send(command);
+        console.log(`File uploaded successfully to ${response.Location}`);
+        return response;
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+
 const readFile = async (fileName) => {
     try {
         const params = {
@@ -85,10 +135,11 @@ const deleteFile = async (fileName) => {
     }
 };
 
-
 module.exports = {
     getFiles,
     uploadFile,
+    uploadFrontPage,
+    uploadNewsletterPDF,
     readFile,
     deleteFile
 };

@@ -8,7 +8,8 @@ const {
     sectionController,
     categoryController,
     tagController,
-    funeralNoticeController
+    funeralNoticeController,
+    printEditionController
 } = require('../controllers');
 
 // Import Auth Middlewares
@@ -54,9 +55,11 @@ routes.put('/posts/update/:postId', postController.updatePost);
 routes.delete('/posts/delete/:postId', postController.deletePost);
 
 // Media
-routes.get('/media', postController.getMedia)
-routes.get('/media/get', postController.getMediaByName)
+routes.get('/media', postController.getMedia);
+routes.get('/media/get', postController.getMediaByName);
 routes.post('/media/upload', postController.uploadMedia);
+routes.post('/media/upload-fp', printEditionController.uploadFrontPage);
+routes.post('/media/upload-pdf', printEditionController.uploadNewsletterPDF);
 routes.delete('/media/delete', postController.deleteMedia);
 
 // Tags
@@ -73,5 +76,12 @@ routes.get('/funeral-notices/:status', funeralNoticeController.getFuneralNotices
 routes.post('/funeral-notices/create',  funeralNoticeController.createFuneralNotice);
 routes.put('/funeral-notices/update/:funeralNoticeId', funeralNoticeController.updateFuneralNotice);
 routes.delete('/funeral-notices/delete/:funeralNoticeId', funeralNoticeController.deleteFuneralNotice);
+
+// Print Editions
+routes.get('/print-edition', printEditionController.getPrintEditions);
+routes.get('/print-edition/:date', printEditionController.getPrintEditionsByDate);
+routes.post('/print-edition/create',  printEditionController.createPrintEdition);
+routes.put('/print-edition/update/:postId', printEditionController.updatePrintEdition);
+routes.delete('/print-edition/delete/:postId', printEditionController.deletePrintEdition);
 
 module.exports = routes;
