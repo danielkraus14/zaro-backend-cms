@@ -105,6 +105,27 @@ const uploadNewsletterPDF = async (file) => {
     }
 };
 
+const uploadBillboard = async (file) => {
+    try {
+        //replace spaces with underscores
+        const nameFormat = file.name.replace(/ /g, '_');
+        const fileName = `billboard/${nameFormat}`;
+
+        const params = {
+            Bucket: AWS_BUCKET_NAME,
+            Key: fileName,
+            Body: file.data
+        };
+        const command = new PutObjectCommand(params);
+        const response = await s3.send(command);
+        console.log(`File uploaded successfully to ${response.Location}`);
+        return response;
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+
 const readFile = async (fileName) => {
     try {
         const params = {
@@ -140,6 +161,7 @@ module.exports = {
     uploadFile,
     uploadFrontPage,
     uploadNewsletterPDF,
+    uploadBillboard,
     readFile,
     deleteFile
 };

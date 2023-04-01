@@ -5,6 +5,8 @@ const categoryController = require('./categoryController');
 const tagController = require('./tagController');
 const funeralNoticeController = require('./funeralNoticeController');
 const printEditionController = require('./printEditionController');
+const eventController = require('./eventController');
+const venueController = require('./venueController');
 
 module.exports = {
     userController,
@@ -14,4 +16,6 @@ module.exports = {
     tagController,
     funeralNoticeController,
     printEditionController,
+    eventController,
+    venueController,
 };

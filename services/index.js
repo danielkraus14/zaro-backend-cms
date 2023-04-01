@@ -6,6 +6,8 @@ const categoryService = require('./categoryService');
 const tagService = require('./tagService');
 const funeralNoticeService = require('./funeralNoticeService');
 const printEditionService = require('./printEditionService');
+const eventService = require('./eventService');
+const venueService = require('./venueService');
 
 module.exports = {
     authService,
@@ -15,5 +17,7 @@ module.exports = {
     categoryService,
     tagService,
     funeralNoticeService,
-    printEditionService
+    printEditionService,
+    eventService,
+    venueService,
 };
