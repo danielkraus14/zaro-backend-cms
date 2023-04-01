@@ -24,8 +24,8 @@ const createSection = async (name, description, image) => {
     let result;
     try{
         const candidateSection = new Section( {
-            name, 
-            description, 
+            name,
+            description,
             image
         } );
         result = await candidateSection.save();
