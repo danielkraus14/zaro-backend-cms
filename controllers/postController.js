@@ -104,7 +104,7 @@ const getMediaByName = async (req, res) => {
 const deleteMedia = async (req, res) => {
     try{
         const result = await deleteFile(req.query.fileName);
-        res.status(200).send(result);
+        res.status(204).send(result);
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong when deleting media"});
     }

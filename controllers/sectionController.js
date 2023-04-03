@@ -46,7 +46,7 @@ const deleteSection = async (req, res) => {
     try{
         const { sectionId } = req.params;
         const result = await sectionService.deleteSection(sectionId);
-        res.status(200).send({section: result});
+        res.status(204).send({section: result});
     }catch(error){
         res.status(400).send({error, message: 'Section not found'});
     }

@@ -42,7 +42,7 @@ const updatePrintEdition = async (req, res) => {
 const deletePrintEdition = async (req, res) => {
     try{
         const result = await printEditionService.deletePrintEdition(req.params.printEditionId);
-        res.status(200).send({post: result});
+        res.status(204).send({post: result});
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});
     }

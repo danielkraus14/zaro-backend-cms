@@ -69,7 +69,7 @@ const deleteFuneralNotice = async (req, res) => {
 const searchFuneralNotice = async (req, res) => {
     try{
         const result = await funeralNoticeService.searchFuneralNotice(req.query);
-        res.status(200).send(result);
+        res.status(204).send(result);
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong when searching posts"});
     }

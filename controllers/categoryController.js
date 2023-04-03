@@ -44,7 +44,7 @@ const deleteCategory = async (req, res) => {
     try{
         const { categoryId } = req.params;
         const result = await categoryService.deleteCategory(categoryId);
-        res.status(200).send({category: result});
+        res.status(204).send({category: result});
     }catch(error){
         res.status(400).send({error, message: 'Category not found'});
     }
