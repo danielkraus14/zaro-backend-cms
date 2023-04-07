@@ -20,7 +20,7 @@ const decodeToken = (token) => {
             message: 'Invalid token'
         }
     }
-}
+};
 
 module.exports = {
     createToken,

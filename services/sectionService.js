@@ -23,12 +23,12 @@ const getSectionById = async (sectionId) => {
 const createSection = async (name, description, image) => {
     let result;
     try{
-        const candidateSection = new Section( {
+        const section = new Section( {
             name,
             description,
             image
         } );
-        result = await candidateSection.save();
+        result = await section.save();
     }catch(error){
         throw error;
     }
@@ -38,21 +38,20 @@ const createSection = async (name, description, image) => {
 const updateSection = async (sectionId, name, description, image) => {
     let result;
     try{
-        const candidateSection = await Section.findById(sectionId);
-        candidateSection.name = name;
-        candidateSection.description = description;
-        candidateSection.image = image;
-        result = await candidateSection.save();
+        const section = await Section.findById(sectionId);
+        section.name = name;
+        section.description = description;
+        section.image = image;
+        result = await section.save();
     }catch(error){
         throw error;
     }
     return result;
 };
 
-
 module.exports = {
     getSections,
     getSectionById,
     createSection,
     updateSection
-}
+};

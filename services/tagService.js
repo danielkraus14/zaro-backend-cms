@@ -8,7 +8,7 @@ const getTags = async () => {
         throw error;
     }
     return result;
-}
+};
 
 const getTagsByName = async (tagName) => {
     let result;
@@ -18,25 +18,23 @@ const getTagsByName = async (tagName) => {
         throw error;
     }
     return result;
-}
+};
 
 const createTag = async (name) => {
     let result;
     try{
-        const candidateTag = new Tag( {
+        const tag = new Tag({
             name
-        } );
-        result = await candidateTag.save();
+        });
+        result = await tag.save();
     }catch(error){
         throw error;
     }
     return result;
-}
-
-
+};
 
 module.exports = {
     getTags,
     getTagsByName,
     createTag
-}
+};

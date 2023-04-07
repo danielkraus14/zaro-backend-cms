@@ -29,12 +29,12 @@ const getCategoryById = async (categoryId) => {
 const createCategory = async (name) => {
     let result;
     try{
-        const candidateCategory = new Category({ name });
+        const newCategory = new Category({ name });
 
-        const categoryFound = await Category.findOne({ name });
-        if(categoryFound) throw new Error('Category already exists');
+        const category = await Category.findOne({ name });
+        if(category) throw new Error('Category already exists');
 
-        result = await candidateCategory.save();
+        result = await newCategory.save();
     } catch(error) {
         throw error;
     }
@@ -45,11 +45,11 @@ const createCategory = async (name) => {
 const updateCategory = async (categoryId, name) => {
     let result;
     try{
-        const categoryFound = await Category.findById(categoryId);
-        if(!categoryFound) throw new Error('Category not found');
+        const category = await Category.findById(categoryId);
+        if(!category) throw new Error('Category not found');
 
-        categoryFound.name = name;
-        result = await categoryFound.save();
+        category.name = name;
+        result = await category.save();
     } catch(error) {
         throw error;
     }
@@ -60,10 +60,10 @@ const deleteCategory = async (categoryId) => {
     let result;
     try{
 
-        const categoryFound = await Category.findById(categoryId)
-        if(!categoryFound) throw new Error('Category not found');
+        const category = await Category.findById(categoryId)
+        if(!category) throw new Error('Category not found');
 
-        result = await categoryFound.remove();
+        result = await category.remove();
     } catch(error) {
         throw error;
     }
