@@ -8,7 +8,7 @@ const getCategories = async () => {
             result = [];
         };
         result = categories;
-    }catch(error){
+    } catch(error) {
         throw error;
     }
     return result;
@@ -20,7 +20,7 @@ const getCategoryById = async (categoryId) => {
         const category = await Category.findById(categoryId);
         if(!category) throw new Error('Category not found');
         result = category;
-    }catch(error){
+    } catch(error) {
         throw error;
     }
     return result;
@@ -32,11 +32,10 @@ const createCategory = async (name) => {
             const candidateCategory = new Category({ name });
 
             const categoryFound = await Category.findOne({ name });
-
             if(categoryFound) throw new Error('Category already exists');
 
             result = await candidateCategory.save();
-        }catch(error){
+        } catch(error) {
             throw error;
         }
 
@@ -48,11 +47,10 @@ const updateCategory = async (categoryId, name) => {
     try{
         const categoryFound = await Category.findById(categoryId);
         if(!categoryFound) throw new Error('Category not found');
-    
+
         categoryFound.name = name;
         result = await categoryFound.save();
-    }
-    catch(error){
+    } catch(error) {
         throw error;
     }
     return result;
@@ -65,8 +63,8 @@ const deleteCategory = async (categoryId) => {
         const categoryFound = await Category.findById(categoryId)
         if(!categoryFound) throw new Error('Category not found');
 
-       result = await categoryFound.remove();
-    }catch(error){
+        result = await categoryFound.remove();
+    } catch(error) {
         throw error;
     }
     return result;
