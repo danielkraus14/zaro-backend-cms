@@ -1,6 +1,4 @@
 const jwt = require('jsonwebtoken');
-const {DateTime} = require('luxon');
-
 
 const createToken = (user) => {
     const payload = {
