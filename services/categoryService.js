@@ -27,19 +27,19 @@ const getCategoryById = async (categoryId) => {
 };
 
 const createCategory = async (name) => {
-        let result;
-        try{
-            const candidateCategory = new Category({ name });
+    let result;
+    try{
+        const candidateCategory = new Category({ name });
 
-            const categoryFound = await Category.findOne({ name });
-            if(categoryFound) throw new Error('Category already exists');
+        const categoryFound = await Category.findOne({ name });
+        if(categoryFound) throw new Error('Category already exists');
 
-            result = await candidateCategory.save();
-        } catch(error) {
-            throw error;
-        }
+        result = await candidateCategory.save();
+    } catch(error) {
+        throw error;
+    }
 
-        return result;
+    return result;
 };
 
 const updateCategory = async (categoryId, name) => {
