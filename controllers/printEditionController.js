@@ -48,38 +48,10 @@ const deletePrintEdition = async (req, res) => {
     }
 };
 
-//Media controller
-
-const uploadFrontPage = async (req, res) => {
-    try{
-        const file = req.files.file;
-        const result = await uploadFrontPage(file);
-
-        res.status(200).send({message: "Front page uploaded", file: result});
-
-    } catch(error) {
-        res.status(400).send({error, message: "Something went wrong when uploading media"});
-    }
-};
-
-const uploadNewsletterPDF = async (req, res) => {
-    try{
-        const file = req.files.file;
-        const result = await uploadNewsletterPDF(file);
-
-        res.status(200).send({message: "Newsletter PDF uploaded", file: result});
-
-    } catch(error) {
-        res.status(400).send({error, message: "Something went wrong when uploading media"});
-    }
-};
-
 module.exports = {
     getPrintEditions,
     getPrintEditionsByDate,
     createPrintEdition,
     updatePrintEdition,
     deletePrintEdition,
-    uploadFrontPage,
-    uploadNewsletterPDF,
 };

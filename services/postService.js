@@ -4,7 +4,7 @@ const Section = require("../models/section");
 const Category = require("../models/category");
 const Tag = require("../models/tag");
 
-const {uploadFile, readFile, getFiles, deleteFile} = require('../s3');
+const { deleteFile } = require('../s3');
 
 
 const paginateOptions = {

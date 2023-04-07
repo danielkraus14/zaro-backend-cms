@@ -9,7 +9,8 @@ const {
     categoryController,
     tagController,
     funeralNoticeController,
-    printEditionController
+    printEditionController,
+    s3Controller
 } = require('../controllers');
 
 // Import Auth Middlewares
@@ -55,12 +56,12 @@ routes.put('/posts/update/:postId', postController.updatePost);
 routes.delete('/posts/delete/:postId', postController.deletePost);
 
 // Media
-routes.get('/media', postController.getMedia);
-routes.get('/media/get', postController.getMediaByName);
-routes.post('/media/upload', postController.uploadMedia);
-routes.post('/media/upload-fp', printEditionController.uploadFrontPage);
-routes.post('/media/upload-pdf', printEditionController.uploadNewsletterPDF);
-routes.delete('/media/delete', postController.deleteMedia);
+routes.get('/media', s3Controller.getMedia);
+routes.get('/media/get', s3Controller.getMediaByName);
+routes.post('/media/upload/:type', s3Controller.uploadMedia);
+routes.delete('/media/delete', s3Controller.deleteMedia);
+routes.post('/media/create-directory', s3Controller.createDirectory);
+routes.get('/media/directories', s3Controller.getDirectories);
 
 // Tags
 routes.get('/tags', tagController.getTags);

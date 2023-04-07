@@ -1,5 +1,4 @@
 const { eventService } = require('../services');
-const { uploadBillboard } = require('../s3');
 
 const getEvents = async (req, res) => {
     try{
@@ -66,18 +65,6 @@ const searchEvents = async (req, res) => {
     }
 };
 
-//Media controller
-
-const uploadBillboard = async (req, res) => {
-    try{
-        const file = req.files.file;
-        const result = await uploadBillboard(file);
-        res.status(200).send({message: "Media uploaded", file: result});
-    } catch(error) {
-        res.status(400).send({error, message: "Something went wrong when uploading media"});
-    }
-};
-
 module.exports = {
     getEvents,
     getEventsByVenue,
@@ -86,5 +73,4 @@ module.exports = {
     updateEvent,
     deleteEvent,
     searchEvents,
-    uploadBillboard,
 };

@@ -7,6 +7,7 @@ const funeralNoticeController = require('./funeralNoticeController');
 const printEditionController = require('./printEditionController');
 const eventController = require('./eventController');
 const venueController = require('./venueController');
+const s3Controller = require('./s3Controller');
 
 module.exports = {
     userController,
@@ -18,4 +19,5 @@ module.exports = {
     printEditionController,
     eventController,
     venueController,
+    s3Controller,
 };

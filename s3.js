@@ -1,5 +1,5 @@
 const dotenv = require('dotenv');
-const { S3Client, ListObjectsCommand, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
+const { S3Client, ListObjectsCommand, PutObjectCommand, GetObjectCommand, DeleteObjectCommand, ListObjectsV2Command } = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner')
 const dateFns = require('date-fns');
 
@@ -30,7 +30,7 @@ const getFiles = async () => {
     }
 };
 
-const uploadFile = async (file) => {
+const uploadFile = async (file, type) => {
     try {
         const year = dateFns.format(new Date(), 'yyyy');
         const month = dateFns.format(new Date(), 'MM');
@@ -38,78 +38,7 @@ const uploadFile = async (file) => {
 
         //replace spaces with underscores
         const nameFormat = file.name.replace(/ /g, '_');
-        const fileName = `${year}/${month}/${day}_${nameFormat}`;
-
-        const params = {
-            Bucket: AWS_BUCKET_NAME,
-            Key: fileName,
-            Body: file.data
-        };
-        const command = new PutObjectCommand(params);
-        const response = await s3.send(command);
-        console.log(`File uploaded successfully to ${response.Location}`);
-        return response;
-    } catch (err) {
-        console.error(err);
-        throw err;
-    }
-};
-
-const uploadFrontPage = async (file) => {
-    try {
-        const year = dateFns.format(new Date(), 'yyyy');
-        const month = dateFns.format(new Date(), 'MM');
-        const day = dateFns.format(new Date(), 'dd');
-
-        //replace spaces with underscores
-        const nameFormat = file.name.replace(/ /g, '_');
-        const fileName = `print_edition/${year}/${month}/${day}_fp_${nameFormat}`;
-
-        const params = {
-            Bucket: AWS_BUCKET_NAME,
-            Key: fileName,
-            Body: file.data
-        };
-        const command = new PutObjectCommand(params);
-        const response = await s3.send(command);
-        console.log(`File uploaded successfully to ${response.Location}`);
-        return response;
-    } catch (err) {
-        console.error(err);
-        throw err;
-    }
-};
-
-const uploadNewsletterPDF = async (file) => {
-    try {
-        const year = dateFns.format(new Date(), 'yyyy');
-        const month = dateFns.format(new Date(), 'MM');
-        const day = dateFns.format(new Date(), 'dd');
-
-        //replace spaces with underscores
-        const nameFormat = file.name.replace(/ /g, '_');
-        const fileName = `print_edition/${year}/${month}/${day}_pdf_${nameFormat}`;
-
-        const params = {
-            Bucket: AWS_BUCKET_NAME,
-            Key: fileName,
-            Body: file.data
-        };
-        const command = new PutObjectCommand(params);
-        const response = await s3.send(command);
-        console.log(`File uploaded successfully to ${response.Location}`);
-        return response;
-    } catch (err) {
-        console.error(err);
-        throw err;
-    }
-};
-
-const uploadBillboard = async (file) => {
-    try {
-        //replace spaces with underscores
-        const nameFormat = file.name.replace(/ /g, '_');
-        const fileName = `billboard/${nameFormat}`;
+        const fileName = `${type}/${year}/${month}/${day}_${nameFormat}`;
 
         const params = {
             Bucket: AWS_BUCKET_NAME,
@@ -156,12 +85,47 @@ const deleteFile = async (fileName) => {
     }
 };
 
+const createDirectory = async(dirName) => {
+    try {
+        //replace spaces with underscores
+        const directory = dirName.replace(/ /g, '_');
+        const params = {
+            Bucket: AWS_BUCKET_NAME,
+            Key: directory,
+            Body: ''
+        };
+        const command = new PutObjectCommand(params);
+        const response = await s3.send(command);
+        console.log(`Successfully created directory ${directory} in bucket ${AWS_BUCKET_NAME}`);
+        return response;
+    } catch(err) {
+        console.error(err);
+        throw err;
+    }
+};
+
+const getDirectories = async() => {
+    try {
+        const params = {
+            Bucket: AWS_BUCKET_NAME,
+            Delimiter: '/'
+        };
+        const command = new ListObjectsV2Command(s);
+        const response = await s3.send(command);
+        const directories = response.CommonPrefixes.map((item) => item.Prefix.slice(0, -1).replace(/_/g, ' '));
+        console.log(`Successfully listed directories in bucket ${AWS_BUCKET_NAME}`);
+        return directories;
+    } catch(err) {
+        console.error(err);
+        throw err;
+    }
+}
+
 module.exports = {
     getFiles,
     uploadFile,
-    uploadFrontPage,
-    uploadNewsletterPDF,
-    uploadBillboard,
     readFile,
-    deleteFile
+    deleteFile,
+    createDirectory,
+    getDirectories
 };

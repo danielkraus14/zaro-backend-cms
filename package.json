@@ -20,9 +20,8 @@
   "homepage": "https://github.com/danielkraus14/zaro-backend-cms#readme",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.231.0",
-    "@aws-sdk/client-s3": "^3.299.0",
-    "@aws-sdk/s3-request-presigner": "^3.236.0",
-    "aws-sdk": "^2.1343.0",
+    "@aws-sdk/client-s3": "^3.306.0",
+    "@aws-sdk/s3-request-presigner": "^3.306.0",
     "bcrypt-nodejs": "^0.0.3",
     "cors": "^2.8.5",
     "date-fns": "^2.29.3",
