@@ -8,6 +8,8 @@ const funeralNoticeService = require('./funeralNoticeService');
 const printEditionService = require('./printEditionService');
 const eventService = require('./eventService');
 const venueService = require('./venueService');
+const fileService = require('./fileService');
+const fileFolderService = require('./fileFolderService');
 
 module.exports = {
     authService,
@@ -20,4 +22,6 @@ module.exports = {
     printEditionService,
     eventService,
     venueService,
+    fileService,
+    fileFolderService
 };

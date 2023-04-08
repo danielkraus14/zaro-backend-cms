@@ -10,7 +10,10 @@ const {
     tagController,
     funeralNoticeController,
     printEditionController,
-    s3Controller
+    fileController,
+    fileFolderController,
+    venueController,
+    eventController
 } = require('../controllers');
 
 // Import Auth Middlewares
@@ -55,14 +58,6 @@ routes.post('/posts/create',  postController.createPost);
 routes.put('/posts/update/:postId', postController.updatePost);
 routes.delete('/posts/delete/:postId', postController.deletePost);
 
-// Media
-routes.get('/media', s3Controller.getMedia);
-routes.get('/media/get', s3Controller.getMediaByName);
-routes.post('/media/upload/:type', s3Controller.uploadMedia);
-routes.delete('/media/delete', s3Controller.deleteMedia);
-routes.post('/media/create-directory', s3Controller.createDirectory);
-routes.get('/media/directories', s3Controller.getDirectories);
-
 // Tags
 routes.get('/tags', tagController.getTags);
 routes.get('/tags/:tagName', tagController.getTagsByName);
@@ -84,5 +79,33 @@ routes.get('/print-edition/:date', printEditionController.getPrintEditionsByDate
 routes.post('/print-edition/create',  printEditionController.createPrintEdition);
 routes.put('/print-edition/update/:postId', printEditionController.updatePrintEdition);
 routes.delete('/print-edition/delete/:postId', printEditionController.deletePrintEdition);
+
+// Venues
+routes.get('/venues', venueController.getVenues);
+routes.get('/venues/:venueId', venueController.getVenueById);
+routes.post('/venues/create', venueController.createVenue);
+routes.put('/venues/update/:venueId', venueController.updateVenue);
+
+// Events
+routes.get('/events', eventController.getEvents);
+routes.get('/events/search', eventController.searchEvents);
+routes.get('/events/venue/:venueId', eventController.getEventsByVenue);
+routes.get('/events/date', eventController.getEventsByDate);
+routes.post('/events/create',  eventController.createEvent);
+routes.put('/events/update/:eventId', eventController.updateEvent);
+routes.delete('/events/delete/:eventId', eventController.deleteEvent);
+
+// File Folders
+routes.get('/file-folders', fileFolderController.getFileFolders);
+routes.get('/file-folders/:fileFolderId', fileFolderController.getFileFolderById);
+routes.post('/file-folders/create', fileFolderController.createFileFolder);
+routes.put('/file-folders/update/:fileFolderId', printEditionController.updatePrintEdition);
+routes.delete('/file-folders/delete/:fileFolderId', fileFolderController.deleteFileFolder);
+
+// Files
+routes.get('/files', fileController.getFiles);
+routes.get('/files/:fileId', fileController.readFileById);
+routes.post('/files/create', fileController.createFile);
+routes.delete('/files/delete/:fileId', fileController.deleteFile);
 
 module.exports = routes;
