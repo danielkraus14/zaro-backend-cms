@@ -1,5 +1,4 @@
 const { printEditionService } = require('../services');
-const { uploadFrontPage, uploadNewsletterPDF } = require('../s3');
 
 const getPrintEditions = async (req, res) => {
     try{

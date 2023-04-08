@@ -39,16 +39,16 @@ const getEventsByVenue = async (venueId) => {
     return result;
 };
 
-const getEventsByDate = async (dateFrom, dateUntil) => {
+const getEventsByDate = async (date) => {
     let result;
     try {
         let query = {};
-        if (dateFrom) {
-            dateFrom.setUTCHours(0, 0, 0, 0);
+        if (date.dateFrom) {
+            date.dateFrom.setUTCHours(0, 0, 0, 0);
             query.dateEnds = { $gte: dateFrom };
         };
-        if (dateUntil) {
-            dateUntil.setUTCHours(23, 59, 59, 999);
+        if (date.dateUntil) {
+            date.dateUntil.setUTCHours(23, 59, 59, 999);
             query.dateStarts = { $lte: dateUntil };
         };
         await Event.paginate(query, paginateOptions, function(err, res){

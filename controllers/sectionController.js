@@ -57,5 +57,5 @@ module.exports = {
     getSectionById,
     createSection,
     updateSection,
-    deleteSection  
-}
+    deleteSection
+};

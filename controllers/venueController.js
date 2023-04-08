@@ -46,5 +46,5 @@ module.exports = {
     getVenues,
     getVenueById,
     createVenue,
-    updateVenue,
+    updateVenue
 };

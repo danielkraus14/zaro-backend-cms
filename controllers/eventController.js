@@ -20,7 +20,7 @@ const getEventsByVenue = async (req, res) => {
 
 const getEventsByDate = async (req, res) => {
     try{
-        const events = await eventService.getEventsByDate(req.params.dateFrom, req.params.dateUntil);
+        const events = await eventService.getEventsByDate(req.query);
         res.status(200).send(events);
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});
@@ -72,5 +72,5 @@ module.exports = {
     createEvent,
     updateEvent,
     deleteEvent,
-    searchEvents,
+    searchEvents
 };
