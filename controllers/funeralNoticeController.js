@@ -38,7 +38,7 @@ const getFuneralNoticesByStatus = async (req, res) => {
 
 const createFuneralNotice = async (req, res) => {
     try{
-        const {userId, title, deceased, client, date, religion, status, content} = req.body;
+        const { userId, title, deceased, client, date, religion, status, content } = req.body;
         const result = await funeralNoticeService.createFuneralNotice(userId, title, deceased, client, date, religion, status, content);
         res.status(201).send({funeralNotice: result});
     } catch(error) {
@@ -48,7 +48,7 @@ const createFuneralNotice = async (req, res) => {
 
 const updateFuneralNotice = async (req, res) => {
     try{
-        const { userId, title, deceased, client, date, religion, status, content} = req.body;
+        const { userId, title, deceased, client, date, religion, status, content } = req.body;
         const result = await funeralNoticeService.updateFuneralNotice(req.params.funeralNoticeId, userId, title, deceased, client, date, religion, status, content);
         res.status(200).send({funeralNotice: result});
     } catch(error) {
