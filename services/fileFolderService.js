@@ -74,10 +74,11 @@ const deleteFileFolder = async (fileFolderSlug) => {
         const fileFolder = await FileFolder.findOne({ slug: fileFolderSlug });
         if(!fileFolder) throw new Error('File folder not found');
 
-        fileFolder.files.map(async (file) => {
+        for (const fileId of fileFolder.files) {
+            const file = await File.findById(fileId);
             await deleteFileS3(file.filename);
-            await deleteFile(file._id);
-        });
+            await deleteFile(fileId);
+        }
 
         result = await fileFolder.remove();
     }catch(error){
