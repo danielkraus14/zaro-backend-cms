@@ -66,7 +66,7 @@ const createDirectoryS3 = async(slug) => {
     try {
         const params = {
             Bucket: AWS_BUCKET_NAME,
-            Key: slug,
+            Key: `${slug}/`,
             Body: ''
         };
         const command = new PutObjectCommand(params);

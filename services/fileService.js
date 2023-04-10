@@ -50,7 +50,9 @@ const createFile = async (file, fileFolderSlug, userId) => {
         const filename = `${fileFolder.slug}/${year}/${month}/${day}_${nameFormat}`;
         const url = `https://${process.env.BUCKET_NAME_AWS}.s3.${process.env.BUCKET_REGION_AWS}.amazonaws.com/${filename}`
 
-        const newFile = new File({ filename, url, createdBy: userId });
+        const newFile = new File({ filename, url, createdBy: userId, fileFolder: fileFolder._id });
+        fileFolder.files.push(newFile._id);
+        await fileFolder.save();
         await uploadFileS3(file, filename);
         result = await newFile.save();
     } catch(error) {
