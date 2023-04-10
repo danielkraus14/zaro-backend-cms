@@ -36,7 +36,7 @@ const createFileFolder = async (name, userId) => {
     try{
         const rawSlug = name.replace(/ /g, '_').toLowerCase();
         const slug = rawSlug.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-        const url = `https://${process.env.BUCKET_NAME_AWS}.s3.${process.env.BUCKET_REGION_AWS}.amazonaws.com/${slug}`;
+        const url = `https://${process.env.BUCKET_NAME_AWS}.s3.${process.env.BUCKET_REGION_AWS}.amazonaws.com/${slug}/`;
         const newFileFolder = new FileFolder({ name, slug, url, createdBy: userId });
 
         const fileFolder = await FileFolder.findOne({ slug });

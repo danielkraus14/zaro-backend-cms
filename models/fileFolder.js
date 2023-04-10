@@ -23,7 +23,8 @@ const FileFolderSchema = new Schema({
     ],
     createdBy: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
     lastUpdatedBy: {
         type: Schema.Types.ObjectId,
