@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const collectionNames = ['post', 'printEdition', 'event', 'section'];
+
 const FileFolderSchema = new Schema({
     name: {
         type: String,
@@ -21,10 +23,15 @@ const FileFolderSchema = new Schema({
             ref: 'File'
         }
     ],
+    collectionName: {
+        type: String,
+        enum: collectionNames,
+        required: false
+    },
     createdBy: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: false
     },
     lastUpdatedBy: {
         type: Schema.Types.ObjectId,

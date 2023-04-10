@@ -21,17 +21,33 @@ const createRoles = async () => {
 
 const createInitialFileFolders = async () => {
     try {
-        const postsFileFolder = FileFolder.findOne({ name: process.env.POSTS_FILE_FOLDER_NAME });
-        if (!postsFileFolder) await createFileFolder(process.env.POSTS_FILE_FOLDER_NAME);
+        const postsFileFolder = await FileFolder.findOne({ name: process.env.POSTS_FILE_FOLDER_NAME });
+        if (!postsFileFolder) {
+            const postsFileFolder = await createFileFolder(process.env.POSTS_FILE_FOLDER_NAME);
+            postsFileFolder.collectionName = 'post';
+            await postsFileFolder.save();
+        };
 
-        const printEditionsFileFolder = FileFolder.findOne({ name: process.env.PRINT_EDITIONS_FILE_FOLDER_NAME });
-        if (!printEditionsFileFolder) await createFileFolder(process.env.PRINT_EDITIONS_FILE_FOLDER_NAME);
+        const printEditionsFileFolder = await FileFolder.findOne({ name: process.env.PRINT_EDITIONS_FILE_FOLDER_NAME });
+        if (!printEditionsFileFolder) {
+            const printEditionsFileFolder = await createFileFolder(process.env.PRINT_EDITIONS_FILE_FOLDER_NAME);
+            printEditionsFileFolder.collectionName = 'printEdition';
+            await printEditionsFileFolder.save();
+        };
 
-        const eventsFileFolder = FileFolder.findOne({ name: process.env.EVENTS_FILE_FOLDER_NAME });
-        if (!eventsFileFolder) await createFileFolder(process.env.EVENTS_FILE_FOLDER_NAME);
+        const eventsFileFolder = await FileFolder.findOne({ name: process.env.EVENTS_FILE_FOLDER_NAME });
+        if (!eventsFileFolder) {
+            const eventsFileFolder = await createFileFolder(process.env.EVENTS_FILE_FOLDER_NAME);
+            eventsFileFolder.collectionName = 'event';
+            await eventsFileFolder.save();
+        };
 
-        const sectionsFileFolder = FileFolder.findOne({ name: process.env.SECTIONS_FILE_FOLDER_NAME });
-        if (!sectionsFileFolder) await createFileFolder(process.env.SECTIONS_FILE_FOLDER_NAME);
+        const sectionsFileFolder = await FileFolder.findOne({ name: process.env.SECTIONS_FILE_FOLDER_NAME });
+        if (!sectionsFileFolder) {
+            const sectionsFileFolder = await createFileFolder(process.env.SECTIONS_FILE_FOLDER_NAME);
+            sectionsFileFolder.collectionName = 'section';
+            await sectionsFileFolder.save();
+        };
     } catch (error) {
         console.error(error);
     }
