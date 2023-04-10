@@ -21,9 +21,8 @@ const readFileById = async (req, res) => {
 
 const createFile = async (req, res) => {
     try{
-        const { fileFolderSlug } = req.params;
         const { file } = req.files
-        const { userId } = req.body
+        const { userId, fileFolderSlug } = req.body
         const result = await fileService.createFile(file, fileFolderSlug, userId);
         res.status(201).send({file: result});
     }catch(error){
