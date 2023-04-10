@@ -58,7 +58,7 @@ const updateFileFolder = async (fileFolderSlug, name, userId) => {
 
         fileFolder.name = name;
         fileFolder.lastUpdatedBy = userId;
-        fileFolder.lastUpdatedAt = new Date.now();
+        fileFolder.lastUpdatedAt = Date.now();
         result = await fileFolder.save();
     }
     catch(error){

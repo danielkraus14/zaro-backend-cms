@@ -157,7 +157,7 @@ const updatePrintEdition = async (
         };
 
         printEdition.lastUpdatedBy = userId;
-        printEdition.lastUpdatedAt = new Date.now();
+        printEdition.lastUpdatedAt = Date.now();
 
         result = await printEdition.save();
     } catch (error) {

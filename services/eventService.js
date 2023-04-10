@@ -156,7 +156,7 @@ const updateEvent = async (
         };
 
         event.lastUpdatedBy = userId;
-        event.lastUpdatedAt = new Date.now();
+        event.lastUpdatedAt = Date.now();
 
         result = await event.save();
     } catch (error) {

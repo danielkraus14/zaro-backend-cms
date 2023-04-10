@@ -250,7 +250,7 @@ const updatePost = async (
         };
 
         post.lastUpdatedBy = userId;
-        post.lastUpdatedAt = new Date.now();
+        post.lastUpdatedAt = Date.now();
 
         result = await post.save();
     } catch (error) {

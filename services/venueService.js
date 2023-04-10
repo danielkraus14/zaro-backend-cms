@@ -56,7 +56,7 @@ const updateVenue = async (venueId, name, description, address, userId) => {
         venue.name = name;
         venue.description = description;
         venue.address = address;
-        venue.lastUpdatedAt = new Date.now();
+        venue.lastUpdatedAt = Date.now();
         venue.lastUpdatedBy = userId;
 
         result = await venue.save();

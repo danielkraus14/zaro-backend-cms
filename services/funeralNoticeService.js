@@ -152,7 +152,7 @@ const updateFuneralNotice = async (
         if (content) funeralNotice.content = content;
 
         funeralNotice.lastUpdatedBy = userId;
-        funeralNotice.lastUpdatedAt = new Date.now();
+        funeralNotice.lastUpdatedAt = Date.now();
 
         result = await post.save();
     } catch (error) {

@@ -65,7 +65,7 @@ const updateSection = async (sectionId, name, description, imageId, userId) => {
         };
 
         section.lastUpdatedBy = userId;
-        section.lastUpdatedAt = new Date.now();
+        section.lastUpdatedAt = Date.now();
 
         result = await section.save();
     }catch(error){

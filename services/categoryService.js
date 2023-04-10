@@ -49,7 +49,7 @@ const updateCategory = async (categoryId, name, userId) => {
         if(!category) throw new Error('Category not found');
 
         category.name = name;
-        category.lastUpdatedAt = new Date.now();
+        category.lastUpdatedAt = Date.now();
         category.lastUpdatedBy = userId;
         result = await category.save();
     } catch(error) {
