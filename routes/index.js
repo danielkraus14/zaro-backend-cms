@@ -97,7 +97,7 @@ routes.delete('/events/delete/:eventId', eventController.deleteEvent);
 routes.get('/file-folders', fileFolderController.getFileFolders);
 routes.get('/file-folders/:fileFolderSlug', fileFolderController.getFileFolderBySlug);
 routes.post('/file-folders/create', fileFolderController.createFileFolder);
-routes.put('/file-folders/update/:fileFolderSlug', printEditionController.updatePrintEdition);
+routes.put('/file-folders/update/:fileFolderSlug', fileFolderController.updateFileFolder);
 routes.delete('/file-folders/delete/:fileFolderSlug', fileFolderController.deleteFileFolder);
 
 // Files
