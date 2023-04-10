@@ -1,8 +1,9 @@
 const PrintEdition = require("../models/printEdition");
 const Tag = require("../models/tag");
+const File = require("../models/file");
+const User = require("../models/user");
 
-const { deleteFile } = require('../s3');
-
+const { deleteFile } = require('../services/fileService');
 
 const paginateOptions = {
     page: 1,
@@ -46,20 +47,20 @@ const getPrintEditionsByDate = async (date) => {
 
 const createPrintEdition = async (
     date,
-    frontPage,
-    newsletterPDF,
+    frontPageId,
+    newsletterPDFId,
     body,
-    tags
+    tags,
+    userId
 ) => {
     let result;
     try {
-        const frontPagePath = `https://${process.env.BUCKET_NAME_AWS}.s3.${process.env.BUCKET_REGION_AWS}.amazonaws.com/${frontPage}`
-        const newsletterPDFPath = `https://${process.env.BUCKET_NAME_AWS}.s3.${process.env.BUCKET_REGION_AWS}.amazonaws.com/${newsletterPDF}`
         const printEdition = new PrintEdition({
             date,
-            frontPage: frontPagePath,
-            newsletterPDF: newsletterPDFPath,
+            frontPage: frontPageId,
+            newsletterPDF: newsletterPDFId,
             body,
+            createdBy: userId
         });
         if (tags) {
             tags.map(async (tag) => {
@@ -75,6 +76,18 @@ const createPrintEdition = async (
                 }
             });
         };
+        if (frontPageId) {
+            const file = await File.findById(frontPageId);
+            if (!file) throw new Error("File not found");
+            file.printEditionFP = printEdition._id;
+            await file.save();
+        };
+        if (newsletterPDFId) {
+            const file = await File.findById(newsletterPDFId);
+            if (!file) throw new Error("File not found");
+            file.printEditionPDF = printEdition._id;
+            await file.save();
+        };
         result = await printEdition.save();
     } catch (error) {
         throw error;
@@ -85,10 +98,11 @@ const createPrintEdition = async (
 const updatePrintEdition = async (
     printEditionId,
     date,
-    frontPage,
-    newsletterPDF,
+    frontPageId,
+    newsletterPDFId,
     body,
-    tags
+    tags,
+    userId
 ) => {
     let result;
     try {
@@ -96,14 +110,26 @@ const updatePrintEdition = async (
         if (!printEdition) throw new Error("Print edition not found");
         if (date) printEdition.date = date;
         if (body) printEdition.body = body;
-        if (frontPage) {
-            const frontPagePath = `https://${process.env.BUCKET_NAME_AWS}.s3.${process.env.BUCKET_REGION_AWS}.amazonaws.com/${frontPage}`
-            printEdition.frontPage = frontPagePath;
+
+        if (frontPageId) {
+            if (printEdition.frontPage != frontPageId) {
+                const file = await File.findById(frontPageId);
+                if (!file) throw new Error("Image not found");
+                file.printEditionFP = printEdition._id;
+                await file.save();
+                printEdition.frontPage = frontPageId;
+            }
         };
-        if (newsletterPDF) {
-            const newsletterPDFPath = `https://${process.env.BUCKET_NAME_AWS}.s3.${process.env.BUCKET_REGION_AWS}.amazonaws.com/${newsletterPDF}`
-            printEdition.newsletterPDF = newsletterPDFPath;
+        if (newsletterPDFId) {
+            if (printEdition.newsletterPDF != newsletterPDFId) {
+                const file = await File.findById(newsletterPDFId);
+                if (!file) throw new Error("Image not found");
+                file.printEditionPDF = printEdition._id;
+                await file.save();
+                printEdition.newsletterPDF = newsletterPDFId;
+            }
         };
+
         if (tags) {
             tags.map(async (tag) => {
                 if (printEdition.tags.indexOf(tag) == -1) {
@@ -128,7 +154,11 @@ const updatePrintEdition = async (
                 }
             });
             printEdition.tags = tags;
-        }
+        };
+
+        printEdition.lastUpdatedBy = userId;
+        printEdition.lastUpdatedAt = new Date.now();
+
         result = await printEdition.save();
     } catch (error) {
         throw error;
@@ -141,13 +171,21 @@ const deletePrintEdition = async (printEditionId) => {
     try {
         const printEdition = await PrintEdition.findById(printEditionId);
         if (!printEdition) throw new Error("Print edition not found");
-        //Delete frontPage and newsletterPDF from S3 server
+
+        //Find the user and delete the printEdition._id from the user's print editions array
+        const user = await User.findById(printEdition.createdBy);
+        if (!user) throw new Error("User not found");
+        user.printEditions.pull(printEdition._id);
+        await user.save();
+
+        //Delete frontPage and newsletterPDF files
         if (printEdition.frontPage) {
             await deleteFile(printEdition.frontPage);
         };
         if (printEdition.newsletterPDF) {
             await deleteFile(printEdition.newsletterPDF);
         };
+
         result = await printEdition.remove();
     } catch (error) {
         throw error;

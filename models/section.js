@@ -11,19 +11,31 @@ const SectionSchema = new Schema({
         required: true
     },
     image: {
-        type: String,
-        required: true
-    },
-    date: {
-        type: Date,
-        default: Date.now
+        type: Schema.Types.ObjectId,
+        ref: 'File'
     },
     posts: [
         {
             type: Schema.Types.ObjectId,
             ref: 'Post'
         }
-    ]
+    ],
+    createdBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    lastUpdatedBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
+    lastUpdatedAt: {
+        type: Date,
+        required: false
+    }
 });
 
 module.exports = mongoose.model('Section', SectionSchema);

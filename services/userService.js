@@ -68,7 +68,9 @@ const deleteUser = async (userId) => {
             result = {error: 'User not found'};
             return result;
         }
-        result = await User.findByIdAndDelete(userId);
+        const user = await User.findById(userId);
+        user.isActive = false;
+        result = await User.save();
     }catch(error){
         throw error;
     }

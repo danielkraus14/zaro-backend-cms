@@ -9,10 +9,10 @@ const getFileFolders = async (req, res) => {
     }
 };
 
-const getFileFolderById = async (req, res) => {
+const getFileFolderBySlug = async (req, res) => {
     try{
-        const { fileFolderId } = req.params;
-        const fileFolder = await fileFolderService.getFileFolderById(fileFolderId);
+        const { fileFolderSlug } = req.params;
+        const fileFolder = await fileFolderService.getFileFolderBySlug(fileFolderSlug);
         res.status(200).send(fileFolder);
     }catch(error){
         res.status(400).send({error, message: 'File folder not found'});
@@ -21,9 +21,9 @@ const getFileFolderById = async (req, res) => {
 
 const createFileFolder = async (req, res) => {
     try{
-        const { name } = req.body;
-        const result = await fileFolderService.createFileFolder(name);
-        res.status(201).send({category: result});
+        const { name, userId } = req.body;
+        const result = await fileFolderService.createFileFolder(name, userId);
+        res.status(201).send({fileFolder: result});
     }catch(error){
         res.status(400).send({error, message: 'File folder already exists'});
     }
@@ -31,10 +31,10 @@ const createFileFolder = async (req, res) => {
 
 const updateFileFolder = async (req, res) => {
     try{
-        const { fileFolderId } = req.params;
-        const { name } = req.body;
-        const result = await fileFolderService.updateFileFolder(fileFolderId, name);
-        res.status(200).send({category: result});
+        const { fileFolderSlug } = req.params;
+        const { name, userId } = req.body;
+        const result = await fileFolderService.updateFileFolder(fileFolderSlug, name, userId);
+        res.status(200).send({fileFolder: result});
     }catch(error){
         res.status(400).send({error, message: 'File folder not found'});
     }
@@ -42,9 +42,9 @@ const updateFileFolder = async (req, res) => {
 
 const deleteFileFolder = async (req, res) => {
     try{
-        const { fileFolderId } = req.params;
-        const result = await fileFolderService.deleteFileFolder(fileFolderId);
-        res.status(204).send({category: result});
+        const { fileFolderSlug } = req.params;
+        const result = await fileFolderService.deleteFileFolder(fileFolderSlug);
+        res.status(204).send({fileFolder: result});
     }catch(error){
         res.status(400).send({error, message: 'File folder not found'});
     }
@@ -52,7 +52,7 @@ const deleteFileFolder = async (req, res) => {
 
 module.exports = {
     getFileFolders,
-    getFileFolderById,
+    getFileFolderBySlug,
     createFileFolder,
     updateFileFolder,
     deleteFileFolder

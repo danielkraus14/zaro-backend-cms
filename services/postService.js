@@ -3,9 +3,9 @@ const Post = require("../models/post");
 const Section = require("../models/section");
 const Category = require("../models/category");
 const Tag = require("../models/tag");
+const File = require("../models/file");
 
-const { deleteFile } = require('../s3');
-
+const { deleteFile } = require('../services/fileService');
 
 const paginateOptions = {
     page: 1,
@@ -89,16 +89,15 @@ const createPost = async (
     type,
     position,
     comments,
-    image,
+    imagesIds,
     sectionId,
     categoryId,
-    tags
+    tags,
+    status
 ) => {
     let result;
     try {
-        const imagePath = `https://${process.env.BUCKET_NAME_AWS}.s3.${process.env.BUCKET_REGION_AWS}.amazonaws.com/${image}`
         const post = new Post({
-            userId,
             title,
             subtitle,
             flywheel,
@@ -106,9 +105,11 @@ const createPost = async (
             type,
             position,
             comments,
-            image: imagePath,
-            sectionId,
-            categoryId,
+            images: imagesIds,
+            section: sectionId,
+            category: categoryId,
+            createdBy: userId,
+            status
         });
         const user = await User.findById(userId);
         if (!user) throw new Error("User not found");
@@ -129,7 +130,16 @@ const createPost = async (
                     tagFound.posts.push(post._id);
                 }
             });
-        }
+        };
+
+        if (imagesIds) {
+            imagesIds.map(async (imageId) => {
+                const image = await File.findById(imageId);
+                if (!image) throw new Error("Image not found");
+                image.post = post._id;
+                await image.save();
+            });
+        };
 
         if (!section) throw new Error("Section not found");
         if (!category) throw new Error("Category not found");
@@ -152,11 +162,16 @@ const updatePost = async (
     userId,
     title,
     subtitle,
+    flywheel,
     content,
-    image,
+    type,
+    position,
+    comments,
+    imagesIds,
     sectionId,
     categoryId,
-    tags
+    tags,
+    status
 ) => {
     let result;
     try {
@@ -165,10 +180,22 @@ const updatePost = async (
 
         if (title) post.title = title;
         if (subtitle) post.subtitle = subtitle;
+        if (flywheel) post.flywheel = flywheel;
         if (content) post.content = content;
-        if (image) {
-            const imagePath = `https://${process.env.BUCKET_NAME_AWS}.s3.${process.env.BUCKET_REGION_AWS}.amazonaws.com/${image}`
-            post.image = imagePath;
+        if (type) post.type = type;
+        if (position) post.position = position;
+        if (comments) post.comments = comments;
+        if (status) post.status = status;
+        if (imagesIds) {
+            imagesIds.map(async (imageId) => {
+                if (post.images.indexOf(imageId) == -1) {
+                    const image = await File.findById(imageId);
+                    if (!image) throw new Error("Image not found");
+                    image.post = post._id;
+                    await image.save();
+                };
+            });
+            post.images = imagesIds;
         }
         if (sectionId) {
             if (post.section != sectionId) {
@@ -220,8 +247,10 @@ const updatePost = async (
                 }
             });
             post.tags = tags;
-        }
+        };
 
+        post.lastUpdatedBy = userId;
+        post.lastUpdatedAt = new Date.now();
 
         result = await post.save();
     } catch (error) {
@@ -230,28 +259,34 @@ const updatePost = async (
     return result;
 };
 
-const deletePost = async (postId, userId) => {
+const deletePost = async (postId) => {
     let result;
     try {
         const post = await Post.findById(postId);
         if (!post) throw new Error("Post not found");
+
         //Find the user and delete the post._id from the user's posts array
-        const user = await User.findById(userId);
+        const user = await User.findById(post.createdBy);
         if (!user) throw new Error("User not found");
         user.posts.pull(post._id);
         await user.save();
+
         //Find the section and delete the post._id from the section's posts array
         const section = await Section.findById(post.section);
         section.posts.pull(post._id);
         await section.save();
+
         //Find the category and delete the post._id from the category's posts array
         const category = await Category.findById(post.category);
         category.posts.pull(post._id);
         await category.save();
-        //Delete image from S3 server
-        if (post.image) {
-            await deleteFile(post.image);
-        }
+
+        //Delete all images
+        if (post.images) {
+            post.images.map(async (imageId) => {
+                await deleteFile(imageId);
+            });
+        };
 
         result = await post.remove();
     } catch (error) {

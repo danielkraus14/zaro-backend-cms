@@ -11,9 +11,9 @@ const EventSchema = new Schema({
         type: String,
         required: false
     },
-    image: {
-        type: String,
-        required: true
+    billboard: {
+        type: Schema.Types.ObjectId,
+        ref: 'File'
     },
     dateStarts: {
         type: Date,
@@ -27,6 +27,22 @@ const EventSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Venue',
     },
+    createdBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    lastUpdatedBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
+    lastUpdatedAt: {
+        type: Date,
+        required: false
+    }
 });
 
 EventSchema.plugin(mongoosePaginate);

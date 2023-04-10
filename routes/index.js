@@ -40,7 +40,6 @@ routes.get('/sections', sectionController.getSections);
 routes.get('/section/:sectionId', sectionController.getSectionById);
 routes.post('/sections/create', sectionController.createSection);
 routes.put('/sections/update/:sectionId', sectionController.updateSection);
-routes.delete('/sections/delete/:sectionId', sectionController.deleteSection);
 
 // Categories
 routes.get('/categories', categoryController.getCategories);
@@ -66,16 +65,16 @@ routes.post('/tags/create', tagController.createTag);
 // Funeral Notices
 routes.get('/funeral-notices', funeralNoticeController.getFuneralNotices);
 routes.get('/funeral-notices/search', funeralNoticeController.searchFuneralNotice);
-routes.get('/funeral-notices/:religion', funeralNoticeController.getFuneralNoticesByReligion);
-routes.get('/funeral-notices/:date', funeralNoticeController.getFuneralNoticesByDate);
-routes.get('/funeral-notices/:status', funeralNoticeController.getFuneralNoticesByStatus);
+routes.get('/funeral-notices/religion/:religion', funeralNoticeController.getFuneralNoticesByReligion);
+routes.get('/funeral-notices/date/:date', funeralNoticeController.getFuneralNoticesByDate);
+routes.get('/funeral-notices/status/:status', funeralNoticeController.getFuneralNoticesByStatus);
 routes.post('/funeral-notices/create',  funeralNoticeController.createFuneralNotice);
 routes.put('/funeral-notices/update/:funeralNoticeId', funeralNoticeController.updateFuneralNotice);
 routes.delete('/funeral-notices/delete/:funeralNoticeId', funeralNoticeController.deleteFuneralNotice);
 
 // Print Editions
 routes.get('/print-edition', printEditionController.getPrintEditions);
-routes.get('/print-edition/:date', printEditionController.getPrintEditionsByDate);
+routes.get('/print-edition/date/:date', printEditionController.getPrintEditionsByDate);
 routes.post('/print-edition/create',  printEditionController.createPrintEdition);
 routes.put('/print-edition/update/:postId', printEditionController.updatePrintEdition);
 routes.delete('/print-edition/delete/:postId', printEditionController.deletePrintEdition);
@@ -90,17 +89,16 @@ routes.put('/venues/update/:venueId', venueController.updateVenue);
 routes.get('/events', eventController.getEvents);
 routes.get('/events/search', eventController.searchEvents);
 routes.get('/events/venue/:venueId', eventController.getEventsByVenue);
-routes.get('/events/date', eventController.getEventsByDate);
 routes.post('/events/create',  eventController.createEvent);
 routes.put('/events/update/:eventId', eventController.updateEvent);
 routes.delete('/events/delete/:eventId', eventController.deleteEvent);
 
 // File Folders
 routes.get('/file-folders', fileFolderController.getFileFolders);
-routes.get('/file-folders/:fileFolderId', fileFolderController.getFileFolderById);
+routes.get('/file-folders/:fileFolderSlug', fileFolderController.getFileFolderBySlug);
 routes.post('/file-folders/create', fileFolderController.createFileFolder);
-routes.put('/file-folders/update/:fileFolderId', printEditionController.updatePrintEdition);
-routes.delete('/file-folders/delete/:fileFolderId', fileFolderController.deleteFileFolder);
+routes.put('/file-folders/update/:fileFolderSlug', printEditionController.updatePrintEdition);
+routes.delete('/file-folders/delete/:fileFolderSlug', fileFolderController.deleteFileFolder);
 
 // Files
 routes.get('/files', fileController.getFiles);

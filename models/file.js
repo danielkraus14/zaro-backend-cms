@@ -14,6 +14,39 @@ const FileSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'FileFolder',
         required: true
+    },
+    post: {
+        type: Schema.Types.ObjectId,
+        ref: 'Post',
+        required: false
+    },
+    printEditionFP: {
+        type: Schema.Types.ObjectId,
+        ref: 'PrintEdition',
+        required: false
+    },
+    printEditionPDF: {
+        type: Schema.Types.ObjectId,
+        ref: 'PrintEdition',
+        required: false
+    },
+    event: {
+        type: Schema.Types.ObjectId,
+        ref: 'Event',
+        required: false
+    },
+    section: {
+        type: Schema.Types.ObjectId,
+        ref: 'Section',
+        required: false
+    },
+    createdBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
 });
 

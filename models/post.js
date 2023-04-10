@@ -2,8 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const mongoosePaginate = require('mongoose-paginate-v2');
 
-const postTypes = ['digital', 'print']
-const positionTypes = ['urgent', 'super_highlight', 'highlight', 'top', 'front', 'video', 'photo_galery', 'section']
+const postTypes = ['digital', 'print'];
+const positionTypes = ['urgent', 'super_highlight', 'highlight', 'top', 'front', 'video', 'photo_galery', 'section'];
+const statusTypes = ['draft', 'published', 'programmed'];
 
 const PostSchema = new Schema({
     title: {
@@ -39,32 +40,48 @@ const PostSchema = new Schema({
         required: true,
         default: true
     },
-    image: {
-        type: String,
-        required: true
-    },
-    date: {
-        type: Date,
-        default: Date.now
-    },
     tags: [
         {
             type: String,
             required: false
         }
     ],
+    images: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'File'
+        }
+    ],
     section: {
         type: Schema.Types.ObjectId,
-        ref: 'Section',
+        ref: 'Section'
     },
     category: {
         type: Schema.Types.ObjectId,
-        ref: 'Category',
+        ref: 'Category'
     },
     status: {
-        type: Schema.Types.ObjectId,
-        ref: 'Status',
+        type: String,
+        enum: statusTypes,
+        required: true,
+        default: 'published'
     },
+    createdBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    lastUpdatedBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
+    lastUpdatedAt: {
+        type: Date,
+        required: false
+    }
 });
 
 PostSchema.plugin(mongoosePaginate);

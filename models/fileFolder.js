@@ -8,7 +8,8 @@ const FileFolderSchema = new Schema({
     },
     slug: {
         type: String,
-        required: false
+        required: true,
+        unique: true
     },
     url: {
         type: String,
@@ -19,7 +20,23 @@ const FileFolderSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'File'
         }
-    ]
+    ],
+    createdBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    lastUpdatedBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
+    lastUpdatedAt: {
+        type: Date,
+        required: false
+    }
 });
 
 module.exports = mongoose.model('FileFolder', FileFolderSchema);

@@ -1,4 +1,3 @@
-const venue = require('../models/venue');
 const Venue = require('../models/venue');
 
 const paginateOptions = {
@@ -32,13 +31,14 @@ const getVenueById = async (venueId) => {
     return result;
 };
 
-const createVenue = async (name, description, address) => {
+const createVenue = async (name, description, address, userId) => {
     let result;
     try{
         const candidateVenue = new Venue({
             name,
             description,
             address,
+            createdBy: userId
         });
         result = await candidateVenue.save();
     }catch(error){
@@ -47,14 +47,19 @@ const createVenue = async (name, description, address) => {
     return result;
 };
 
-const updateVenue = async (venueId, name, description, address) => {
+const updateVenue = async (venueId, name, description, address, userId) => {
     let result;
     try{
-        const candidateVenue = await Venue.findById(venueId);
-        candidateVenue.name = name;
-        candidateVenue.description = description;
-        candidateVenue.address = address;
-        result = await candidateVenue.save();
+        const venue = await Venue.findById(venueId);
+        if (!venue) throw new Error("Venue not found");
+
+        venue.name = name;
+        venue.description = description;
+        venue.address = address;
+        venue.lastUpdatedAt = new Date.now();
+        venue.lastUpdatedBy = userId;
+
+        result = await venue.save();
     }catch(error){
         throw error;
     }

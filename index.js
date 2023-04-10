@@ -9,7 +9,7 @@ const fs = require('fs');
 const https = require('https');
 
 // Initial Setup
-const { createRoles, createStatus } = require('./libs/initialSetup');
+const { createRoles, createInitialFileFolders } = require('./libs/initialSetup');
 
 // Load env vars
 
@@ -18,7 +18,7 @@ dotenv.config();
 //Init express
 const app = express();
 createRoles();
-createStatus();
+createInitialFileFolders();
 
 // Cors
 app.use(cors(

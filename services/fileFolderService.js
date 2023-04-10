@@ -1,5 +1,8 @@
 const FileFolder = require('../models/fileFolder');
 const File = require('../models/file');
+
+const { deleteFile } = require('../services/fileService');
+
 const { deleteFileS3, createDirectoryS3 } = require('../s3');
 
 const getFileFolders = async () => {
@@ -16,10 +19,10 @@ const getFileFolders = async () => {
     return result;
 };
 
-const getFileFolderById = async (fileFolderId) => {
+const getFileFolderBySlug = async (fileFolderSlug) => {
     let result;
     try{
-        const fileFolder = await FileFolder.findById(fileFolderId);
+        const fileFolder = await FileFolder.findOne({ slug: fileFolderSlug });
         if(!fileFolder) throw new Error('File folder not found');
         result = fileFolder;
     } catch(error) {
@@ -28,14 +31,15 @@ const getFileFolderById = async (fileFolderId) => {
     return result;
 };
 
-const createFileFolder = async (name) => {
+const createFileFolder = async (name, userId) => {
     let result;
     try{
-        const slug = name.replace(/ /g, '_').toLowerCase();
-        const url = `https://${process.env.BUCKET_NAME_AWS}.s3.${process.env.BUCKET_REGION_AWS}.amazonaws.com/${slug}`
-        const newFileFolder = new FileFolder({ name, slug, url });
+        const rawSlug = name.replace(/ /g, '_').toLowerCase();
+        const slug = rawSlug.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+        const url = `https://${process.env.BUCKET_NAME_AWS}.s3.${process.env.BUCKET_REGION_AWS}.amazonaws.com/${slug}`;
+        const newFileFolder = new FileFolder({ name, slug, url, createdBy: userId });
 
-        const fileFolder = await FileFolder.findOne({ name });
+        const fileFolder = await FileFolder.findOne({ slug });
         if(fileFolder) throw new Error('File folder already exists');
 
         await createDirectoryS3(slug);
@@ -46,13 +50,15 @@ const createFileFolder = async (name) => {
     return result;
 };
 
-const updateFileFolder = async (fileFolderId, name) => {
+const updateFileFolder = async (fileFolderSlug, name, userId) => {
     let result;
     try{
-        const fileFolder = await FileFolder.findById(fileFolderId);
+        const fileFolder = await FileFolder.findOne({ slug: fileFolderSlug });
         if(!fileFolder) throw new Error('File folder not found');
 
         fileFolder.name = name;
+        fileFolder.lastUpdatedBy = userId;
+        fileFolder.lastUpdatedAt = new Date.now();
         result = await fileFolder.save();
     }
     catch(error){
@@ -61,17 +67,17 @@ const updateFileFolder = async (fileFolderId, name) => {
     return result;
 };
 
-const deleteFileFolder = async (fileFolderId) => {
+const deleteFileFolder = async (fileFolderSlug) => {
     let result;
     try{
 
-        const fileFolder = await FileFolder.findById(fileFolderId)
+        const fileFolder = await FileFolder.findOne({ slug: fileFolderSlug });
         if(!fileFolder) throw new Error('File folder not found');
 
-        for (const file of fileFolder.files) {
+        fileFolder.files.map(async (file) => {
             await deleteFileS3(file.filename);
-            await File.findByIdAndDelete(file._id);
-        };
+            await deleteFile(file._id);
+        });
 
         result = await fileFolder.remove();
     }catch(error){
@@ -82,7 +88,7 @@ const deleteFileFolder = async (fileFolderId) => {
 
 module.exports = {
     getFileFolders,
-    getFileFolderById,
+    getFileFolderBySlug,
     createFileFolder,
     updateFileFolder,
     deleteFileFolder

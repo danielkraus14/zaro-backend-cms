@@ -21,10 +21,10 @@ const getVenueById = async (req, res) => {
 };
 
 const createVenue = async (req, res) => {
-    const {name, description, address} = req.body;
+    const { name, description, address, userId } = req.body;
     let result;
     try{
-        result = await venueService.createVenue(name, description, address);
+        result = await venueService.createVenue(name, description, address, userId);
     }catch(error){
         console.log(error);
     }
@@ -34,8 +34,8 @@ const createVenue = async (req, res) => {
 const updateVenue = async (req, res) => {
     try{
         const { venueId } = req.params;
-        const { name, description, address } = req.body;
-        const result = await venueService.updateVenue(venueId, name, description, address);
+        const { name, description, address, userId } = req.body;
+        const result = await venueService.updateVenue(venueId, name, description, address, userId);
         res.status(200).send({venue: result});
     }catch(error){
         res.status(400).send({error, message: 'Section not found'});

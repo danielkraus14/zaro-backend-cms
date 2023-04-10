@@ -39,6 +39,16 @@ const UserSchema = new Schema({
             ref: 'FuneralNotice'
         }
     ],
+    events: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Event'
+        }
+    ],
+    isActive: {
+        type: Boolean,
+        default: true
+    }
 });
 
 UserSchema.pre("save", function(next) {

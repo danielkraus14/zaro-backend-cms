@@ -10,12 +10,12 @@ const PrintEditionSchema = new Schema({
         default: Date.now
     },
     frontPage: {
-        type: String,
-        required: true
+        type: Schema.Types.ObjectId,
+        ref: 'File'
     },
     newsletterPDF: {
-        type: String,
-        required: true
+        type: Schema.Types.ObjectId,
+        ref: 'File'
     },
     body: {
         type: String,
@@ -29,6 +29,22 @@ const PrintEditionSchema = new Schema({
             required: false
         }
     ],
+    createdBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+    },
+    lastUpdatedBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
+    lastUpdatedAt: {
+        type: Date,
+        required: false
+    }
 });
 
 PrintEditionSchema.plugin(mongoosePaginate);

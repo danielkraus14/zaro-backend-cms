@@ -25,7 +25,7 @@ const getFuneralNotices = async () => {
 const getFuneralNoticesByReligion = async (religion) => {
     let result;
     try {
-        await FuneralNotice.paginate({ religion: religion }, paginateOptions, function (err, res) {
+        await FuneralNotice.paginate({ religion }, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
@@ -59,7 +59,7 @@ const getFuneralNoticesByDate = async (date) => {
 const getFuneralNoticesByStatus = async (status) => {
     let result;
     try {
-        await FuneralNotice.paginate({ status: status }, paginateOptions, function (err, res) {
+        await FuneralNotice.paginate({ status }, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
@@ -106,7 +106,6 @@ const createFuneralNotice = async (
     let result;
     try {
         const funeralNotice = new FuneralNotice({
-            userId,
             title,
             deceased,
             client,
@@ -114,6 +113,7 @@ const createFuneralNotice = async (
             religion,
             status,
             content,
+            createdBy: userId
         });
         const user = await User.findById(userId);
         if (!user) throw new Error("User not found");
@@ -151,6 +151,9 @@ const updateFuneralNotice = async (
         if (status) funeralNotice.status = status;
         if (content) funeralNotice.content = content;
 
+        funeralNotice.lastUpdatedBy = userId;
+        funeralNotice.lastUpdatedAt = new Date.now();
+
         result = await post.save();
     } catch (error) {
         throw error;
@@ -158,13 +161,14 @@ const updateFuneralNotice = async (
     return result;
 };
 
-const deleteFuneralNotice = async (funeralNoticeId, userId) => {
+const deleteFuneralNotice = async (funeralNoticeId) => {
     let result;
     try {
         const funeralNotice = await FuneralNotice.findById(funeralNoticeId);
         if (!funeralNotice) throw new Error("Funeral notice not found");
+
         //Find the user and delete the funeralNotice._id from the user's funeral notices array
-        const user = await User.findById(userId);
+        const user = await User.findById(funeralNotice.createdBy);
         if (!user) throw new Error("User not found");
         user.funeralNotices.pull(funeralNotice._id);
         await user.save();

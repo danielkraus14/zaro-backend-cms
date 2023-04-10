@@ -26,10 +26,10 @@ const getCategoryById = async (categoryId) => {
     return result;
 };
 
-const createCategory = async (name) => {
+const createCategory = async (name, userId) => {
     let result;
     try{
-        const newCategory = new Category({ name });
+        const newCategory = new Category({ name, createdBy: userId });
 
         const category = await Category.findOne({ name });
         if(category) throw new Error('Category already exists');
@@ -42,13 +42,15 @@ const createCategory = async (name) => {
     return result;
 };
 
-const updateCategory = async (categoryId, name) => {
+const updateCategory = async (categoryId, name, userId) => {
     let result;
     try{
         const category = await Category.findById(categoryId);
         if(!category) throw new Error('Category not found');
 
         category.name = name;
+        category.lastUpdatedAt = new Date.now();
+        category.lastUpdatedBy = userId;
         result = await category.save();
     } catch(error) {
         throw error;

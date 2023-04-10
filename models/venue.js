@@ -20,7 +20,23 @@ const VenueSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Event'
         }
-    ]
+    ],
+    createdBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    lastUpdatedBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
+    lastUpdatedAt: {
+        type: Date,
+        required: false
+    }
 });
 
 VenueSchema.plugin(mongoosePaginate);

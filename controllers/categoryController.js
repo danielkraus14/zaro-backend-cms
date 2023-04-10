@@ -21,8 +21,8 @@ const getCategoryById = async (req, res) => {
 
 const createCategory = async (req, res) => {
     try{
-        const { name } = req.body;
-        const result = await categoryService.createCategory(name);
+        const { name, userId } = req.body;
+        const result = await categoryService.createCategory(name, userId);
         res.status(201).send({category: result});
     }catch(error){
         res.status(400).send({error, message: 'Category already exists'});
@@ -32,8 +32,8 @@ const createCategory = async (req, res) => {
 const updateCategory = async (req, res) => {
     try{
         const { categoryId } = req.params;
-        const { name } = req.body;
-        const result = await categoryService.updateCategory(categoryId, name);
+        const { name, userId } = req.body;
+        const result = await categoryService.updateCategory(categoryId, name, userId);
         res.status(200).send({category: result});
     }catch(error){
         res.status(400).send({error, message: 'Category not found'});

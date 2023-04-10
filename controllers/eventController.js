@@ -18,19 +18,10 @@ const getEventsByVenue = async (req, res) => {
     }
 };
 
-const getEventsByDate = async (req, res) => {
-    try{
-        const events = await eventService.getEventsByDate(req.query);
-        res.status(200).send(events);
-    } catch(error) {
-        res.status(400).send({error, message: "Something went wrong"});
-    }
-};
-
 const createEvent = async (req, res) => {
     try{
-        const { title, description, image, dateStarts, dateEnds, venue } = req.body;
-        const result = await eventService.createEvent(title, description, image, dateStarts, dateEnds, venue);
+        const { title, description, billboardId, dateStarts, dateEnds, venueId, userId } = req.body;
+        const result = await eventService.createEvent(title, description, billboardId, dateStarts, dateEnds, venueId, userId);
         res.status(201).send({event: result});
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});
@@ -39,8 +30,9 @@ const createEvent = async (req, res) => {
 
 const updateEvent = async (req, res) => {
     try{
-        const { title, description, image, dateStarts, dateEnds, venue } = req.body;
-        const result = await eventService.updateEvent(req.params.eventId, title, description, image, dateStarts, dateEnds, venue);
+        const { eventId } = req.params.eventId
+        const { title, description, billboardId, dateStarts, dateEnds, venueId, userId } = req.body;
+        const result = await eventService.updateEvent(eventId, title, description, billboardId, dateStarts, dateEnds, venueId, userId);
         res.status(200).send({event: result});
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});
@@ -68,7 +60,6 @@ const searchEvents = async (req, res) => {
 module.exports = {
     getEvents,
     getEventsByVenue,
-    getEventsByDate,
     createEvent,
     updateEvent,
     deleteEvent,

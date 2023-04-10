@@ -21,10 +21,11 @@ const readFileById = async (req, res) => {
 
 const createFile = async (req, res) => {
     try{
-        const { fileFolderId } = req.params;
-        const file = req.files.file
-        const result = await fileService.createFile(file, fileFolderId);
-        res.status(201).send({category: result});
+        const { fileFolderSlug } = req.params;
+        const { file } = req.files
+        const { userId } = req.body
+        const result = await fileService.createFile(file, fileFolderSlug, userId);
+        res.status(201).send({file: result});
     }catch(error){
         res.status(400).send({error, message: 'File already exists'});
     }
@@ -34,7 +35,7 @@ const deleteFile = async (req, res) => {
     try{
         const { fileId } = req.params;
         const result = await fileService.deleteFile(fileId);
-        res.status(204).send({category: result});
+        res.status(204).send({file: result});
     }catch(error){
         res.status(400).send({error, message: 'File not found'});
     }
