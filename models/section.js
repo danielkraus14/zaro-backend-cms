@@ -8,7 +8,7 @@ const SectionSchema = new Schema({
     },
     description: {
         type: String,
-        required: true
+        required: false
     },
     image: {
         type: Schema.Types.ObjectId,
@@ -27,7 +27,8 @@ const SectionSchema = new Schema({
     ],
     createdBy: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
     lastUpdatedBy: {
         type: Schema.Types.ObjectId,

@@ -33,7 +33,6 @@ const createSection = async (name, description, imageId, userId) => {
         const section = new Section( {
             name,
             description,
-            image: imageId,
             slug,
             createdBy: userId
         } );
@@ -43,6 +42,7 @@ const createSection = async (name, description, imageId, userId) => {
             if (!file) throw new Error("File not found");
             file.section = section._id;
             await file.save();
+            section.image = imageId;
         };
 
         result = await section.save();
