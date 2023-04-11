@@ -16,7 +16,7 @@ const getVenueById = async (req, res) => {
         const venue = await venueService.getVenueById(venueId);
         res.status(200).send(venue);
     }catch(error){
-        res.status(400).send({error, message: 'Section not found'});
+        res.status(400).send({error, message: 'Venue not found'});
     }
 };
 
@@ -38,7 +38,7 @@ const updateVenue = async (req, res) => {
         const result = await venueService.updateVenue(venueId, name, description, address, userId);
         res.status(200).send({venue: result});
     }catch(error){
-        res.status(400).send({error, message: 'Section not found'});
+        res.status(400).send({error, message: 'Venue not found'});
     }
 };
 
