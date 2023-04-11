@@ -37,23 +37,23 @@ routes.delete('/delete/:userId',  userController.deleteUser);
 
 // Sections
 routes.get('/sections', sectionController.getSections);
-routes.get('/section/:sectionId', sectionController.getSectionById);
+routes.get('/section/:sectionSlug', sectionController.getSectionBySlug);
 routes.post('/sections/create', sectionController.createSection);
-routes.put('/sections/update/:sectionId', sectionController.updateSection);
-routes.delete('/sections/delete/:sectionId', sectionController.deleteSection);
+routes.put('/sections/update/:sectionSlug', sectionController.updateSection);
+routes.delete('/sections/delete/:sectionSlug', sectionController.deleteSection);
 
 // Categories
 routes.get('/categories', categoryController.getCategories);
-routes.get('/categories/:categoryId', categoryController.getCategoryById);
+routes.get('/categories/:categorySlug', categoryController.getCategoryBySlug);
 routes.post('/categories/create', categoryController.createCategory);
-routes.put('/categories/update/:categoryId', categoryController.updateCategory);
-routes.delete('/categories/delete/:categoryId', categoryController.deleteCategory);
+routes.put('/categories/update/:categorySlug', categoryController.updateCategory);
+routes.delete('/categories/delete/:categorySlug', categoryController.deleteCategory);
 
 // Posts
 routes.get('/posts', postController.getPosts);
 routes.get('/posts/search', postController.searchPosts);
-routes.get('/posts/section/:sectionId', postController.getPostsBySection);
-routes.get('/posts/category/:categoryId', postController.getPostsByCategory);
+routes.get('/posts/section/:sectionSlug', postController.getPostsBySection);
+routes.get('/posts/category/:categorySlug', postController.getPostsByCategory);
 routes.post('/posts/create',  postController.createPost);
 routes.put('/posts/update/:postId', postController.updatePost);
 routes.delete('/posts/delete/:postId', postController.deletePost);

@@ -28,10 +28,12 @@ const getPosts = async () => {
     return result;
 };
 
-const getPostsBySection = async (sectionId) => {
+const getPostsBySection = async (sectionSlug) => {
     let result;
     try {
-        await Post.paginate({ section: sectionId }, paginateOptions, function (err, res) {
+        const section = await Section.findOne({ slug: sectionSlug });
+        if(!section) throw new Error('Section not found');
+        await Post.paginate({ section: section._id }, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
@@ -43,10 +45,12 @@ const getPostsBySection = async (sectionId) => {
     return result;
 };
 
-const getPostsByCategory = async (categoryId) => {
+const getPostsByCategory = async (categorySlug) => {
     let result;
     try {
-        await Post.paginate({ category: categoryId }, paginateOptions, function (err, res) {
+        const category = await Category.findOne({ slug: categorySlug });
+        if(!category) throw new Error('Category not found');
+        await Post.paginate({ category: category._id }, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }

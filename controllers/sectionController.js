@@ -10,10 +10,10 @@ const getSections = async (req, res) => {
     res.status(200).send(result);
 };
 
-const getSectionById = async (req, res) => {
+const getSectionBySlug = async (req, res) => {
     try{
-        const { sectionId } = req.params;
-        const section = await sectionService.getSectionById(sectionId);
+        const { sectionSlug } = req.params;
+        const section = await sectionService.getSectionBySlug(sectionSlug);
         res.status(200).send(section);
     }catch(error){
         res.status(400).send({error, message: 'Section not found'});
@@ -33,9 +33,9 @@ const createSection = async (req, res) => {
 
 const updateSection = async (req, res) => {
     try{
-        const { sectionId } = req.params;
+        const { sectionSlug } = req.params;
         const { name, description, imageId, userId } = req.body;
-        const result = await sectionService.updateSection(sectionId, name, description, imageId, userId);
+        const result = await sectionService.updateSection(sectionSlug, name, description, imageId, userId);
         res.status(200).send({section: result});
     }catch(error){
         res.status(400).send({error, message: 'Section not found'});
@@ -44,8 +44,8 @@ const updateSection = async (req, res) => {
 
 const deleteSection = async (req, res) => {
     try{
-        const { sectionId } = req.params;
-        const result = await sectionService.deleteSection(sectionId);
+        const { sectionSlug } = req.params;
+        const result = await sectionService.deleteSection(sectionSlug);
         res.status(204).send({section: result});
     }catch(error){
         res.status(400).send({error, message: 'Section not found'});
@@ -54,7 +54,7 @@ const deleteSection = async (req, res) => {
 
 module.exports = {
     getSections,
-    getSectionById,
+    getSectionBySlug,
     createSection,
     updateSection,
     deleteSection

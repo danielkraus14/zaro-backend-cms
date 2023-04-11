@@ -1,6 +1,8 @@
 const Section = require('../models/section');
 const File = require("../models/file");
 
+const { deletePost } = require('../services/postService');
+
 const getSections = async () => {
     let result;
     try{
@@ -11,10 +13,12 @@ const getSections = async () => {
     return result;
 };
 
-const getSectionById = async (sectionId) => {
+const getSectionBySlug = async (sectionSlug) => {
     let result;
     try{
-        result = await Section.findById(sectionId);
+        const section = await Section.findOne({ slug: sectionSlug });
+        if (!section) throw new Error("Section not found");
+        result = section;
     }catch(error){
         throw error;
     }
@@ -24,10 +28,13 @@ const getSectionById = async (sectionId) => {
 const createSection = async (name, description, imageId, userId) => {
     let result;
     try{
+        const rawSlug = name.replace(/ /g, '_').toLowerCase();
+        const slug = rawSlug.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
         const section = new Section( {
             name,
             description,
             image: imageId,
+            slug,
             createdBy: userId
         } );
 
@@ -45,10 +52,10 @@ const createSection = async (name, description, imageId, userId) => {
     return result;
 };
 
-const updateSection = async (sectionId, name, description, imageId, userId) => {
+const updateSection = async (sectionSlug, name, description, imageId, userId) => {
     let result;
     try{
-        const section = await Section.findById(sectionId);
+        const section = await Section.findOne({ slug: sectionSlug });
         if (!section) throw new Error("Section not found");
 
         section.name = name;
@@ -74,12 +81,16 @@ const updateSection = async (sectionId, name, description, imageId, userId) => {
     return result;
 };
 
-const deleteSection = async (sectionId) => {
+const deleteSection = async (sectionSlug) => {
     let result;
     try{
 
-        const section = await Section.findById(sectionId)
+        const section = await Section.findOne({ slug: sectionSlug });
         if(!section) throw new Error('Section not found');
+
+        for (const postId of section.posts) {
+            await deletePost(postId);
+        };
 
         result = await section.remove();
     } catch(error) {
@@ -90,7 +101,7 @@ const deleteSection = async (sectionId) => {
 
 module.exports = {
     getSections,
-    getSectionById,
+    getSectionBySlug,
     createSection,
     updateSection,
     deleteSection

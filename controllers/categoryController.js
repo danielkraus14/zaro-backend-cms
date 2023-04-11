@@ -9,10 +9,10 @@ const getCategories = async (req, res) => {
     }
 };
 
-const getCategoryById = async (req, res) => {
+const getCategoryBySlug = async (req, res) => {
     try{
-        const { categoryId } = req.params;
-        const category = await categoryService.getCategoryById(categoryId);
+        const { categorySlug } = req.params;
+        const category = await categoryService.getCategoryBySlug(categorySlug);
         res.status(200).send(category);
     }catch(error){
         res.status(400).send({error, message: 'Category not found'});
@@ -21,8 +21,8 @@ const getCategoryById = async (req, res) => {
 
 const createCategory = async (req, res) => {
     try{
-        const { name, userId } = req.body;
-        const result = await categoryService.createCategory(name, userId);
+        const { name, description, userId } = req.body;
+        const result = await categoryService.createCategory(name, description, userId);
         res.status(201).send({category: result});
     }catch(error){
         res.status(400).send({error, message: 'Category already exists'});
@@ -31,9 +31,9 @@ const createCategory = async (req, res) => {
 
 const updateCategory = async (req, res) => {
     try{
-        const { categoryId } = req.params;
-        const { name, userId } = req.body;
-        const result = await categoryService.updateCategory(categoryId, name, userId);
+        const { categorySlug } = req.params;
+        const { name, description, userId } = req.body;
+        const result = await categoryService.updateCategory(categorySlug, name, description, userId);
         res.status(200).send({category: result});
     }catch(error){
         res.status(400).send({error, message: 'Category not found'});
@@ -42,8 +42,8 @@ const updateCategory = async (req, res) => {
 
 const deleteCategory = async (req, res) => {
     try{
-        const { categoryId } = req.params;
-        const result = await categoryService.deleteCategory(categoryId);
+        const { categorySlug } = req.params;
+        const result = await categoryService.deleteCategory(categorySlug);
         res.status(204).send({category: result});
     }catch(error){
         res.status(400).send({error, message: 'Category not found'});
@@ -52,7 +52,7 @@ const deleteCategory = async (req, res) => {
 
 module.exports = {
     getCategories,
-    getCategoryById,
+    getCategoryBySlug,
     createCategory,
     updateCategory,
     deleteCategory

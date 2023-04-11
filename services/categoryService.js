@@ -1,5 +1,7 @@
 const Category = require('../models/category');
 
+const { deletePost } = require('../services/postService');
+
 const getCategories = async () => {
     let result;
     try{
@@ -14,10 +16,10 @@ const getCategories = async () => {
     return result;
 };
 
-const getCategoryById = async (categoryId) => {
+const getCategoryBySlug = async (categorySlug) => {
     let result;
     try{
-        const category = await Category.findById(categoryId);
+        const category = await Category.findOne({ slug: categorySlug });
         if(!category) throw new Error('Category not found');
         result = category;
     } catch(error) {
@@ -26,12 +28,14 @@ const getCategoryById = async (categoryId) => {
     return result;
 };
 
-const createCategory = async (name, userId) => {
+const createCategory = async (name, description, userId) => {
     let result;
     try{
-        const newCategory = new Category({ name, createdBy: userId });
+        const rawSlug = name.replace(/ /g, '_').toLowerCase();
+        const slug = rawSlug.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+        const newCategory = new Category({ name, slug, description, createdBy: userId });
 
-        const category = await Category.findOne({ name });
+        const category = await Category.findOne({ slug });
         if(category) throw new Error('Category already exists');
 
         result = await newCategory.save();
@@ -42,13 +46,14 @@ const createCategory = async (name, userId) => {
     return result;
 };
 
-const updateCategory = async (categoryId, name, userId) => {
+const updateCategory = async (categorySlug, name, description, userId) => {
     let result;
     try{
-        const category = await Category.findById(categoryId);
+        const category = await Category.findOne({ slug: categorySlug });
         if(!category) throw new Error('Category not found');
 
         category.name = name;
+        category.description = description;
         category.lastUpdatedAt = Date.now();
         category.lastUpdatedBy = userId;
         result = await category.save();
@@ -58,12 +63,16 @@ const updateCategory = async (categoryId, name, userId) => {
     return result;
 };
 
-const deleteCategory = async (categoryId) => {
+const deleteCategory = async (categorySlug) => {
     let result;
     try{
 
-        const category = await Category.findById(categoryId)
+        const category = await Category.findOne({ slug: categorySlug });
         if(!category) throw new Error('Category not found');
+
+        for (const postId of category.posts) {
+            await deletePost(postId);
+        };
 
         result = await category.remove();
     } catch(error) {
@@ -74,7 +83,7 @@ const deleteCategory = async (categoryId) => {
 
 module.exports = {
     getCategories,
-    getCategoryById,
+    getCategoryBySlug,
     createCategory,
     updateCategory,
     deleteCategory

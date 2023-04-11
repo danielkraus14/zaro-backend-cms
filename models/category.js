@@ -10,6 +10,11 @@ const CategorySchema = new Schema({
         type: String,
         required: false
     },
+    slug: {
+        type: String,
+        required: true,
+        unique: true
+    },
     posts: [
         {
             type: Schema.Types.ObjectId,

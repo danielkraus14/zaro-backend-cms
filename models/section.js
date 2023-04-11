@@ -14,6 +14,11 @@ const SectionSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'File'
     },
+    slug: {
+        type: String,
+        required: true,
+        unique: true
+    },
     posts: [
         {
             type: Schema.Types.ObjectId,

@@ -11,7 +11,7 @@ const getPosts = async (req, res) => {
 
 const getPostsBySection = async (req, res) => {
     try{
-        const posts = await postService.getPostsBySection(req.params.sectionId);
+        const posts = await postService.getPostsBySection(req.params.sectionSlug);
         res.status(200).send(posts);
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});
@@ -20,7 +20,7 @@ const getPostsBySection = async (req, res) => {
 
 const getPostsByCategory = async (req, res) => {
     try{
-        const posts = await postService.getPostsByCategory(req.params.categoryId);
+        const posts = await postService.getPostsByCategory(req.params.categorySlug);
         res.status(200).send(posts);
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});
