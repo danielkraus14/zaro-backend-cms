@@ -40,6 +40,7 @@ routes.get('/sections', sectionController.getSections);
 routes.get('/section/:sectionId', sectionController.getSectionById);
 routes.post('/sections/create', sectionController.createSection);
 routes.put('/sections/update/:sectionId', sectionController.updateSection);
+routes.delete('/sections/delete/:sectionId', sectionController.deleteSection);
 
 // Categories
 routes.get('/categories', categoryController.getCategories);

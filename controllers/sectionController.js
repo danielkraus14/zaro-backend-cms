@@ -42,9 +42,20 @@ const updateSection = async (req, res) => {
     }
 };
 
+const deleteSection = async (req, res) => {
+    try{
+        const { sectionId } = req.params;
+        const result = await sectionService.deleteSection(sectionId);
+        res.status(204).send({section: result});
+    }catch(error){
+        res.status(400).send({error, message: 'Section not found'});
+    }
+};
+
 module.exports = {
     getSections,
     getSectionById,
     createSection,
-    updateSection
+    updateSection,
+    deleteSection
 };

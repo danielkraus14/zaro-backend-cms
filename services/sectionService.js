@@ -74,9 +74,24 @@ const updateSection = async (sectionId, name, description, imageId, userId) => {
     return result;
 };
 
+const deleteSection = async (sectionId) => {
+    let result;
+    try{
+
+        const section = await Section.findById(sectionId)
+        if(!section) throw new Error('Section not found');
+
+        result = await section.remove();
+    } catch(error) {
+        throw error;
+    }
+    return result;
+};
+
 module.exports = {
     getSections,
     getSectionById,
     createSection,
-    updateSection
+    updateSection,
+    deleteSection
 };
