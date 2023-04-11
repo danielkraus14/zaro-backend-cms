@@ -27,7 +27,7 @@ const createSection = async (req, res) => {
         result = await sectionService.createSection(name, description, imageId, userId);
         res.status(201).send(result);
     }catch(error){
-        res.status(400).send({error, message: 'Category already exists'});
+        res.status(400).send({error, message: 'Section already exists'});
     }
 };
 
