@@ -22,7 +22,7 @@ const getFileFolders = async () => {
 const getFileFolderBySlug = async (fileFolderSlug) => {
     let result;
     try{
-        const fileFolder = await FileFolder.findOne({ slug: fileFolderSlug });
+        const fileFolder = await FileFolder.findOne({ slug: fileFolderSlug }).populate('files', 'url');
         if(!fileFolder) throw new Error('File folder not found');
         result = fileFolder;
     } catch(error) {
