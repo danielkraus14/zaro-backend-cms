@@ -37,7 +37,7 @@ routes.delete('/delete/:userId',  userController.deleteUser);
 
 // Sections
 routes.get('/sections', sectionController.getSections);
-routes.get('/section/:sectionSlug', sectionController.getSectionBySlug);
+routes.get('/sections/:sectionSlug', sectionController.getSectionBySlug);
 routes.post('/sections/create', sectionController.createSection);
 routes.put('/sections/update/:sectionSlug', sectionController.updateSection);
 routes.delete('/sections/delete/:sectionSlug', sectionController.deleteSection);
