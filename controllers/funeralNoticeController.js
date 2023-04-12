@@ -13,7 +13,7 @@ const getFuneralNoticeById = async (req, res) => {
     try{
         const { funeralNoticeId } = req.params;
         const funeralNotice = await funeralNoticeService.getFuneralNoticeById(funeralNoticeId);
-        res.status(200).send(post);
+        res.status(200).send(funeralNotice);
     }catch(error){
         res.status(400).send({error, message: 'Funeral notice not found'});
     }
@@ -72,7 +72,7 @@ const deleteFuneralNotice = async (req, res) => {
         const { userId } = req.body;
         const { funeralNoticeId } = req.params;
         const result = await funeralNoticeService.deleteFuneralNotice(funeralNoticeId, userId);
-        res.status(200).send({funeralNotice: result});
+        res.status(204).send({funeralNotice: result});
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});
     }
@@ -81,7 +81,7 @@ const deleteFuneralNotice = async (req, res) => {
 const searchFuneralNotice = async (req, res) => {
     try{
         const result = await funeralNoticeService.searchFuneralNotice(req.query);
-        res.status(204).send(result);
+        res.status(200).send(result);
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong when searching funeral notices"});
     }

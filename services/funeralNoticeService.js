@@ -119,14 +119,15 @@ const createFuneralNotice = async (
             title,
             deceased,
             client,
-            date,
-            religion,
-            status,
             content,
             createdBy: userId
         });
         const user = await User.findById(userId);
         if (!user) throw new Error("User not found");
+
+        if (date) funeralNotice.date = date;
+        if (religion) funeralNotice.religion = religion;
+        if (status) funeralNotice.status = status;
 
         user.funeralNotices.push(funeralNotice._id);
         await user.save();
@@ -164,7 +165,7 @@ const updateFuneralNotice = async (
         funeralNotice.lastUpdatedBy = userId;
         funeralNotice.lastUpdatedAt = Date.now();
 
-        result = await post.save();
+        result = await funeralNotice.save();
     } catch (error) {
         throw error;
     }
