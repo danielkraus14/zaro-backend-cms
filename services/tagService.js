@@ -3,7 +3,7 @@ const Tag = require('../models/tag');
 const getTags = async () => {
     let result;
     try{
-        result = await Tag.find().populate('posts');
+        result = await Tag.find().populate('posts').populate('printEditions');
     }catch(error){
         throw error;
     }
@@ -13,7 +13,7 @@ const getTags = async () => {
 const getTagsByName = async (tagName) => {
     let result;
     try{
-        result = await Tag.findOne({ name: tagName }).populate('posts');
+        result = await Tag.findOne({ name: tagName }).populate('posts').populate('printEditions');
     }catch(error){
         throw error;
     }
