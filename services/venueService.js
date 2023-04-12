@@ -81,7 +81,7 @@ const deleteVenue = async (venueSlug) => {
             await deleteEvent(eventId);
         };
 
-        result = await category.remove();
+        result = await venue.remove();
     } catch(error) {
         throw error;
     }
