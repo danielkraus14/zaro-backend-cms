@@ -30,7 +30,7 @@ const createEvent = async (req, res) => {
 
 const updateEvent = async (req, res) => {
     try{
-        const { eventId } = req.params.eventId
+        const { eventId } = req.params
         const { title, description, billboardId, dateStarts, dateEnds, venueId, userId } = req.body;
         const result = await eventService.updateEvent(eventId, title, description, billboardId, dateStarts, dateEnds, venueId, userId);
         res.status(200).send({event: result});
