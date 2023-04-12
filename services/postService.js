@@ -130,7 +130,7 @@ const createPost = async (
         if (type) post.type = type;
         if (position) post.position = position;
         if (tags) {
-            tags.map(async (tag) => {
+            for (const tag of tags) {
                 const tagFound = await Tag.findOne({ name: tag });
                 if (!tagFound) {
                     const newTag = new Tag({ name: tag });
@@ -142,16 +142,16 @@ const createPost = async (
                     post.tags.push(tagFound.name);
                     tagFound.posts.push(post._id);
                 }
-            });
+            };
         };
 
         if (imagesIds) {
-            imagesIds.map(async (imageId) => {
+            for (const imageId of imagesIds) {
                 const image = await File.findById(imageId);
                 if (!image) throw new Error("Image not found");
                 image.post = post._id;
                 await image.save();
-            });
+            };
             post.images = imagesIds;
         };
 
@@ -201,14 +201,14 @@ const updatePost = async (
         if (comments) post.comments = comments;
         if (status) post.status = status;
         if (imagesIds) {
-            imagesIds.map(async (imageId) => {
+            for (const imageId of imagesIds) {
                 if (post.images.indexOf(imageId) == -1) {
                     const image = await File.findById(imageId);
                     if (!image) throw new Error("Image not found");
                     image.post = post._id;
                     await image.save();
                 };
-            });
+            };
             post.images = imagesIds;
         }
         if (sectionId) {
@@ -238,7 +238,7 @@ const updatePost = async (
             }
         }
         if (tags) {
-            tags.map(async (tag) => {
+            for (const tag of tags) {
                 if (post.tags.indexOf(tag) == -1) {
                     const tagFound = await Tag.findOne({ name: tag });
                     if (!tagFound) {
@@ -249,9 +249,9 @@ const updatePost = async (
                         tagFound.posts.push(post._id);
                         await tagFound.save();
                     }
-                }
-            });
-            post.tags.map(async (tag) => {
+                };
+            };
+            for (const tag of post.tags) {
                 if (tags.indexOf(tag) == -1) {
                     const tagFound = await Tag.findOne({ name: tag });
                     if (tagFound) {
@@ -259,7 +259,7 @@ const updatePost = async (
                         await tagFound.save();
                     }
                 }
-            });
+            };
             post.tags = tags;
         };
 
@@ -297,9 +297,9 @@ const deletePost = async (postId) => {
 
         //Delete all images
         if (post.images) {
-            post.images.map(async (imageId) => {
+            for (const imageId of post.images) {
                 await deleteFile(imageId);
-            });
+            };
         };
 
         result = await post.remove();

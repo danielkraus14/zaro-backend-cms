@@ -63,7 +63,7 @@ const createPrintEdition = async (
             createdBy: userId
         });
         if (tags) {
-            tags.map(async (tag) => {
+            for (const tag of tags) {
                 const tagFound = await Tag.findOne({ name: tag });
                 if (!tagFound) {
                     const newTag = new Tag({ name: tag });
@@ -74,7 +74,7 @@ const createPrintEdition = async (
                     printEdition.tags.push(tagFound.name);
                     tagFound.printEditions.push(printEdition._id);
                 }
-            });
+            };
         };
         if (frontPageId) {
             const file = await File.findById(frontPageId);
@@ -131,7 +131,7 @@ const updatePrintEdition = async (
         };
 
         if (tags) {
-            tags.map(async (tag) => {
+            for (const tag of tags) {
                 if (printEdition.tags.indexOf(tag) == -1) {
                     const tagFound = await Tag.findOne({ name: tag });
                     if (!tagFound) {
@@ -143,8 +143,8 @@ const updatePrintEdition = async (
                         await tagFound.save();
                     }
                 }
-            });
-            printEdition.tags.map(async (tag) => {
+            };
+            for (const tag of printEdition.tags) {
                 if (tags.indexOf(tag) == -1) {
                     const tagFound = await Tag.findOne({ name: tag });
                     if (tagFound) {
@@ -152,7 +152,7 @@ const updatePrintEdition = async (
                         await tagFound.save();
                     }
                 }
-            });
+            };
             printEdition.tags = tags;
         };
 
