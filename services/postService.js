@@ -28,6 +28,16 @@ const getPosts = async () => {
     return result;
 };
 
+const getPostById = async (postId) => {
+    let result;
+    try{
+        result = await Post.findById(postId);
+    }catch(error){
+        throw error;
+    }
+    return result;
+};
+
 const getPostsBySection = async (sectionSlug) => {
     let result;
     try {
@@ -106,20 +116,19 @@ const createPost = async (
             subtitle,
             flywheel,
             content,
-            type,
-            position,
-            comments,
-            images: imagesIds,
             section: sectionId,
             category: categoryId,
-            createdBy: userId,
-            status
+            createdBy: userId
         });
         const user = await User.findById(userId);
         if (!user) throw new Error("User not found");
 
-        const section = await Section.findById(section);
-        const category = await Category.findById(category);
+        const section = await Section.findById(sectionId);
+        const category = await Category.findById(categoryId);
+        if (status) post.status = status;
+        if (comments) post.comments = comments;
+        if (type) post.type = type;
+        if (position) post.position = position;
         if (tags) {
             tags.map(async (tag) => {
                 const tagFound = await Tag.findOne({ name: tag });
@@ -143,6 +152,7 @@ const createPost = async (
                 image.post = post._id;
                 await image.save();
             });
+            post.images = imagesIds;
         };
 
         if (!section) throw new Error("Section not found");
@@ -301,10 +311,11 @@ const deletePost = async (postId) => {
 
 module.exports = {
     getPosts,
-    createPost,
-    searchPosts,
+    getPostById,
     getPostsBySection,
     getPostsByCategory,
+    createPost,
+    searchPosts,
     updatePost,
     deletePost,
 };

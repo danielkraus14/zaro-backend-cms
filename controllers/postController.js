@@ -9,6 +9,16 @@ const getPosts = async (req, res) => {
     }
 };
 
+const getPostById = async (req, res) => {
+    try{
+        const { postId } = req.params;
+        const post = await postService.getPostById(postId);
+        res.status(200).send(post);
+    }catch(error){
+        res.status(400).send({error, message: 'Post not found'});
+    }
+};
+
 const getPostsBySection = async (req, res) => {
     try{
         const posts = await postService.getPostsBySection(req.params.sectionSlug);
@@ -98,6 +108,7 @@ const searchPosts = async (req, res) => {
 
 module.exports = {
     getPosts,
+    getPostById,
     getPostsBySection,
     getPostsByCategory,
     createPost,
