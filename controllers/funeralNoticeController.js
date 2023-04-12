@@ -9,6 +9,16 @@ const getFuneralNotices = async (req, res) => {
     }
 };
 
+const getFuneralNoticeById = async (req, res) => {
+    try{
+        const { funeralNoticeId } = req.params;
+        const funeralNotice = await funeralNoticeService.getFuneralNoticeById(funeralNoticeId);
+        res.status(200).send(post);
+    }catch(error){
+        res.status(400).send({error, message: 'Funeral notice not found'});
+    }
+};
+
 const getFuneralNoticesByReligion = async (req, res) => {
     try{
         const funeralNotices = await funeralNoticeService.getFuneralNoticesByReligion(req.params.religion);
@@ -79,6 +89,7 @@ const searchFuneralNotice = async (req, res) => {
 
 module.exports = {
     getFuneralNotices,
+    getFuneralNoticeById,
     getFuneralNoticesByReligion,
     getFuneralNoticesByDate,
     getFuneralNoticesByStatus,

@@ -66,6 +66,7 @@ routes.post('/tags/create', tagController.createTag);
 
 // Funeral Notices
 routes.get('/funeral-notices', funeralNoticeController.getFuneralNotices);
+routes.get('/funeral-notices/id/:funeralNoticeId', funeralNoticeController.getFuneralNoticeById);
 routes.get('/funeral-notices/search', funeralNoticeController.searchFuneralNotice);
 routes.get('/funeral-notices/religion/:religion', funeralNoticeController.getFuneralNoticesByReligion);
 routes.get('/funeral-notices/date/:date', funeralNoticeController.getFuneralNoticesByDate);

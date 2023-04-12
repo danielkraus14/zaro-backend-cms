@@ -22,6 +22,16 @@ const getFuneralNotices = async () => {
     return result;
 };
 
+const getFuneralNoticeById = async (funeralNoticeId) => {
+    let result;
+    try{
+        result = await FuneralNotice.findById(funeralNoticeId);
+    }catch(error){
+        throw error;
+    }
+    return result;
+};
+
 const getFuneralNoticesByReligion = async (religion) => {
     let result;
     try {
@@ -182,6 +192,7 @@ const deleteFuneralNotice = async (funeralNoticeId) => {
 
 module.exports = {
     getFuneralNotices,
+    getFuneralNoticeById,
     createFuneralNotice,
     searchFuneralNotice,
     getFuneralNoticesByReligion,
