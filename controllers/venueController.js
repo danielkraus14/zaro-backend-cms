@@ -46,9 +46,9 @@ const deleteVenue = async (req, res) => {
     try{
         const { venueSlug } = req.params;
         const result = await venueService.deleteVenue(venueSlug);
-        res.status(204).send({category: result});
+        res.status(204).send({venue: result});
     }catch(error){
-        res.status(400).send({error, message: 'Category not found'});
+        res.status(400).send({error, message: 'Venue not found'});
     }
 };
 
