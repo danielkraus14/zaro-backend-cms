@@ -40,14 +40,14 @@ const createVenue = async (name, description, address, userId) => {
     try{
         const rawSlug = name.replace(/ /g, '_').toLowerCase();
         const slug = rawSlug.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-        const candidateVenue = new Venue({
+        const venue = new Venue({
             name,
             description,
             address,
             slug,
             createdBy: userId
         });
-        result = await candidateVenue.save();
+        result = await venue.save();
     }catch(error){
         throw error;
     }
