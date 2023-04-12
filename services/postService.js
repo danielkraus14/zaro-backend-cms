@@ -283,17 +283,14 @@ const deletePost = async (postId) => {
         const user = await User.findById(post.createdBy);
         if (!user) throw new Error("User not found");
         user.posts.pull(post._id);
-        await user.save();
 
         //Find the section and delete the post._id from the section's posts array
         const section = await Section.findById(post.section);
         section.posts.pull(post._id);
-        await section.save();
 
         //Find the category and delete the post._id from the category's posts array
         const category = await Category.findById(post.category);
         category.posts.pull(post._id);
-        await category.save();
 
         //Delete all images
         if (post.images) {
@@ -302,6 +299,9 @@ const deletePost = async (postId) => {
             };
         };
 
+        await category.save();
+        await section.save();
+        await user.save();
         result = await post.remove();
     } catch (error) {
         throw error;
