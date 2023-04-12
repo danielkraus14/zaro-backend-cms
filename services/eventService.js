@@ -61,12 +61,14 @@ const searchEvents = async (search) => {
             query.title = { $regex: new RegExp(search.title), $options: "i" };
         };
         if (search.dateFrom) {
-            search.dateFrom.setUTCHours(0, 0, 0, 0);
-            query.dateEnds = { $gte: dateFrom };
+            const date = new Date(search.dateFrom);
+            date.setUTCHours(0, 0, 0, 0);
+            query.dateEnds = { $gte: date };
         };
         if (search.dateUntil) {
-            search.dateUntil.setUTCHours(23, 59, 59, 999);
-            query.dateStarts = { $lte: dateUntil };
+            const date = new Date(search.dateUntil);
+            date.setUTCHours(23, 59, 59, 999);
+            query.dateStarts = { $lte: date };
         };
         await Event.paginate(query, paginateOptions, function(err, res){
         if (err) {
