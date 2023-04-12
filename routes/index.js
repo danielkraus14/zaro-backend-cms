@@ -95,7 +95,7 @@ routes.delete('/venues/delete/:venueSlug', venueController.deleteVenue);
 routes.get('/events', eventController.getEvents);
 routes.get('/events/id/:eventId', eventController.getEventById);
 routes.get('/events/search', eventController.searchEvents);
-routes.get('/events/venue/:venueId', eventController.getEventsByVenue);
+routes.get('/events/venue/:venueSlug', eventController.getEventsByVenue);
 routes.post('/events/create',  eventController.createEvent);
 routes.put('/events/update/:eventId', eventController.updateEvent);
 routes.delete('/events/delete/:eventId', eventController.deleteEvent);

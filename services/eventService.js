@@ -36,10 +36,12 @@ const getEventById = async (eventId) => {
     return result;
 };
 
-const getEventsByVenue = async (venueId) => {
+const getEventsByVenue = async (venueSlug) => {
     let result;
     try {
-        await Event.paginate({ venue: venueId }, paginateOptions, function(err, res){
+        const venue = await Venue.findOne({ slug: venueSlug });
+        if (!venue) throw new Error("Venue not found");
+        await Event.paginate({ venue: venue._id }, paginateOptions, function(err, res){
             if (err) {
                 throw err;
             }

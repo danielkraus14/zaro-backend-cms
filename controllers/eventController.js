@@ -21,7 +21,7 @@ const getEventById = async (req, res) => {
 
 const getEventsByVenue = async (req, res) => {
     try{
-        const events = await eventService.getEventsByVenue(req.params.venueId);
+        const events = await eventService.getEventsByVenue(req.params.venueSlug);
         res.status(200).send(events);
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});
