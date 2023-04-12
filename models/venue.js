@@ -15,6 +15,11 @@ const VenueSchema = new Schema({
         type: String,
         required: true
     },
+    slug: {
+        type: String,
+        required: true,
+        unique: true
+    },
     events: [
         {
             type: Schema.Types.ObjectId,

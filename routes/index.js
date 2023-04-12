@@ -86,9 +86,10 @@ routes.delete('/print-edition/delete/:postId', printEditionController.deletePrin
 
 // Venues
 routes.get('/venues', venueController.getVenues);
-routes.get('/venues/:venueId', venueController.getVenueById);
+routes.get('/venues/:venueSlug', venueController.getVenueBySlug);
 routes.post('/venues/create', venueController.createVenue);
-routes.put('/venues/update/:venueId', venueController.updateVenue);
+routes.put('/venues/update/:venueSlug', venueController.updateVenue);
+routes.delete('/venues/delete/:venueSlug', venueController.deleteVenue);
 
 // Events
 routes.get('/events', eventController.getEvents);

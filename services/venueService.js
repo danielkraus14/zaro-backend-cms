@@ -1,5 +1,7 @@
 const Venue = require('../models/venue');
 
+const { deleteEvent } = require('../services/eventService');
+
 const paginateOptions = {
     page: 1,
     limit: 15,
@@ -21,10 +23,12 @@ const getVenues = async () => {
     return result;
 };
 
-const getVenueById = async (venueId) => {
+const getVenueBySlug = async (venueSlug) => {
     let result;
     try{
-        result = await Venue.findById(venueId);
+        const venue = await Venue.findOne({ slug: venueSlug });
+        if(!venue) throw new Error('Venue not found');
+        result = venue;
     }catch(error){
         throw error;
     }
@@ -47,10 +51,10 @@ const createVenue = async (name, description, address, userId) => {
     return result;
 };
 
-const updateVenue = async (venueId, name, description, address, userId) => {
+const updateVenue = async (venueSlug, name, description, address, userId) => {
     let result;
     try{
-        const venue = await Venue.findById(venueId);
+        const venue = await Venue.findOne({ slug: venueSlug });
         if (!venue) throw new Error("Venue not found");
 
         venue.name = name;
@@ -66,9 +70,28 @@ const updateVenue = async (venueId, name, description, address, userId) => {
     return result;
 };
 
+const deleteVenue = async (venueSlug) => {
+    let result;
+    try{
+
+        const venue = await Venue.findOne({ slug: venueSlug });
+        if(!venue) throw new Error('Venue not found');
+
+        for (const eventId of venue.events) {
+            await deleteEvent(eventId);
+        };
+
+        result = await category.remove();
+    } catch(error) {
+        throw error;
+    }
+    return result;
+};
+
 module.exports = {
     getVenues,
-    getVenueById,
+    getVenueBySlug,
     createVenue,
     updateVenue,
+    deleteVenue
 };
