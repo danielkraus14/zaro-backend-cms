@@ -54,11 +54,13 @@ const PostSchema = new Schema({
     ],
     section: {
         type: Schema.Types.ObjectId,
-        ref: 'Section'
+        ref: 'Section',
+        required: true
     },
     category: {
         type: Schema.Types.ObjectId,
-        ref: 'Category'
+        ref: 'Category',
+        required: true
     },
     status: {
         type: String,
