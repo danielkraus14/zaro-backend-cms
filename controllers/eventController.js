@@ -9,6 +9,16 @@ const getEvents = async (req, res) => {
     }
 };
 
+const getEventById = async (req, res) => {
+    try{
+        const { eventId } = req.params;
+        const event = await eventService.getEventById(eventId);
+        res.status(200).send(event);
+    }catch(error){
+        res.status(400).send({error, message: 'Event not found'});
+    }
+};
+
 const getEventsByVenue = async (req, res) => {
     try{
         const events = await eventService.getEventsByVenue(req.params.venueId);
@@ -59,6 +69,7 @@ const searchEvents = async (req, res) => {
 
 module.exports = {
     getEvents,
+    getEventById,
     getEventsByVenue,
     createEvent,
     updateEvent,

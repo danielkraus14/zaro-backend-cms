@@ -26,6 +26,16 @@ const getEvents = async () => {
     return result;
 };
 
+const getEventById = async (eventId) => {
+    let result;
+    try{
+        result = await Event.findById(eventId);
+    }catch(error){
+        throw error;
+    }
+    return result;
+};
+
 const getEventsByVenue = async (venueId) => {
     let result;
     try {
@@ -198,6 +208,7 @@ const deleteEvent = async (eventId) => {
 
 module.exports = {
     getEvents,
+    getEventById,
     getEventsByVenue,
     searchEvents,
     createEvent,
