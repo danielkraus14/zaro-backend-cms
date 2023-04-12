@@ -30,10 +30,12 @@ const { userSchema } = require('../controllers/schemas');
 // Routes
 
 // Users
+routes.get('/users', userSchema, userController.getUsers);
+routes.get('/users/id/:userId', userSchema, userController.getUserById);
 routes.post('/signup', userSchema, userController.signUpUser);
 routes.post('/signin', userSchema, userController.signInUser);
-routes.put('/update/:userId', userController.updateUser);
-routes.delete('/delete/:userId',  userController.deleteUser);
+routes.put('/users/update/:userId', userController.updateUser);
+routes.delete('/users/delete/:userId',  userController.deleteUser);
 
 // Sections
 routes.get('/sections', sectionController.getSections);

@@ -1,6 +1,26 @@
 const User = require('../models/user');
 const Role = require('../models/role');
 
+const getUsers = async () => {
+    let result;
+    try{
+        result = await User.find();
+    }catch(error){
+        throw error;
+    }
+    return result;
+};
+
+const getUserById = async (userId) => {
+    let result;
+    try{
+        result = await User.findById(userId);
+    }catch(error){
+        throw error;
+    }
+    return result;
+};
+
 const signUpUser = async (email, username, password, role) => {
     let result;
     try{
@@ -37,8 +57,8 @@ const signInUser = async (email, username, password) => {
     let result;
     try{
         const candidateUser = new User( {
-            email, 
-            username, 
+            email,
+            username,
             password
         } );
 
@@ -85,11 +105,12 @@ const updateUser = async (userId, email, username, password, role) => {
             result = {error: 'User not found'};
             return result;
         }
-        const candidateUser = new User( {
-            email, 
-            username, 
-            password, 
-            role} );
+        const candidateUser = new User({
+            email,
+            username,
+            password,
+            role
+        });
         result = await User.findByIdAndUpdate(userId, candidateUser, {new: true});
     }catch(error){
         throw error;
@@ -99,6 +120,8 @@ const updateUser = async (userId, email, username, password, role) => {
 
 
 module.exports = {
+    getUsers,
+    getUserById,
     signUpUser,
     signInUser,
     deleteUser,
