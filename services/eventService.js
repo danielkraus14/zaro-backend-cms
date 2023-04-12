@@ -82,9 +82,6 @@ const createEvent = async (
         const event = new Event({
             title,
             description,
-            billboard: billboardId,
-            dateStarts,
-            dateEnds,
             venue: venueId,
             createdBy: userId
         });
@@ -99,7 +96,10 @@ const createEvent = async (
             if (!file) throw new Error("File not found");
             file.event = event._id;
             await file.save();
+            event.billboard = billboardId;
         };
+        if (dateStarts) event.dateStarts = dateStarts;
+        if (dateEnds) event.dateEnds = dateEnds;
 
         user.events.push(event._id);
         await user.save();
@@ -134,6 +134,7 @@ const updateEvent = async (
             if (event.billboard != billboardId) {
                 const file = await File.findById(billboardId);
                 if (!file) throw new Error("Image not found");
+                await deleteFile(event.billboard);
                 file.event = event._id;
                 await file.save();
                 event.billboard = billboardId;
