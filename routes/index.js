@@ -51,7 +51,7 @@ routes.delete('/categories/delete/:categorySlug', categoryController.deleteCateg
 
 // Posts
 routes.get('/posts', postController.getPosts);
-routes.get('/posts/:postId', postController.getPostById);
+routes.get('/posts/id/:postId', postController.getPostById);
 routes.get('/posts/search', postController.searchPosts);
 routes.get('/posts/section/:sectionSlug', postController.getPostsBySection);
 routes.get('/posts/category/:categorySlug', postController.getPostsByCategory);
