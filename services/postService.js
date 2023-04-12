@@ -209,6 +209,11 @@ const updatePost = async (
                     await image.save();
                 };
             };
+            for (const imageId of post.images) {
+                if (imagesIds.indexOf(imageId) == -1) {
+                    await deleteImage(imageId);
+                };
+            };
             post.images = imagesIds;
         }
         if (sectionId) {
