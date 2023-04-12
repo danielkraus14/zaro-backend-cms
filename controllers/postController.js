@@ -19,6 +19,15 @@ const getPostById = async (req, res) => {
     }
 };
 
+const searchPosts = async (req, res) => {
+    try{
+        const result = await postService.searchPosts(req.query);
+        res.status(200).send(result);
+    } catch(error) {
+        res.status(400).send({error, message: "Something went wrong when searching posts"});
+    }
+};
+
 const getPostsBySection = async (req, res) => {
     try{
         const posts = await postService.getPostsBySection(req.params.sectionSlug);
@@ -90,18 +99,9 @@ const updatePost = async (req, res) => {
 const deletePost = async (req, res) => {
     try{
         const result = await postService.deletePost(req.params.postId);
-        res.status(200).send({post: result});
+        res.status(204).send({post: result});
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});
-    }
-};
-
-const searchPosts = async (req, res) => {
-    try{
-        const result = await postService.searchPosts(req.query);
-        res.status(200).send(result);
-    } catch(error) {
-        res.status(400).send({error, message: "Something went wrong when searching posts"});
     }
 };
 
@@ -109,10 +109,10 @@ const searchPosts = async (req, res) => {
 module.exports = {
     getPosts,
     getPostById,
+    searchPosts,
     getPostsBySection,
     getPostsByCategory,
     createPost,
     updatePost,
-    deletePost,
-    searchPosts,
+    deletePost
 };
