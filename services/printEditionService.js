@@ -66,12 +66,11 @@ const createPrintEdition = async (
     let result;
     try {
         const printEdition = new PrintEdition({
-            date,
-            frontPage: frontPageId,
-            newsletterPDF: newsletterPDFId,
-            body,
             createdBy: userId
         });
+        if (date) printEdition.date = date;
+        if (body) printEdition.body = body;
+
         if (tags) {
             for (const tag of tags) {
                 const tagFound = await Tag.findOne({ name: tag });
@@ -86,18 +85,23 @@ const createPrintEdition = async (
                 }
             };
         };
+
         if (frontPageId) {
             const file = await File.findById(frontPageId);
             if (!file) throw new Error("File not found");
             file.printEditionFP = printEdition._id;
             await file.save();
+            printEdition.frontPage = frontPageId;
         };
+
         if (newsletterPDFId) {
             const file = await File.findById(newsletterPDFId);
             if (!file) throw new Error("File not found");
             file.printEditionPDF = printEdition._id;
             await file.save();
+            printEdition.newsletterPDF = newsletterPDFId;
         };
+
         result = await printEdition.save();
     } catch (error) {
         throw error;
@@ -185,8 +189,7 @@ const deletePrintEdition = async (printEditionId) => {
         //Find the user and delete the printEdition._id from the user's print editions array
         const user = await User.findById(printEdition.createdBy);
         if (!user) throw new Error("User not found");
-        user.printEditions.pull(printEdition._id);
-        await user.save();
+        if (user.printEditions.indexOf(printEdition._id) != -1) user.printEditions.pull(printEdition._id);
 
         //Delete frontPage and newsletterPDF files
         if (printEdition.frontPage) {
@@ -196,6 +199,7 @@ const deletePrintEdition = async (printEditionId) => {
             await deleteFile(printEdition.newsletterPDF);
         };
 
+        await user.save();
         result = await printEdition.remove();
     } catch (error) {
         throw error;
