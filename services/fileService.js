@@ -74,8 +74,8 @@ const deleteFile = async (fileId) => {
 
         if (file.post) {
             const post = await Post.findById(file.post);
-            if(!post) throw new Error('Post not found');
-            post.images.pull(file._id);
+            if (!post) throw new Error('Post not found');
+            if (post.images.indexOf(file._id) != -1) post.images.pull(file._id);
             await post.save();
         };
         if (file.printEditionFP) {
