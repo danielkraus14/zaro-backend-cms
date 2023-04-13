@@ -83,14 +83,10 @@ const signInUser = async (email, username, password) => {
 const deleteUser = async (userId) => {
     let result;
     try{
-        const userFound = await User.findById(userId);
-        if(!userFound){
-            result = {error: 'User not found'};
-            return result;
-        }
         const user = await User.findById(userId);
+        if (!user) throw new Error('User not found');
         user.isActive = false;
-        result = await User.save();
+        result = await user.save();
     }catch(error){
         throw error;
     }
