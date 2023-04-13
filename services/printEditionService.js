@@ -129,6 +129,7 @@ const updatePrintEdition = async (
             if (printEdition.frontPage != frontPageId) {
                 const file = await File.findById(frontPageId);
                 if (!file) throw new Error("Image not found");
+                await deleteFile(printEdition.frontPage);
                 file.printEditionFP = printEdition._id;
                 await file.save();
                 printEdition.frontPage = frontPageId;
@@ -138,6 +139,7 @@ const updatePrintEdition = async (
             if (printEdition.newsletterPDF != newsletterPDFId) {
                 const file = await File.findById(newsletterPDFId);
                 if (!file) throw new Error("Image not found");
+                await deleteFile(printEdition.newsletterPDF);
                 file.printEditionPDF = printEdition._id;
                 await file.save();
                 printEdition.newsletterPDF = newsletterPDFId;
