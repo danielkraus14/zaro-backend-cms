@@ -79,9 +79,25 @@ const createDirectoryS3 = async(slug) => {
     }
 };
 
+const deleteDirectoryS3 = async (slug) => {
+    try {
+        const params = {
+            Bucket: AWS_BUCKET_NAME,
+            Key: `${slug}/`
+        };
+        const command = new DeleteObjectCommand(params);
+        const response = await s3.send(command);
+        return response;
+    } catch(err) {
+        console.error(err);
+        throw err;
+    }
+};
+
 module.exports = {
     uploadFileS3,
     readFileS3,
     deleteFileS3,
-    createDirectoryS3
+    createDirectoryS3,
+    deleteDirectoryS3
 };

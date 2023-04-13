@@ -3,7 +3,7 @@ const File = require('../models/file');
 
 const { deleteFile } = require('../services/fileService');
 
-const { deleteFileS3, createDirectoryS3 } = require('../s3');
+const { deleteFileS3, createDirectoryS3, deleteDirectoryS3 } = require('../s3');
 
 const getFileFolders = async () => {
     let result;
@@ -79,7 +79,7 @@ const deleteFileFolder = async (fileFolderSlug) => {
             await deleteFileS3(file.filename);
             await deleteFile(fileId);
         }
-
+        await deleteDirectoryS3(fileFolder.slug);
         result = await fileFolder.remove();
     }catch(error){
         throw error;
