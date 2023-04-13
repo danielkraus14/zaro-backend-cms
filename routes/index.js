@@ -79,7 +79,7 @@ routes.delete('/funeral-notices/delete/:funeralNoticeId', funeralNoticeControlle
 
 // Print Editions
 routes.get('/print-editions', printEditionController.getPrintEditions);
-routes.put('/print-editions/id/:printEditionId', printEditionController.getPrintEditionById);
+routes.get('/print-editions/id/:printEditionId', printEditionController.getPrintEditionById);
 routes.get('/print-editions/date/:date', printEditionController.getPrintEditionsByDate);
 routes.post('/print-editions/create',  printEditionController.createPrintEdition);
 routes.put('/print-editions/update/:printEditionId', printEditionController.updatePrintEdition);
