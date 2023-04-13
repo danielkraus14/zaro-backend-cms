@@ -33,4 +33,4 @@ module.exports  =  {
     getTags,
     getTagsByName,
     createTag
-}
+};

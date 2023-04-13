@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const mongoosePaginate = require('mongoose-paginate-v2');
 
-const CategorySchema = new Schema({
+const VenueSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -10,21 +11,24 @@ const CategorySchema = new Schema({
         type: String,
         required: false
     },
+    address: {
+        type: String,
+        required: true
+    },
     slug: {
         type: String,
         required: true,
         unique: true
     },
-    posts: [
+    events: [
         {
             type: Schema.Types.ObjectId,
-            ref: 'Post'
+            ref: 'Event'
         }
     ],
     createdBy: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+        ref: 'User'
     },
     lastUpdatedBy: {
         type: Schema.Types.ObjectId,
@@ -40,4 +44,6 @@ const CategorySchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('Category', CategorySchema);
+VenueSchema.plugin(mongoosePaginate);
+
+module.exports = mongoose.model('Venue', VenueSchema);

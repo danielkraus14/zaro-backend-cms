@@ -1,79 +1,103 @@
 const dotenv = require('dotenv');
-const {S3Client, PutObjectCommand, GetObjectCommand, ListObjectsCommand, DeleteObjectCommand} = require('@aws-sdk/client-s3');
-const {getSignedUrl} = require('@aws-sdk/s3-request-presigner')
-const fs = require('fs');
-const dateFns = require('date-fns');
+const { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner')
 
 const AWS_BUCKET_NAME=process.env.BUCKET_NAME_AWS
 const AWS_BUCKET_REGION=process.env.BUCKET_REGION_AWS
 const AWS_PUBLICK_KEY=process.env.PUBLICK_KEY_AWS
 const AWS_SECRET_KEY=process.env.SECRET_KEY_AWS
 
-const client = new S3Client({
-    region: AWS_BUCKET_REGION,
+const s3 = new S3Client({
     credentials: {
         accessKeyId: AWS_PUBLICK_KEY,
-        secretAccessKey: AWS_SECRET_KEY,
-    }
+        secretAccessKey: AWS_SECRET_KEY
+    },
+    region: AWS_BUCKET_REGION
 });
 
-async function getFiles() {
-    const params = {
-        Bucket: AWS_BUCKET_NAME,
-    };
-    const data = await client.send(new ListObjectsCommand(params));
-    return data.Contents;
-}
-
-async function uploadFile(file) {
-
-    const stream = fs.createReadStream(file.tempFilePath);
-
-    const year = dateFns.format(new Date(), 'yyyy');
-    const month = dateFns.format(new Date(), 'MM');
-    const day = dateFns.format(new Date(), 'dd');
-
-    //replace spaces with underscores
-    const nameFormat = file.name.replace(/ /g, '_');
-    const fileName = `${year}/${month}/${day}_${nameFormat}`;
-
-    const params = {
-        Bucket: AWS_BUCKET_NAME,
-        Key: fileName,
-        Body: stream
-    };
-    await client.send(new PutObjectCommand(params));
-
-    return fileName;
-    
+const uploadFileS3 = async (file, filename) => {
+    try {
+        const params = {
+            Bucket: AWS_BUCKET_NAME,
+            Key: filename,
+            Body: file.data
+        };
+        const command = new PutObjectCommand(params);
+        const response = await s3.send(command);
+        console.log(`File uploaded successfully in bucket ${AWS_BUCKET_NAME}`);
+        return response;
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
 };
 
-async function readFile(fileName) {
-    const params = {
-        Bucket: AWS_BUCKET_NAME,
-        Key: fileName,
-    };
+const readFileS3 = async (filename) => {
+    try {
+        const params = {
+            Bucket: AWS_BUCKET_NAME,
+            Key: filename,
+        };
+        const command = new GetObjectCommand(params);
+        const response = await getSignedUrl(s3, command, { expiresIn: 36000 });
+        return response;
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
 
-    const command = new GetObjectCommand(params);
-    const data = await getSignedUrl(client, command, { expiresIn: 36000 });
-    return data;
-    //data.Body.pipe(fs.createWriteStream(`./uploads/images/${fileName}`));
+const deleteFileS3 = async (filename) => {
+    try {
+        const params = {
+            Bucket: AWS_BUCKET_NAME,
+            Key: filename,
+        };
+        const command = new DeleteObjectCommand(params);
+        const response = await s3.send(command);
+        return response;
+    } catch(err) {
+        console.error(err);
+        throw err;
+    }
+};
 
-}
+const createDirectoryS3 = async(slug) => {
+    try {
+        const params = {
+            Bucket: AWS_BUCKET_NAME,
+            Key: `${slug}/`,
+            Body: ''
+        };
+        const command = new PutObjectCommand(params);
+        const response = await s3.send(command);
+        console.log(`Successfully created directory ${slug} in bucket ${AWS_BUCKET_NAME}`);
+        return response;
+    } catch(err) {
+        console.error(err);
+        throw err;
+    }
+};
 
-async function deleteFile(fileName) {
-    const params = {
-        Bucket: AWS_BUCKET_NAME,
-        Key: fileName,
-    };
-    const data = await client.send(new DeleteObjectCommand(params));
-    return data;
-}
-
+const deleteDirectoryS3 = async (slug) => {
+    try {
+        const params = {
+            Bucket: AWS_BUCKET_NAME,
+            Key: `${slug}/`
+        };
+        const command = new DeleteObjectCommand(params);
+        const response = await s3.send(command);
+        return response;
+    } catch(err) {
+        console.error(err);
+        throw err;
+    }
+};
 
 module.exports = {
-    getFiles,
-    uploadFile,
-    readFile,
-    deleteFile
+    uploadFileS3,
+    readFileS3,
+    deleteFileS3,
+    createDirectoryS3,
+    deleteDirectoryS3
 };

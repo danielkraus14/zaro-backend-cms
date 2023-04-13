@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const mongoosePaginate = require('mongoose-paginate-v2');
 
+const postTypes = ['digital', 'print'];
+const positionTypes = ['urgent', 'super_highlight', 'highlight', 'top', 'front', 'video', 'photo_galery', 'section'];
+const statusTypes = ['draft', 'published', 'programmed'];
+
 const PostSchema = new Schema({
     title: {
         type: String,
@@ -11,17 +15,30 @@ const PostSchema = new Schema({
         type: String,
         required: false
     },
+    flywheel: {
+        type: String,
+        required: false
+    },
     content: {
         type: String,
         required: true
     },
-    image: {
+    type: {
         type: String,
-        required: true
+        enum: postTypes,
+        required: true,
+        default: 'digital'
     },
-    date: {
-        type: Date,
-        default: Date.now
+    position: {
+        type: String,
+        enum: positionTypes,
+        required: true,
+        default: 'section'
+    },
+    comments: {
+        type: Boolean,
+        required: true,
+        default: true
     },
     tags: [
         {
@@ -29,18 +46,44 @@ const PostSchema = new Schema({
             required: false
         }
     ],
+    images: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'File'
+        }
+    ],
     section: {
         type: Schema.Types.ObjectId,
         ref: 'Section',
+        required: true
     },
     category: {
         type: Schema.Types.ObjectId,
         ref: 'Category',
+        required: true
     },
     status: {
-        type: Schema.Types.ObjectId,
-        ref: 'Status',
+        type: String,
+        enum: statusTypes,
+        required: true,
+        default: 'published'
     },
+    createdBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    lastUpdatedBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
+    lastUpdatedAt: {
+        type: Date,
+        required: false
+    }
 });
 
 PostSchema.plugin(mongoosePaginate);

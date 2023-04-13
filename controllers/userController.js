@@ -1,12 +1,31 @@
-const User = require('../models/user');
 const { validationResult } = require('express-validator');
 const { authService, userService } = require('../services');
+
+const getUsers = async (req, res) => {
+    let result;
+    try{
+        result = await userService.getUsers();
+        res.status(200).send(result);
+    }catch(error){
+        res.status(404).send({error, message: 'User not found'});
+    }
+};
+
+const getUserById = async (req, res) => {
+    try{
+        const { userId } = req.params;
+        const user = await userService.getUserById(userId);
+        res.status(200).send(user);
+    }catch(error){
+        res.status(404).send({error, message: 'User not found'});
+    }
+};
 
 const signUpUser = async (req, res) => {
     try{
         const resulValidationReq = validationResult(req);
         const isValidReq = resulValidationReq.isEmpty();
-        
+
         if(!isValidReq){
             return res.status(400).send({message: 'Invalid request', error: resulValidationReq.array()});
         }
@@ -29,7 +48,7 @@ const signInUser = async (req, res) => {
         if(!isValidReq){
             return res.status(400).send({message: 'Invalid request', error: resulValidationReq.array()});
         }
-    
+
         const { email, username, password} = req.body;
         result =  await userService.signInUser(email, username, password).catch(
             error => {
@@ -50,7 +69,7 @@ const deleteUser = async (req, res) => {
         result = await userService.deleteUser(userId);
         res.status(200).send({message: 'User deleted', user: result});
     }catch(error){
-        res.status(400).send(error);
+        res.status(404).send(error);
     }
 };
 
@@ -64,12 +83,14 @@ const updateUser = async (req, res) => {
     }catch(error){
         res.status(400).send(error);
     }
-}
+};
 
 
 module.exports = {
+    getUsers,
+    getUserById,
     signUpUser,
     signInUser,
     deleteUser,
     updateUser
-}
+};

@@ -1,5 +1,7 @@
 const Role = require('../models/role');
-const Status = require('../models/status');
+const FileFolder = require('../models/fileFolder');
+
+const { createFileFolder } = require('../services/fileFolderService')
 
 const createRoles = async () => {
     try {
@@ -17,16 +19,35 @@ const createRoles = async () => {
     }
 }
 
-const createStatus = async () => {
+const createInitialFileFolders = async () => {
     try {
-        const count = await Status.estimatedDocumentCount();
-        if(count > 0) return;
-        const values = await Promise.all([
-            new Status({name: 'draft'}).save(),
-            new Status({name: 'published'}).save(),
-            new Status({name: 'programed'}).save()
-        ]);
-        console.log(values);
+        const postsFileFolder = await FileFolder.findOne({ name: process.env.POSTS_FILE_FOLDER_NAME });
+        if (!postsFileFolder) {
+            const postsFileFolder = await createFileFolder(process.env.POSTS_FILE_FOLDER_NAME);
+            postsFileFolder.collectionName = 'post';
+            await postsFileFolder.save();
+        };
+
+        const printEditionsFileFolder = await FileFolder.findOne({ name: process.env.PRINT_EDITIONS_FILE_FOLDER_NAME });
+        if (!printEditionsFileFolder) {
+            const printEditionsFileFolder = await createFileFolder(process.env.PRINT_EDITIONS_FILE_FOLDER_NAME);
+            printEditionsFileFolder.collectionName = 'printEdition';
+            await printEditionsFileFolder.save();
+        };
+
+        const eventsFileFolder = await FileFolder.findOne({ name: process.env.EVENTS_FILE_FOLDER_NAME });
+        if (!eventsFileFolder) {
+            const eventsFileFolder = await createFileFolder(process.env.EVENTS_FILE_FOLDER_NAME);
+            eventsFileFolder.collectionName = 'event';
+            await eventsFileFolder.save();
+        };
+
+        const sectionsFileFolder = await FileFolder.findOne({ name: process.env.SECTIONS_FILE_FOLDER_NAME });
+        if (!sectionsFileFolder) {
+            const sectionsFileFolder = await createFileFolder(process.env.SECTIONS_FILE_FOLDER_NAME);
+            sectionsFileFolder.collectionName = 'section';
+            await sectionsFileFolder.save();
+        };
     } catch (error) {
         console.error(error);
     }
@@ -35,5 +56,5 @@ const createStatus = async () => {
 
 module.exports = {
     createRoles,
-    createStatus
+    createInitialFileFolders
 };

@@ -33,6 +33,28 @@ const UserSchema = new Schema({
             ref: 'Post'
         }
     ],
+    printEditions: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'PrintEdition'
+        }
+    ],
+    funeralNotices: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'FuneralNotice'
+        }
+    ],
+    events: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Event'
+        }
+    ],
+    isActive: {
+        type: Boolean,
+        default: true
+    }
 });
 
 UserSchema.pre("save", function(next) {

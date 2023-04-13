@@ -1,30 +1,37 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const CategorySchema = new Schema({
+const collectionNames = ['post', 'printEdition', 'event', 'section'];
+
+const FileFolderSchema = new Schema({
     name: {
         type: String,
         required: true
-    },
-    description: {
-        type: String,
-        required: false
     },
     slug: {
         type: String,
         required: true,
         unique: true
     },
-    posts: [
+    url: {
+        type: String,
+        required: false
+    },
+    files: [
         {
             type: Schema.Types.ObjectId,
-            ref: 'Post'
+            ref: 'File'
         }
     ],
+    collectionName: {
+        type: String,
+        enum: collectionNames,
+        required: false
+    },
     createdBy: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: false
     },
     lastUpdatedBy: {
         type: Schema.Types.ObjectId,
@@ -40,4 +47,4 @@ const CategorySchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('Category', CategorySchema);
+module.exports = mongoose.model('FileFolder', FileFolderSchema);

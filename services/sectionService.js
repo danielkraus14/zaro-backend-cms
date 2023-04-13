@@ -1,4 +1,8 @@
 const Section = require('../models/section');
+const File = require("../models/file");
+
+const { deletePost } = require('../services/postService');
+const { deleteFile } = require('../services/fileService');
 
 const getSections = async () => {
     let result;
@@ -10,49 +14,103 @@ const getSections = async () => {
     return result;
 };
 
-const getSectionById = async (sectionId) => {
+const getSectionBySlug = async (sectionSlug) => {
     let result;
     try{
-        result = await Section.findById(sectionId);
+        const section = await Section.findOne({ slug: sectionSlug });
+        if (!section) throw new Error("Section not found");
+        result = section;
     }catch(error){
         throw error;
     }
     return result;
 };
 
-const createSection = async (name, description, image) => {
+const createSection = async (name, description, imageId, userId) => {
     let result;
     try{
-        const candidateSection = new Section( {
-            name, 
-            description, 
-            image
+        const rawSlug = name.replace(/ /g, '_').toLowerCase();
+        const slug = rawSlug.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+        const section = new Section( {
+            name,
+            description,
+            slug,
+            createdBy: userId
         } );
-        result = await candidateSection.save();
+
+        if (imageId) {
+            const file = await File.findById(imageId);
+            if (!file) throw new Error("File not found");
+            file.section = section._id;
+            await file.save();
+            section.image = imageId;
+        };
+
+        result = await section.save();
     }catch(error){
         throw error;
     }
     return result;
 };
 
-const updateSection = async (sectionId, name, description, image) => {
+const updateSection = async (sectionSlug, name, description, imageId, userId) => {
     let result;
     try{
-        const candidateSection = await Section.findById(sectionId);
-        candidateSection.name = name;
-        candidateSection.description = description;
-        candidateSection.image = image;
-        result = await candidateSection.save();
+        const section = await Section.findOne({ slug: sectionSlug });
+        if (!section) throw new Error("Section not found");
+
+        section.name = name;
+        section.description = description;
+
+        if (imageId) {
+            if (section.image != imageId) {
+                const file = await File.findById(imageId);
+                if (!file) throw new Error("Image not found");
+                await deleteFile(section.image);
+                file.section = section._id;
+                await file.save();
+                section.image = imageId;
+            }
+        };
+
+        section.lastUpdatedBy = userId;
+        section.lastUpdatedAt = Date.now();
+
+        result = await section.save();
     }catch(error){
         throw error;
     }
     return result;
 };
 
+const deleteSection = async (sectionSlug) => {
+    let result;
+    try{
+
+        const section = await Section.findOne({ slug: sectionSlug });
+        if(!section) throw new Error('Section not found');
+
+        //Delete all posts in section
+        for (const postId of section.posts) {
+            await deletePost(postId);
+        };
+
+        //Delete image from S3 server
+        if (section.image) {
+            await deleteFile(section.image);
+        };
+
+        result = await section.remove();
+    } catch(error) {
+        throw error;
+    }
+    return result;
+};
 
 module.exports = {
     getSections,
-    getSectionById,
+    getSectionBySlug,
     createSection,
-    updateSection
-}
+    updateSection,
+    deleteSection
+};

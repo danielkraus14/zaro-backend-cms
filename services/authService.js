@@ -1,6 +1,4 @@
 const jwt = require('jsonwebtoken');
-const {DateTime} = require('luxon');
-
 
 const createToken = (user) => {
     const payload = {
@@ -22,7 +20,7 @@ const decodeToken = (token) => {
             message: 'Invalid token'
         }
     }
-}
+};
 
 module.exports = {
     createToken,

@@ -11,6 +11,12 @@ const TagSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Post'
         }
+    ],
+    printEditions: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'PrintEdition'
+        }
     ]
 });
 

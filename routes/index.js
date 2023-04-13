@@ -2,12 +2,19 @@ const express = require('express');
 const routes = express.Router();
 
 // Import controllers
-const { 
+const {
     userController,
+    roleController,
     postController,
     sectionController,
     categoryController,
-    tagController
+    tagController,
+    funeralNoticeController,
+    printEditionController,
+    fileController,
+    fileFolderController,
+    venueController,
+    eventController
 } = require('../controllers');
 
 // Import Auth Middlewares
@@ -23,43 +30,93 @@ const { userSchema } = require('../controllers/schemas');
 
 // Routes
 
+// Roles
+routes.get('/roles', roleController.getRoles);
+routes.get('/roles/id/:roleId', roleController.getRoleById);
+
 // Users
+routes.get('/users', userSchema, userController.getUsers);
+routes.get('/users/id/:userId', userSchema, userController.getUserById);
 routes.post('/signup', userSchema, userController.signUpUser);
 routes.post('/signin', userSchema, userController.signInUser);
-routes.put('/update/:userId', userController.updateUser);
-routes.delete('/delete/:userId',  userController.deleteUser);
+routes.put('/users/update/:userId', userController.updateUser);
+routes.delete('/users/delete/:userId', userController.deleteUser);
 
 // Sections
 routes.get('/sections', sectionController.getSections);
-routes.get('/section/:sectionId', sectionController.getSectionById);
+routes.get('/sections/:sectionSlug', sectionController.getSectionBySlug);
 routes.post('/sections/create', sectionController.createSection);
-routes.put('/sections/update/:sectionId', sectionController.updateSection);
-routes.delete('/sections/delete/:sectionId', sectionController.deleteSection);
+routes.put('/sections/update/:sectionSlug', sectionController.updateSection);
+routes.delete('/sections/delete/:sectionSlug', sectionController.deleteSection);
 
 // Categories
 routes.get('/categories', categoryController.getCategories);
-routes.get('/categories/:categoryId', categoryController.getCategoryById);
+routes.get('/categories/:categorySlug', categoryController.getCategoryBySlug);
 routes.post('/categories/create', categoryController.createCategory);
-routes.put('/categories/update/:categoryId', categoryController.updateCategory);
-routes.delete('/categories/delete/:categoryId', categoryController.deleteCategory);
+routes.put('/categories/update/:categorySlug', categoryController.updateCategory);
+routes.delete('/categories/delete/:categorySlug', categoryController.deleteCategory);
 
 // Posts
 routes.get('/posts', postController.getPosts);
+routes.get('/posts/id/:postId', postController.getPostById);
 routes.get('/posts/search', postController.searchPosts);
-routes.get('/posts/section/:sectionId', postController.getPostsBySection);
-routes.get('/posts/category/:categoryId', postController.getPostsByCategory);
+routes.get('/posts/section/:sectionSlug', postController.getPostsBySection);
+routes.get('/posts/category/:categorySlug', postController.getPostsByCategory);
 routes.post('/posts/create',  postController.createPost);
 routes.put('/posts/update/:postId', postController.updatePost);
 routes.delete('/posts/delete/:postId', postController.deletePost);
 
- // Media
- routes.get('/media', postController.getMedia)
- routes.get('/media/get', postController.getMediaByName)
-routes.post('/media/upload', postController.uploadMedia);
-routes.delete('/media/delete', postController.deleteMedia);
 // Tags
 routes.get('/tags', tagController.getTags);
 routes.get('/tags/:tagName', tagController.getTagsByName);
 routes.post('/tags/create', tagController.createTag);
+
+// Funeral Notices
+routes.get('/funeral-notices', funeralNoticeController.getFuneralNotices);
+routes.get('/funeral-notices/id/:funeralNoticeId', funeralNoticeController.getFuneralNoticeById);
+routes.get('/funeral-notices/search', funeralNoticeController.searchFuneralNotice);
+routes.get('/funeral-notices/religion/:religion', funeralNoticeController.getFuneralNoticesByReligion);
+routes.get('/funeral-notices/date/:date', funeralNoticeController.getFuneralNoticesByDate);
+routes.get('/funeral-notices/status/:status', funeralNoticeController.getFuneralNoticesByStatus);
+routes.post('/funeral-notices/create',  funeralNoticeController.createFuneralNotice);
+routes.put('/funeral-notices/update/:funeralNoticeId', funeralNoticeController.updateFuneralNotice);
+routes.delete('/funeral-notices/delete/:funeralNoticeId', funeralNoticeController.deleteFuneralNotice);
+
+// Print Editions
+routes.get('/print-editions', printEditionController.getPrintEditions);
+routes.get('/print-editions/id/:printEditionId', printEditionController.getPrintEditionById);
+routes.get('/print-editions/date/:date', printEditionController.getPrintEditionsByDate);
+routes.post('/print-editions/create',  printEditionController.createPrintEdition);
+routes.put('/print-editions/update/:printEditionId', printEditionController.updatePrintEdition);
+routes.delete('/print-editions/delete/:printEditionId', printEditionController.deletePrintEdition);
+
+// Venues
+routes.get('/venues', venueController.getVenues);
+routes.get('/venues/:venueSlug', venueController.getVenueBySlug);
+routes.post('/venues/create', venueController.createVenue);
+routes.put('/venues/update/:venueSlug', venueController.updateVenue);
+routes.delete('/venues/delete/:venueSlug', venueController.deleteVenue);
+
+// Events
+routes.get('/events', eventController.getEvents);
+routes.get('/events/id/:eventId', eventController.getEventById);
+routes.get('/events/search', eventController.searchEvents);
+routes.get('/events/venue/:venueSlug', eventController.getEventsByVenue);
+routes.post('/events/create',  eventController.createEvent);
+routes.put('/events/update/:eventId', eventController.updateEvent);
+routes.delete('/events/delete/:eventId', eventController.deleteEvent);
+
+// File Folders
+routes.get('/file-folders', fileFolderController.getFileFolders);
+routes.get('/file-folders/:fileFolderSlug', fileFolderController.getFileFolderBySlug);
+routes.post('/file-folders/create', fileFolderController.createFileFolder);
+routes.put('/file-folders/update/:fileFolderSlug', fileFolderController.updateFileFolder);
+routes.delete('/file-folders/delete/:fileFolderSlug', fileFolderController.deleteFileFolder);
+
+// Files
+routes.get('/files', fileController.getFiles);
+routes.get('/files/:fileId', fileController.readFileById);
+routes.post('/files/create', fileController.createFile);
+routes.delete('/files/delete/:fileId', fileController.deleteFile);
 
 module.exports = routes;
