@@ -1,5 +1,6 @@
 const authService = require('./authService');
 const userService = require('./userService');
+const roleService = require('./roleService');
 const postService = require('./postService');
 const sectionService = require('./sectionService');
 const categoryService = require('./categoryService');
@@ -14,6 +15,7 @@ const fileFolderService = require('./fileFolderService');
 module.exports = {
     authService,
     userService,
+    roleService,
     postService,
     sectionService,
     categoryService,

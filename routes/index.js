@@ -4,6 +4,7 @@ const routes = express.Router();
 // Import controllers
 const {
     userController,
+    roleController,
     postController,
     sectionController,
     categoryController,
@@ -28,6 +29,10 @@ const {
 const { userSchema } = require('../controllers/schemas');
 
 // Routes
+
+// Roles
+routes.get('/roles', roleController.getRoles);
+routes.get('/roles/id/:roleId', roleController.getRoleById);
 
 // Users
 routes.get('/users', userSchema, userController.getUsers);

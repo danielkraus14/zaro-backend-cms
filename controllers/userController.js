@@ -1,4 +1,3 @@
-const User = require('../models/user');
 const { validationResult } = require('express-validator');
 const { authService, userService } = require('../services');
 
@@ -18,7 +17,7 @@ const getUserById = async (req, res) => {
         const user = await userService.getUserById(userId);
         res.status(200).send(user);
     }catch(error){
-        res.status(400).send({error, message: 'User not found'});
+        res.status(404).send({error, message: 'User not found'});
     }
 };
 

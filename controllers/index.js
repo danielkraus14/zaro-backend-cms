@@ -1,4 +1,5 @@
 const userController = require('./userController');
+const roleController = require('./roleController');
 const postController = require('./postController');
 const sectionController = require('./sectionController');
 const categoryController = require('./categoryController');
@@ -12,6 +13,7 @@ const fileFolderController = require('./fileFolderController');
 
 module.exports = {
     userController,
+    roleController,
     postController,
     sectionController,
     categoryController,
