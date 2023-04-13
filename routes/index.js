@@ -78,12 +78,12 @@ routes.put('/funeral-notices/update/:funeralNoticeId', funeralNoticeController.u
 routes.delete('/funeral-notices/delete/:funeralNoticeId', funeralNoticeController.deleteFuneralNotice);
 
 // Print Editions
-routes.get('/print-edition', printEditionController.getPrintEditions);
-routes.put('/print-edition/id/:printEditionId', printEditionController.getPrintEditionById);
-routes.get('/print-edition/date/:date', printEditionController.getPrintEditionsByDate);
-routes.post('/print-edition/create',  printEditionController.createPrintEdition);
-routes.put('/print-edition/update/:printEditionId', printEditionController.updatePrintEdition);
-routes.delete('/print-edition/delete/:printEditionId', printEditionController.deletePrintEdition);
+routes.get('/print-editions', printEditionController.getPrintEditions);
+routes.put('/print-editions/id/:printEditionId', printEditionController.getPrintEditionById);
+routes.get('/print-editions/date/:date', printEditionController.getPrintEditionsByDate);
+routes.post('/print-editions/create',  printEditionController.createPrintEdition);
+routes.put('/print-editions/update/:printEditionId', printEditionController.updatePrintEdition);
+routes.delete('/print-editions/delete/:printEditionId', printEditionController.deletePrintEdition);
 
 // Venues
 routes.get('/venues', venueController.getVenues);
