@@ -287,15 +287,17 @@ const deletePost = async (postId) => {
         //Find the user and delete the post._id from the user's posts array
         const user = await User.findById(post.createdBy);
         if (!user) throw new Error("User not found");
-        user.posts.pull(post._id);
+        if (user.posts.indexOf(post._id) != -1) user.posts.pull(post._id);
 
         //Find the section and delete the post._id from the section's posts array
         const section = await Section.findById(post.section);
-        section.posts.pull(post._id);
+        if (!section) throw new Error("Section not found");
+        if (section.posts.indexOf(post._id) != -1) section.posts.pull(post._id);
 
         //Find the category and delete the post._id from the category's posts array
         const category = await Category.findById(post.category);
-        category.posts.pull(post._id);
+        if (!category) throw new Error("Category not found");
+        if (category.posts.indexOf(post._id) != -1) category.posts.pull(post._id);
 
         //Delete all images
         if (post.images) {
