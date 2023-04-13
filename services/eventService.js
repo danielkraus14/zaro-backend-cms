@@ -189,20 +189,20 @@ const deleteEvent = async (eventId) => {
         //Find the user and delete the event._id from the user's events array
         const user = await User.findById(event.createdBy);
         if (!user) throw new Error("User not found");
-        user.events.pull(event._id);
-        await user.save();
+        if (user.events.indexOf(event._id) != -1) user.events.pull(event._id);
 
         //Find the venue and delete the event._id from the venue's events array
         const venue = await Venue.findById(event.venue);
         if (!venue) throw new Error("Venue not found");
-        venue.events.pull(event._id);
-        await venue.save();
+        if (venue.events.indexOf(event._id) != -1) venue.events.pull(event._id);
 
         //Delete image from S3 server
         if (event.billboard) {
             await deleteFile(event.billboard);
         };
 
+        await user.save();
+        await venue.save();
         result = await event.remove();
     } catch (error) {
         throw error;
