@@ -33,6 +33,12 @@ const UserSchema = new Schema({
             ref: 'Post'
         }
     ],
+    printEditions: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'PrintEdition'
+        }
+    ],
     funeralNotices: [
         {
             type: Schema.Types.ObjectId,
