@@ -26,6 +26,16 @@ const getPrintEditions = async () => {
     return result;
 };
 
+const getPrintEditionById = async (printEditionId) => {
+    let result;
+    try{
+        result = await PrintEdition.findById(printEditionId);
+    }catch(error){
+        throw error;
+    }
+    return result;
+};
+
 const getPrintEditionsByDate = async (date) => {
     let result;
     try {
@@ -195,6 +205,7 @@ const deletePrintEdition = async (printEditionId) => {
 
 module.exports = {
     getPrintEditions,
+    getPrintEditionById,
     getPrintEditionsByDate,
     createPrintEdition,
     updatePrintEdition,

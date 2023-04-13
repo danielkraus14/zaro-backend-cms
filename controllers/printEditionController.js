@@ -9,6 +9,16 @@ const getPrintEditions = async (req, res) => {
     }
 };
 
+const getPrintEditionById = async (req, res) => {
+    try{
+        const { printEditionId } = req.params;
+        const printEdition = await printEditionService.getPrintEditionById(printEditionId);
+        res.status(200).send(printEdition);
+    }catch(error){
+        res.status(400).send({error, message: 'Print edition not found'});
+    }
+};
+
 const getPrintEditionsByDate = async (req, res) => {
     try{
         const printEditions = await printEditionService.getPrintEditionsByDate(req.params.date);
@@ -50,6 +60,7 @@ const deletePrintEdition = async (req, res) => {
 
 module.exports = {
     getPrintEditions,
+    getPrintEditionById,
     getPrintEditionsByDate,
     createPrintEdition,
     updatePrintEdition,
