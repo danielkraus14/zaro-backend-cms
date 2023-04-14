@@ -29,9 +29,9 @@ const getPrintEditions = async () => {
 
 const getPrintEditionById = async (printEditionId) => {
     let result;
-    try{
+    try {
         result = await PrintEdition.findById(printEditionId);
-    }catch(error){
+    } catch(error) {
         throw error;
     }
     return result;
@@ -106,7 +106,7 @@ const createPrintEdition = async (
         const description = `${printEdition.date.toISOString().split('T')[0]} - ${printEdition.body}`;
 
         result = await printEdition.save();
-        await new Record({ description, operation: 'create', collectionName: 'printEdition', objectId: printEdition._id, user: userId}).save();
+        await new Record({ description, operation: 'create', collectionName: 'printEdition', objectId: printEdition._id, user: userId }).save();
     } catch (error) {
         throw error;
     };
@@ -182,7 +182,7 @@ const updatePrintEdition = async (
         const description = `${printEdition.date.toISOString().split('T')[0]} - ${printEdition.body}`;
 
         result = await printEdition.save();
-        await new Record({ description, operation: 'update', collectionName: 'printEdition', objectId: printEdition._id, user: userId}).save();
+        await new Record({ description, operation: 'update', collectionName: 'printEdition', objectId: printEdition._id, user: userId }).save();
     } catch (error) {
         throw error;
     }
@@ -212,7 +212,7 @@ const deletePrintEdition = async (printEditionId, userId) => {
         const delPrintEditionId = printEdition._id;
         const description = `${printEdition.date.toISOString().split('T')[0]} - ${printEdition.body}`;
         result = await printEdition.remove();
-        await new Record({ description, operation: 'delete', collectionName: 'printEdition', objectId: delPrintEditionId, user: userId}).save();
+        await new Record({ description, operation: 'delete', collectionName: 'printEdition', objectId: delPrintEditionId, user: userId }).save();
     } catch (error) {
         throw error;
     }

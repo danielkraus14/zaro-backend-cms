@@ -7,9 +7,9 @@ const { deleteFile } = require('../services/fileService');
 
 const getSections = async () => {
     let result;
-    try{
+    try {
         result = await Section.find({});
-    }catch(error){
+    } catch(error) {
         throw error;
     }
     return result;
@@ -17,11 +17,11 @@ const getSections = async () => {
 
 const getSectionBySlug = async (sectionSlug) => {
     let result;
-    try{
+    try {
         const section = await Section.findOne({ slug: sectionSlug });
         if (!section) throw new Error("Section not found");
         result = section;
-    }catch(error){
+    } catch(error) {
         throw error;
     }
     return result;
@@ -29,7 +29,7 @@ const getSectionBySlug = async (sectionSlug) => {
 
 const createSection = async (name, description, imageId, userId) => {
     let result;
-    try{
+    try {
         const rawSlug = name.replace(/ /g, '_').toLowerCase();
         const slug = rawSlug.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
         const section = new Section( {
@@ -48,8 +48,8 @@ const createSection = async (name, description, imageId, userId) => {
         };
 
         result = await section.save();
-        await new Record({ description: section.name, operation: 'create', collectionName: 'section', objectId: section._id, user: userId}).save();
-    }catch(error){
+        await new Record({ description: section.name, operation: 'create', collectionName: 'section', objectId: section._id, user: userId }).save();
+    } catch(error) {
         throw error;
     }
     return result;
@@ -57,7 +57,7 @@ const createSection = async (name, description, imageId, userId) => {
 
 const updateSection = async (sectionSlug, name, description, imageId, userId) => {
     let result;
-    try{
+    try {
         const section = await Section.findOne({ slug: sectionSlug });
         if (!section) throw new Error("Section not found");
 
@@ -79,8 +79,8 @@ const updateSection = async (sectionSlug, name, description, imageId, userId) =>
         section.lastUpdatedAt = Date.now();
 
         result = await section.save();
-        await new Record({ description: section.name, operation: 'update', collectionName: 'section', objectId: section._id, user: userId}).save();
-    }catch(error){
+        await new Record({ description: section.name, operation: 'update', collectionName: 'section', objectId: section._id, user: userId }).save();
+    } catch(error) {
         throw error;
     }
     return result;
@@ -88,7 +88,7 @@ const updateSection = async (sectionSlug, name, description, imageId, userId) =>
 
 const deleteSection = async (sectionSlug, userId) => {
     let result;
-    try{
+    try {
 
         const section = await Section.findOne({ slug: sectionSlug });
         if(!section) throw new Error('Section not found');
@@ -106,7 +106,7 @@ const deleteSection = async (sectionSlug, userId) => {
         const delSectionId = section._id;
         const description = section.name;
         result = await section.remove();
-        await new Record({ description, operation: 'delete', collectionName: 'section', objectId: delSectionId, user: userId}).save();
+        await new Record({ description, operation: 'delete', collectionName: 'section', objectId: delSectionId, user: userId }).save();
     } catch(error) {
         throw error;
     }

@@ -60,16 +60,16 @@ const UserSchema = new Schema({
 UserSchema.pre("save", function(next) {
     const user = this;
 
-    if(!user.isModified('password')){
+    if (!user.isModified('password')) {
         return next();
     };
 
     bcrypt.genSalt(10, (error, salt) => {
-        if(error){
+        if (error) {
             return next(error);
         }
         bcrypt.hash(user.password, salt, null, (error, hash) => {
-            if(error){
+            if (error) {
                 return next(error);
             }
             user.password = hash;
@@ -78,7 +78,7 @@ UserSchema.pre("save", function(next) {
     });
 })
 
-UserSchema.methods.comparePassword = function (candidatePassword){
+UserSchema.methods.comparePassword = function (candidatePassword) {
     let user = this;
     return bcrypt.compareSync(candidatePassword, user.password);
 }

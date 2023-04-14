@@ -2,9 +2,9 @@ const Role = require('../models/role');
 
 const getRoles = async () => {
     let result;
-    try{
+    try {
         result = await Role.find();
-    }catch(error){
+    } catch(error) {
         throw error;
     }
     return result;
@@ -12,9 +12,9 @@ const getRoles = async () => {
 
 const getRoleById = async (roleId) => {
     let result;
-    try{
+    try {
         result = await Role.findById(roleId);
-    }catch(error){
+    } catch(error) {
         throw error;
     }
     return result;

@@ -15,7 +15,7 @@ const paginateOptions = {
 const getEvents = async () => {
     let result;
     try {
-        await Event.paginate({}, paginateOptions, function(err, res){
+        await Event.paginate({}, paginateOptions, function(err, res) {
             if (err) {
                 throw err;
             };
@@ -29,9 +29,9 @@ const getEvents = async () => {
 
 const getEventById = async (eventId) => {
     let result;
-    try{
+    try {
         result = await Event.findById(eventId);
-    }catch(error){
+    } catch(error) {
         throw error;
     }
     return result;
@@ -42,7 +42,7 @@ const getEventsByVenue = async (venueSlug) => {
     try {
         const venue = await Venue.findOne({ slug: venueSlug });
         if (!venue) throw new Error("Venue not found");
-        await Event.paginate({ venue: venue._id }, paginateOptions, function(err, res){
+        await Event.paginate({ venue: venue._id }, paginateOptions, function(err, res) {
             if (err) {
                 throw err;
             }
@@ -71,7 +71,7 @@ const searchEvents = async (search) => {
             date.setUTCHours(23, 59, 59, 999);
             query.dateStarts = { $lte: date };
         };
-        await Event.paginate(query, paginateOptions, function(err, res){
+        await Event.paginate(query, paginateOptions, function(err, res) {
         if (err) {
             throw err;
         }
@@ -122,7 +122,7 @@ const createEvent = async (
         await venue.save();
         const venueName = venue.name;
         result = await event.save();
-        await new Record({ description: `${event.title} at ${venueName}`, operation: 'create', collectionName: 'event', objectId: event._id, user: userId}).save();
+        await new Record({ description: `${event.title} at ${venueName}`, operation: 'create', collectionName: 'event', objectId: event._id, user: userId }).save();
     } catch (error) {
     throw error;
     }
@@ -179,7 +179,7 @@ const updateEvent = async (
         event.lastUpdatedAt = Date.now();
 
         result = await event.save();
-        await new Record({ description: `${event.title} at ${venueName}`, operation: 'update', collectionName: 'event', objectId: event._id, user: userId}).save();
+        await new Record({ description: `${event.title} at ${venueName}`, operation: 'update', collectionName: 'event', objectId: event._id, user: userId }).save();
     } catch (error) {
         throw error;
     }
@@ -214,7 +214,7 @@ const deleteEvent = async (eventId, userId) => {
         await user.save();
         await venue.save();
         result = await event.remove();
-        await new Record({ description, operation: 'delete', collectionName: 'event', objectId: delEventId, user: userId}).save();
+        await new Record({ description, operation: 'delete', collectionName: 'event', objectId: delEventId, user: userId }).save();
     } catch (error) {
         throw error;
     }

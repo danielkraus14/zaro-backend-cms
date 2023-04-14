@@ -2,9 +2,9 @@ const Tag = require('../models/tag');
 
 const getTags = async () => {
     let result;
-    try{
+    try {
         result = await Tag.find().populate('posts').populate('printEditions');
-    }catch(error){
+    } catch(error) {
         throw error;
     }
     return result;
@@ -12,9 +12,9 @@ const getTags = async () => {
 
 const getTagsByName = async (tagName) => {
     let result;
-    try{
+    try {
         result = await Tag.findOne({ name: tagName }).populate('posts').populate('printEditions');
-    }catch(error){
+    } catch(error) {
         throw error;
     }
     return result;
@@ -22,12 +22,12 @@ const getTagsByName = async (tagName) => {
 
 const createTag = async (name) => {
     let result;
-    try{
+    try {
         const tag = new Tag({
             name
         });
         result = await tag.save();
-    }catch(error){
+    } catch(error) {
         throw error;
     }
     return result;

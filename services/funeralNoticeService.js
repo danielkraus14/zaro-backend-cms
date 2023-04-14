@@ -25,9 +25,9 @@ const getFuneralNotices = async () => {
 
 const getFuneralNoticeById = async (funeralNoticeId) => {
     let result;
-    try{
+    try {
         result = await FuneralNotice.findById(funeralNoticeId);
-    }catch(error){
+    } catch(error) {
         throw error;
     }
     return result;
@@ -202,7 +202,7 @@ const deleteFuneralNotice = async (funeralNoticeId, userId) => {
         const delFuneralNoticeId = funeralNotice._id;
         const description = `${funeralNotice.deceased} by ${funeralNotice.client}`;
         result = await funeralNotice.remove();
-        await new Record({ description, operation: 'delete', collectionName: 'funeralNotice', objectId: delFuneralNoticeId, user: userId}).save();
+        await new Record({ description, operation: 'delete', collectionName: 'funeralNotice', objectId: delFuneralNoticeId, user: userId }).save();
     } catch (error) {
         throw error;
     }

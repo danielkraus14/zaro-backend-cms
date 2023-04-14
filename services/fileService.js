@@ -12,9 +12,9 @@ const dateFns = require('date-fns');
 
 const getFiles = async () => {
     let result;
-    try{
+    try {
         const files = await File.find();
-        if(!files){
+        if (!files) {
             result = [];
         };
         result = files;
@@ -26,9 +26,9 @@ const getFiles = async () => {
 
 const readFileById = async (fileId) => {
     let result;
-    try{
+    try {
         const file = await File.findById(fileId);
-        if(!file) throw new Error('File not found');
+        if (!file) throw new Error('File not found');
         result = await readFileS3(file.filename);
     } catch(error) {
         throw error;
@@ -38,7 +38,7 @@ const readFileById = async (fileId) => {
 
 const createFile = async (file, fileFolderSlug, userId) => {
     let result;
-    try{
+    try {
         const year = dateFns.format(new Date(), 'yyyy');
         const month = dateFns.format(new Date(), 'MM');
         const day = dateFns.format(new Date(), 'dd');
@@ -56,7 +56,7 @@ const createFile = async (file, fileFolderSlug, userId) => {
         await fileFolder.save();
         await uploadFileS3(file, filename);
         result = await newFile.save();
-        await new Record({ description: newFile.filename, operation: 'create', collectionName: 'file', objectId: newFile._id, user: userId}).save();
+        await new Record({ description: newFile.filename, operation: 'create', collectionName: 'file', objectId: newFile._id, user: userId }).save();
     } catch(error) {
         throw error;
     }
@@ -65,7 +65,7 @@ const createFile = async (file, fileFolderSlug, userId) => {
 
 const deleteFile = async (fileId, userId) => {
     let result;
-    try{
+    try {
         const file = await File.findById(fileId);
         if(!file) throw new Error('File not found');
 
@@ -109,8 +109,8 @@ const deleteFile = async (fileId, userId) => {
         const delFileId = file._id;
         const description = file.filename;
         result = await file.remove();
-        await new Record({ description, operation: 'delete', collectionName: 'file', objectId: delFileId, user: userId}).save();
-    }catch(error){
+        await new Record({ description, operation: 'delete', collectionName: 'file', objectId: delFileId, user: userId }).save();
+    } catch(error) {
         throw error;
     }
     return result;

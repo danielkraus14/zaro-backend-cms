@@ -17,7 +17,7 @@ const paginateOptions = {
 
 const getRecords = async () => {
     let result;
-    try{
+    try {
         await Record.paginate({}, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
@@ -32,7 +32,7 @@ const getRecords = async () => {
 
 const searchRecords = async (search) => {
     let result;
-    try{
+    try {
         let query = {};
         if (search.collectionName) {
             query.collectionName = { $eq: search.collectionName };
@@ -73,7 +73,7 @@ const searchRecords = async (search) => {
 
 const getObjectOfRecord = async (recordId) => {
     let object;
-    try{
+    try {
         const record = await Record.findById(recordId);
         const collectionName = record.collectionName;
         const objectId = record.objectId;
@@ -110,7 +110,7 @@ const getObjectOfRecord = async (recordId) => {
             default:
                 throw new Error("Invalid collection name");
         };
-    }catch(error){
+    } catch(error) {
         throw error;
     }
     return object;

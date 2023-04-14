@@ -2,20 +2,20 @@ const { venueService } = require('../services');
 
 const getVenues = async (req, res) => {
     let result;
-    try{
+    try {
         result = await venueService.getVenues();
-    }catch(error){
+    } catch(error) {
         throw error;
     }
     res.status(200).send(result);
 };
 
 const getVenueBySlug = async (req, res) => {
-    try{
+    try {
         const { venueSlug } = req.params;
         const venue = await venueService.getVenueBySlug(venueSlug);
         res.status(200).send(venue);
-    }catch(error){
+    } catch(error) {
         res.status(400).send({error, message: 'Venue not found'});
     }
 };
@@ -23,32 +23,32 @@ const getVenueBySlug = async (req, res) => {
 const createVenue = async (req, res) => {
     const { name, description, address, userId } = req.body;
     let result;
-    try{
+    try {
         result = await venueService.createVenue(name, description, address, userId);
-    }catch(error){
+    } catch(error) {
         console.log(error);
     }
     res.status(201).send(result);
 };
 
 const updateVenue = async (req, res) => {
-    try{
+    try {
         const { venueSlug } = req.params;
         const { name, description, address, userId } = req.body;
         const result = await venueService.updateVenue(venueSlug, name, description, address, userId);
         res.status(200).send({venue: result});
-    }catch(error){
+    } catch(error) {
         res.status(400).send({error, message: 'Venue not found'});
     }
 };
 
 const deleteVenue = async (req, res) => {
-    try{
+    try {
         const { venueSlug } = req.params;
         const { userId } = req.body;
         const result = await venueService.deleteVenue(venueSlug, userId);
         res.status(204).send({venue: result});
-    }catch(error){
+    } catch(error) {
         res.status(400).send({error, message: 'Venue not found'});
     }
 };
