@@ -1,4 +1,5 @@
 const Category = require('../models/category');
+const Record = require('../models/record');
 
 const { deletePost } = require('../services/postService');
 
@@ -39,6 +40,7 @@ const createCategory = async (name, description, userId) => {
         if(category) throw new Error('Category already exists');
 
         result = await newCategory.save();
+        await new Record({ description: newCategory.name, operation: 'create', collectionName: 'category', objectId: newCategory._id, user: userId }).save();
     } catch(error) {
         throw error;
     }
@@ -57,13 +59,14 @@ const updateCategory = async (categorySlug, name, description, userId) => {
         category.lastUpdatedAt = Date.now();
         category.lastUpdatedBy = userId;
         result = await category.save();
+        await new Record({ description: category.name, operation: 'update', collectionName: 'category', objectId: category._id, user: userId}).save();
     } catch(error) {
         throw error;
     }
     return result;
 };
 
-const deleteCategory = async (categorySlug) => {
+const deleteCategory = async (categorySlug, userId) => {
     let result;
     try{
 
@@ -73,8 +76,11 @@ const deleteCategory = async (categorySlug) => {
         for (const postId of category.posts) {
             await deletePost(postId);
         };
+        const delCategoryId = category._id;
+        const description = category.name;
 
         result = await category.remove();
+        await new Record({ description, operation: 'delete', collectionName: 'category', objectId: delCategoryId, user: userId}).save();
     } catch(error) {
         throw error;
     }

@@ -2,6 +2,7 @@ const PrintEdition = require("../models/printEdition");
 const Tag = require("../models/tag");
 const File = require("../models/file");
 const User = require("../models/user");
+const Record = require("../models/record");
 
 const { deleteFile } = require('../services/fileService');
 
@@ -102,7 +103,10 @@ const createPrintEdition = async (
             printEdition.newsletterPDF = newsletterPDFId;
         };
 
+        const description = `${printEdition.date.toISOString().split('T')[0]} - ${printEdition.body}`;
+
         result = await printEdition.save();
+        await new Record({ description, operation: 'create', collectionName: 'printEdition', objectId: printEdition._id, user: userId}).save();
     } catch (error) {
         throw error;
     };
@@ -175,14 +179,17 @@ const updatePrintEdition = async (
         printEdition.lastUpdatedBy = userId;
         printEdition.lastUpdatedAt = Date.now();
 
+        const description = `${printEdition.date.toISOString().split('T')[0]} - ${printEdition.body}`;
+
         result = await printEdition.save();
+        await new Record({ description, operation: 'update', collectionName: 'printEdition', objectId: printEdition._id, user: userId}).save();
     } catch (error) {
         throw error;
     }
     return result;
 };
 
-const deletePrintEdition = async (printEditionId) => {
+const deletePrintEdition = async (printEditionId, userId) => {
     let result;
     try {
         const printEdition = await PrintEdition.findById(printEditionId);
@@ -202,7 +209,10 @@ const deletePrintEdition = async (printEditionId) => {
         };
 
         await user.save();
+        const delPrintEditionId = printEdition._id;
+        const description = `${printEdition.date.toISOString().split('T')[0]} - ${printEdition.body}`;
         result = await printEdition.remove();
+        await new Record({ description, operation: 'delete', collectionName: 'printEdition', objectId: delPrintEditionId, user: userId}).save();
     } catch (error) {
         throw error;
     }

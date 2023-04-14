@@ -1,5 +1,6 @@
 const Section = require('../models/section');
 const File = require("../models/file");
+const Record = require('../models/record');
 
 const { deletePost } = require('../services/postService');
 const { deleteFile } = require('../services/fileService');
@@ -47,6 +48,7 @@ const createSection = async (name, description, imageId, userId) => {
         };
 
         result = await section.save();
+        await new Record({ description: section.name, operation: 'create', collectionName: 'section', objectId: section._id, user: userId}).save();
     }catch(error){
         throw error;
     }
@@ -77,13 +79,14 @@ const updateSection = async (sectionSlug, name, description, imageId, userId) =>
         section.lastUpdatedAt = Date.now();
 
         result = await section.save();
+        await new Record({ description: section.name, operation: 'update', collectionName: 'section', objectId: section._id, user: userId}).save();
     }catch(error){
         throw error;
     }
     return result;
 };
 
-const deleteSection = async (sectionSlug) => {
+const deleteSection = async (sectionSlug, userId) => {
     let result;
     try{
 
@@ -100,7 +103,10 @@ const deleteSection = async (sectionSlug) => {
             await deleteFile(section.image);
         };
 
+        const delSectionId = section._id;
+        const description = section.name;
         result = await section.remove();
+        await new Record({ description, operation: 'delete', collectionName: 'section', objectId: delSectionId, user: userId}).save();
     } catch(error) {
         throw error;
     }

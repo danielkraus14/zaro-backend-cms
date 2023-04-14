@@ -4,6 +4,7 @@ const Section = require("../models/section");
 const Category = require("../models/category");
 const Tag = require("../models/tag");
 const File = require("../models/file");
+const Record = require("../models/record");
 
 const { deleteFile } = require('../services/fileService');
 
@@ -165,6 +166,7 @@ const createPost = async (
         await section.save();
         await category.save();
         result = await post.save();
+        await new Record({ description: post.title, operation: 'create', collectionName: 'post', objectId: post._id, user: userId}).save();
     } catch (error) {
         throw error;
     }
@@ -272,13 +274,14 @@ const updatePost = async (
         post.lastUpdatedAt = Date.now();
 
         result = await post.save();
+        await new Record({ description: post.title, operation: 'update', collectionName: 'post', objectId: post._id, user: userId}).save();
     } catch (error) {
         throw error;
     }
     return result;
 };
 
-const deletePost = async (postId) => {
+const deletePost = async (postId, userId) => {
     let result;
     try {
         const post = await Post.findById(postId);
@@ -309,7 +312,10 @@ const deletePost = async (postId) => {
         await category.save();
         await section.save();
         await user.save();
+        const delPostId = post._id;
+        const description = post.title;
         result = await post.remove();
+        await new Record({ description, operation: 'delete', collectionName: 'post', objectId: delPostId, user: userId}).save();
     } catch (error) {
         throw error;
     }

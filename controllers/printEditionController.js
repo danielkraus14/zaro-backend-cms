@@ -51,7 +51,9 @@ const updatePrintEdition = async (req, res) => {
 
 const deletePrintEdition = async (req, res) => {
     try{
-        const result = await printEditionService.deletePrintEdition(req.params.printEditionId);
+        const { printEditionId } = req.params;
+        const { userId } = req.body;
+        const result = await printEditionService.deletePrintEdition(printEditionId, userId);
         res.status(204).send({printEdition: result});
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});

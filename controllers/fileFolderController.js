@@ -43,7 +43,8 @@ const updateFileFolder = async (req, res) => {
 const deleteFileFolder = async (req, res) => {
     try{
         const { fileFolderSlug } = req.params;
-        const result = await fileFolderService.deleteFileFolder(fileFolderSlug);
+        const { userId } = req.body;
+        const result = await fileFolderService.deleteFileFolder(fileFolderSlug, userId);
         res.status(204).send({fileFolder: result});
     }catch(error){
         res.status(400).send({error, message: 'File folder not found'});

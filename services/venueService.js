@@ -1,4 +1,5 @@
 const Venue = require('../models/venue');
+const Record = require('../models/record');
 
 const { deleteEvent } = require('../services/eventService');
 
@@ -48,6 +49,7 @@ const createVenue = async (name, description, address, userId) => {
             createdBy: userId
         });
         result = await venue.save();
+        await new Record({ description: venue.name, operation: 'create', collectionName: 'venue', objectId: venue._id, user: userId}).save();
     }catch(error){
         throw error;
     }
@@ -67,16 +69,16 @@ const updateVenue = async (venueSlug, name, description, address, userId) => {
         venue.lastUpdatedBy = userId;
 
         result = await venue.save();
+        await new Record({ description: venue.name, operation: 'update', collectionName: 'venue', objectId: venue._id, user: userId}).save();
     }catch(error){
         throw error;
     }
     return result;
 };
 
-const deleteVenue = async (venueSlug) => {
+const deleteVenue = async (venueSlug, userId) => {
     let result;
     try{
-
         const venue = await Venue.findOne({ slug: venueSlug });
         if(!venue) throw new Error('Venue not found');
 
@@ -84,7 +86,10 @@ const deleteVenue = async (venueSlug) => {
             await deleteEvent(eventId);
         };
 
+        const delVenueId = venue._id;
+        const description = venue.name;
         result = await venue.remove();
+        await new Record({ description, operation: 'delete', collectionName: 'venue', objectId: delVenueId, user: userId}).save();
     } catch(error) {
         throw error;
     }

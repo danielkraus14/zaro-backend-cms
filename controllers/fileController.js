@@ -33,7 +33,8 @@ const createFile = async (req, res) => {
 const deleteFile = async (req, res) => {
     try{
         const { fileId } = req.params;
-        const result = await fileService.deleteFile(fileId);
+        const { userId } = req.body;
+        const result = await fileService.deleteFile(fileId, userId);
         res.status(204).send({file: result});
     }catch(error){
         res.status(400).send({error, message: 'File not found'});

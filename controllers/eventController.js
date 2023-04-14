@@ -51,7 +51,9 @@ const updateEvent = async (req, res) => {
 
 const deleteEvent = async (req, res) => {
     try{
-        const result = await eventService.deleteEvent(req.params.eventId);
+        const { eventId } = req.params;
+        const { userId } = req.body;
+        const result = await eventService.deleteEvent(eventId, userId);
         res.status(204).send({event: result});
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});

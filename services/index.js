@@ -11,6 +11,7 @@ const eventService = require('./eventService');
 const venueService = require('./venueService');
 const fileService = require('./fileService');
 const fileFolderService = require('./fileFolderService');
+const recordService = require('./recordService');
 
 module.exports = {
     authService,
@@ -25,5 +26,6 @@ module.exports = {
     eventService,
     venueService,
     fileService,
-    fileFolderService
+    fileFolderService,
+    recordService
 };

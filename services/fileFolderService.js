@@ -1,5 +1,6 @@
 const FileFolder = require('../models/fileFolder');
 const File = require('../models/file');
+const Record = require('../models/record');
 
 const { deleteFile } = require('../services/fileService');
 
@@ -44,6 +45,7 @@ const createFileFolder = async (name, userId) => {
 
         await createDirectoryS3(slug);
         result = await newFileFolder.save();
+        await new Record({ description: newFileFolder.name, operation: 'create', collectionName: 'fileFolder', objectId: newFileFolder._id, user: userId}).save();
     } catch(error) {
         throw error;
     }
@@ -60,6 +62,7 @@ const updateFileFolder = async (fileFolderSlug, name, userId) => {
         fileFolder.lastUpdatedBy = userId;
         fileFolder.lastUpdatedAt = Date.now();
         result = await fileFolder.save();
+        await new Record({ description: fileFolder.name, operation: 'update', collectionName: 'fileFolder', objectId: fileFolder._id, user: userId}).save();
     }
     catch(error){
         throw error;
@@ -67,7 +70,7 @@ const updateFileFolder = async (fileFolderSlug, name, userId) => {
     return result;
 };
 
-const deleteFileFolder = async (fileFolderSlug) => {
+const deleteFileFolder = async (fileFolderSlug, userId) => {
     let result;
     try{
 
@@ -80,7 +83,10 @@ const deleteFileFolder = async (fileFolderSlug) => {
             await deleteFile(fileId);
         }
         await deleteDirectoryS3(fileFolder.slug);
+        const delFileFolderId = fileFolder._id;
+        const description = fileFolder.name;
         result = await fileFolder.remove();
+        await new Record({ description, operation: 'delete', collectionName: 'fileFolder', objectId: delFileFolderId, user: userId}).save();
     }catch(error){
         throw error;
     }

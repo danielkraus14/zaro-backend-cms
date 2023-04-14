@@ -45,7 +45,8 @@ const updateSection = async (req, res) => {
 const deleteSection = async (req, res) => {
     try{
         const { sectionSlug } = req.params;
-        const result = await sectionService.deleteSection(sectionSlug);
+        const { userId } = req.body;
+        const result = await sectionService.deleteSection(sectionSlug, userId);
         res.status(204).send({section: result});
     }catch(error){
         res.status(400).send({error, message: 'Section not found'});
