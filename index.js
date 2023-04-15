@@ -61,7 +61,7 @@ app.get('/.well-known/pki-validation/DE08D5B05F58F1B5AD3FB65FFB15CA44.txt', (req
 
 // Connect to DB and Server
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true }, error =>{
-    if(error){
+    if(error) {
         console.log(error);
     } else {
         console.log('Connected to DB');

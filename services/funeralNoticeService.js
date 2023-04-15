@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const FuneralNotice = require("../models/funeralNotice");
+const Record = require("../models/record");
 
 const paginateOptions = {
     page: 1,
@@ -24,9 +25,9 @@ const getFuneralNotices = async () => {
 
 const getFuneralNoticeById = async (funeralNoticeId) => {
     let result;
-    try{
+    try {
         result = await FuneralNotice.findById(funeralNoticeId);
-    }catch(error){
+    } catch(error) {
         throw error;
     }
     return result;
@@ -132,6 +133,13 @@ const createFuneralNotice = async (
         user.funeralNotices.push(funeralNotice._id);
         await user.save();
         result = await funeralNotice.save();
+        await new Record({
+            description: `${funeralNotice.deceased} by ${funeralNotice.client}`,
+            operation: 'create',
+            collectionName: 'funeralNotice',
+            objectId: funeralNotice._id,
+            user: userId
+        }).save();
     } catch (error) {
         throw error;
     }
@@ -166,13 +174,20 @@ const updateFuneralNotice = async (
         funeralNotice.lastUpdatedAt = Date.now();
 
         result = await funeralNotice.save();
+        await new Record({
+            description: `${funeralNotice.deceased} by ${funeralNotice.client}`,
+            operation: 'update',
+            collectionName: 'funeralNotice',
+            objectId: funeralNotice._id,
+            user: userId
+        }).save();
     } catch (error) {
         throw error;
     }
     return result;
 };
 
-const deleteFuneralNotice = async (funeralNoticeId) => {
+const deleteFuneralNotice = async (funeralNoticeId, userId) => {
     let result;
     try {
         const funeralNotice = await FuneralNotice.findById(funeralNoticeId);
@@ -184,7 +199,10 @@ const deleteFuneralNotice = async (funeralNoticeId) => {
         if (user.funeralNotices.indexOf(funeralNotice._id) != -1) user.funeralNotices.pull(funeralNotice._id);
         await user.save();
 
+        const delFuneralNoticeId = funeralNotice._id;
+        const description = `${funeralNotice.deceased} by ${funeralNotice.client}`;
         result = await funeralNotice.remove();
+        await new Record({ description, operation: 'delete', collectionName: 'funeralNotice', objectId: delFuneralNoticeId, user: userId }).save();
     } catch (error) {
         throw error;
     }

@@ -9,8 +9,8 @@ const createToken = (user) => {
 
 const decodeToken = (token) => {
     try {
-        if(!token){
-            return res.status(403).send({message: 'You are not authorized'});
+        if (!token) {
+            return res.status(403).send({ message: 'You are not authorized' });
         }
         const payload = jwt.verify(token, process.env.SECRET_KEY);
         return  payload.sub

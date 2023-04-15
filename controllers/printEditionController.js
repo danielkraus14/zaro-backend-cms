@@ -1,7 +1,7 @@
 const { printEditionService } = require('../services');
 
 const getPrintEditions = async (req, res) => {
-    try{
+    try {
         const printEditions = await printEditionService.getPrintEditions();
         res.status(200).send(printEditions);
     } catch(error) {
@@ -10,17 +10,17 @@ const getPrintEditions = async (req, res) => {
 };
 
 const getPrintEditionById = async (req, res) => {
-    try{
+    try {
         const { printEditionId } = req.params;
         const printEdition = await printEditionService.getPrintEditionById(printEditionId);
         res.status(200).send(printEdition);
-    }catch(error){
+    } catch(error) {
         res.status(400).send({error, message: 'Print edition not found'});
     }
 };
 
 const getPrintEditionsByDate = async (req, res) => {
-    try{
+    try {
         const printEditions = await printEditionService.getPrintEditionsByDate(req.params.date);
         res.status(200).send(printEditions);
     } catch(error) {
@@ -29,7 +29,7 @@ const getPrintEditionsByDate = async (req, res) => {
 };
 
 const createPrintEdition = async (req, res) => {
-    try{
+    try {
         const { date, frontPageId, newsletterPDFId, body, tags, userId } = req.body;
         const result = await printEditionService.createPrintEdition(date, frontPageId, newsletterPDFId, body, tags, userId);
         res.status(201).send({printEdition: result});
@@ -39,7 +39,7 @@ const createPrintEdition = async (req, res) => {
 };
 
 const updatePrintEdition = async (req, res) => {
-    try{
+    try {
         const { printEditionId } = req.params;
         const { date, frontPageId, newsletterPDFId, body, tags, userId } = req.body;
         const result = await printEditionService.updatePrintEdition(printEditionId, date, frontPageId, newsletterPDFId, body, tags, userId);
@@ -50,8 +50,10 @@ const updatePrintEdition = async (req, res) => {
 };
 
 const deletePrintEdition = async (req, res) => {
-    try{
-        const result = await printEditionService.deletePrintEdition(req.params.printEditionId);
+    try {
+        const { printEditionId } = req.params;
+        const { userId } = req.body;
+        const result = await printEditionService.deletePrintEdition(printEditionId, userId);
         res.status(204).send({printEdition: result});
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});

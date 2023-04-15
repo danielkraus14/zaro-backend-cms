@@ -14,7 +14,8 @@ const {
     fileController,
     fileFolderController,
     venueController,
-    eventController
+    eventController,
+    recordController
 } = require('../controllers');
 
 // Import Auth Middlewares
@@ -118,5 +119,10 @@ routes.get('/files', fileController.getFiles);
 routes.get('/files/:fileId', fileController.readFileById);
 routes.post('/files/create', fileController.createFile);
 routes.delete('/files/delete/:fileId', fileController.deleteFile);
+
+// Records
+routes.get('/records', recordController.getRecords);
+routes.get('/records/search', recordController.searchRecords);
+routes.get('/records/object/:recordId', recordController.getObjectOfRecord);
 
 module.exports = routes;

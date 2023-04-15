@@ -1,7 +1,7 @@
 const { postService } = require('../services');
 
 const getPosts = async (req, res) => {
-    try{
+    try {
         const posts = await postService.getPosts();
         res.status(200).send(posts);
     } catch(error) {
@@ -10,17 +10,17 @@ const getPosts = async (req, res) => {
 };
 
 const getPostById = async (req, res) => {
-    try{
+    try {
         const { postId } = req.params;
         const post = await postService.getPostById(postId);
         res.status(200).send(post);
-    }catch(error){
+    } catch(error) {
         res.status(400).send({error, message: 'Post not found'});
     }
 };
 
 const searchPosts = async (req, res) => {
-    try{
+    try {
         const result = await postService.searchPosts(req.query);
         res.status(200).send(result);
     } catch(error) {
@@ -29,7 +29,7 @@ const searchPosts = async (req, res) => {
 };
 
 const getPostsBySection = async (req, res) => {
-    try{
+    try {
         const posts = await postService.getPostsBySection(req.params.sectionSlug);
         res.status(200).send(posts);
     } catch(error) {
@@ -38,7 +38,7 @@ const getPostsBySection = async (req, res) => {
 };
 
 const getPostsByCategory = async (req, res) => {
-    try{
+    try {
         const posts = await postService.getPostsByCategory(req.params.categorySlug);
         res.status(200).send(posts);
     } catch(error) {
@@ -47,7 +47,7 @@ const getPostsByCategory = async (req, res) => {
 };
 
 const createPost = async (req, res) => {
-    try{
+    try {
         const { userId, title, subtitle, flywheel, content, type, position, comments, imagesIds, sectionId, categoryId, tags, status } = req.body;
         const result = await postService.createPost(
             userId,
@@ -71,7 +71,7 @@ const createPost = async (req, res) => {
 };
 
 const updatePost = async (req, res) => {
-    try{
+    try {
         const { postId } = req.params
         const { userId, title, subtitle, flywheel, content, type, position, comments, imagesIds, sectionId, categoryId, tags, status } = req.body;
         const result = await postService.updatePost(
@@ -97,8 +97,10 @@ const updatePost = async (req, res) => {
 };
 
 const deletePost = async (req, res) => {
-    try{
-        const result = await postService.deletePost(req.params.postId);
+    try {
+        const { postId } = req.params;
+        const { userId } = req.body;
+        const result = await postService.deletePost(postId, userId);
         res.status(204).send({post: result});
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});

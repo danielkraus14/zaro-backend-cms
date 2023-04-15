@@ -1,4 +1,5 @@
 const Venue = require('../models/venue');
+const Record = require('../models/record');
 
 const { deleteEvent } = require('../services/eventService');
 
@@ -10,14 +11,14 @@ const paginateOptions = {
 
 const getVenues = async () => {
     let result;
-    try{
-        await Venue.paginate({}, paginateOptions, function(err, res){
+    try {
+        await Venue.paginate({}, paginateOptions, function(err, res) {
             if (err) {
                 throw err;
             }
             result = res;
         })
-    }catch(error){
+    } catch(error) {
         throw error;
     }
     return result;
@@ -25,11 +26,11 @@ const getVenues = async () => {
 
 const getVenueBySlug = async (venueSlug) => {
     let result;
-    try{
+    try {
         const venue = await Venue.findOne({ slug: venueSlug });
-        if(!venue) throw new Error('Venue not found');
+        if (!venue) throw new Error('Venue not found');
         result = venue;
-    }catch(error){
+    } catch(error) {
         throw error;
     }
     return result;
@@ -37,7 +38,7 @@ const getVenueBySlug = async (venueSlug) => {
 
 const createVenue = async (name, description, address, userId) => {
     let result;
-    try{
+    try {
         const rawSlug = name.replace(/ /g, '_').toLowerCase();
         const slug = rawSlug.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
         const venue = new Venue({
@@ -48,7 +49,8 @@ const createVenue = async (name, description, address, userId) => {
             createdBy: userId
         });
         result = await venue.save();
-    }catch(error){
+        await new Record({ description: venue.name, operation: 'create', collectionName: 'venue', objectId: venue._id, user: userId }).save();
+    } catch(error) {
         throw error;
     }
     return result;
@@ -56,7 +58,7 @@ const createVenue = async (name, description, address, userId) => {
 
 const updateVenue = async (venueSlug, name, description, address, userId) => {
     let result;
-    try{
+    try {
         const venue = await Venue.findOne({ slug: venueSlug });
         if (!venue) throw new Error("Venue not found");
 
@@ -67,16 +69,16 @@ const updateVenue = async (venueSlug, name, description, address, userId) => {
         venue.lastUpdatedBy = userId;
 
         result = await venue.save();
-    }catch(error){
+        await new Record({ description: venue.name, operation: 'update', collectionName: 'venue', objectId: venue._id, user: userId }).save();
+    } catch(error) {
         throw error;
     }
     return result;
 };
 
-const deleteVenue = async (venueSlug) => {
+const deleteVenue = async (venueSlug, userId) => {
     let result;
-    try{
-
+    try {
         const venue = await Venue.findOne({ slug: venueSlug });
         if(!venue) throw new Error('Venue not found');
 
@@ -84,7 +86,10 @@ const deleteVenue = async (venueSlug) => {
             await deleteEvent(eventId);
         };
 
+        const delVenueId = venue._id;
+        const description = venue.name;
         result = await venue.remove();
+        await new Record({ description, operation: 'delete', collectionName: 'venue', objectId: delVenueId, user: userId }).save();
     } catch(error) {
         throw error;
     }

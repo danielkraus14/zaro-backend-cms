@@ -3,9 +3,9 @@ const Role = require('../models/role');
 
 const getUsers = async () => {
     let result;
-    try{
+    try {
         result = await User.find();
-    }catch(error){
+    } catch(error) {
         throw error;
     }
     return result;
@@ -13,9 +13,9 @@ const getUsers = async () => {
 
 const getUserById = async (userId) => {
     let result;
-    try{
+    try {
         result = await User.findById(userId);
-    }catch(error){
+    } catch(error) {
         throw error;
     }
     return result;
@@ -23,7 +23,7 @@ const getUserById = async (userId) => {
 
 const signUpUser = async (email, username, password, role) => {
     let result;
-    try{
+    try {
         const candidateUser = new User( {
             email,
             username,
@@ -31,23 +31,23 @@ const signUpUser = async (email, username, password, role) => {
             role} );
 
             User.findOne({email: candidateUser.email, username: candidateUser.username}, (error, user) => {
-                if(error){
+                if (error) {
                     throw error;
                 }
-                if(user){
+                if (user) {
                     result = {error: 'User already exists'};
                     return result;
                 }
             })
-            if(role){
+            if (role) {
                 const roleFound = await Role.findOne({_id: role});
                 candidateUser.role = roleFound._id;
-            }else{
+            } else {
                 const roleFound = await Role.findOne({name: 'editor'});
                 candidateUser.role = roleFound._id;
             }
         result = await candidateUser.save();
-    }catch(error){
+    } catch(error) {
         throw error;
     }
     return result;
@@ -55,7 +55,7 @@ const signUpUser = async (email, username, password, role) => {
 
 const signInUser = async (email, username, password) => {
     let result;
-    try{
+    try {
         const candidateUser = new User( {
             email,
             username,
@@ -63,18 +63,18 @@ const signInUser = async (email, username, password) => {
         } );
 
         const userFound = await User.findOne({email: candidateUser.email, username: candidateUser.username}).populate('role');
-        if(!userFound){
+        if (!userFound) {
             result = {error: 'User not found'};
             return result;
         }
         const isMatch = await userFound.comparePassword(candidateUser.password);
-        if(!isMatch){
+        if (!isMatch) {
             result = {error: 'Email, username or password is incorrect'};
             return result;
         }
 
         result = userFound;
-    }catch(error){
+    } catch(error) {
         throw error;
     }
     return result;
@@ -82,12 +82,12 @@ const signInUser = async (email, username, password) => {
 
 const deleteUser = async (userId) => {
     let result;
-    try{
+    try {
         const user = await User.findById(userId);
         if (!user) throw new Error('User not found');
         user.isActive = false;
         result = await user.save();
-    }catch(error){
+    } catch(error) {
         throw error;
     }
     return result;
@@ -95,9 +95,9 @@ const deleteUser = async (userId) => {
 
 const updateUser = async (userId, email, username, password, role) => {
     let result;
-    try{
+    try {
         const userFound = await User.findById(userId);
-        if(!userFound){
+        if (!userFound) {
             result = {error: 'User not found'};
             return result;
         }
@@ -107,8 +107,8 @@ const updateUser = async (userId, email, username, password, role) => {
             password,
             role
         });
-        result = await User.findByIdAndUpdate(userId, candidateUser, {new: true});
-    }catch(error){
+        result = await User.findByIdAndUpdate(userId, candidateUser, { new: true });
+    } catch(error) {
         throw error;
     }
     return result;
