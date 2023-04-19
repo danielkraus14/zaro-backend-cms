@@ -8,7 +8,7 @@ const { deleteFile } = require('../services/fileService');
 const getSections = async () => {
     let result;
     try {
-        result = await Section.find({});
+        result = await Section.find().populate('image', 'url');
     } catch(error) {
         throw error;
     }
@@ -18,7 +18,7 @@ const getSections = async () => {
 const getSectionBySlug = async (sectionSlug) => {
     let result;
     try {
-        const section = await Section.findOne({ slug: sectionSlug });
+        const section = await Section.findOne({ slug: sectionSlug }).populate('image', 'url');
         if (!section) throw new Error("Section not found");
         result = section;
     } catch(error) {
@@ -47,7 +47,7 @@ const createSection = async (name, description, imageId, userId) => {
             section.image = imageId;
         };
 
-        result = await section.save();
+        result = (await section.save()).populate('image', 'url');
         await new Record({ description: section.name, operation: 'create', collectionName: 'section', objectId: section._id, user: userId }).save();
     } catch(error) {
         throw error;
@@ -78,7 +78,7 @@ const updateSection = async (sectionSlug, name, description, imageId, userId) =>
         section.lastUpdatedBy = userId;
         section.lastUpdatedAt = Date.now();
 
-        result = await section.save();
+        result = (await section.save()).populate('image', 'url');
         await new Record({ description: section.name, operation: 'update', collectionName: 'section', objectId: section._id, user: userId }).save();
     } catch(error) {
         throw error;
