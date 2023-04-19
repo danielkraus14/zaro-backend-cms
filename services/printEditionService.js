@@ -10,6 +10,13 @@ const paginateOptions = {
     page: 1,
     limit: 15,
     sort: { date: -1 },
+    populate: [{
+        path: 'frontPage',
+        select: 'url'
+    }, {
+        path: 'newsletterPDF',
+        select: 'url'
+    }]
 };
 
 const getPrintEditions = async () => {
@@ -30,7 +37,7 @@ const getPrintEditions = async () => {
 const getPrintEditionById = async (printEditionId) => {
     let result;
     try {
-        result = await PrintEdition.findById(printEditionId);
+        result = await PrintEdition.findById(printEditionId).populate(paginateOptions.populate);
     } catch(error) {
         throw error;
     }
@@ -105,7 +112,7 @@ const createPrintEdition = async (
 
         const description = `${printEdition.date.toISOString().split('T')[0]} - ${printEdition.body}`;
 
-        result = await printEdition.save();
+        result = (await printEdition.save()).populate(paginateOptions.populate);
         await new Record({ description, operation: 'create', collectionName: 'printEdition', objectId: printEdition._id, user: userId }).save();
     } catch (error) {
         throw error;
@@ -181,7 +188,7 @@ const updatePrintEdition = async (
 
         const description = `${printEdition.date.toISOString().split('T')[0]} - ${printEdition.body}`;
 
-        result = await printEdition.save();
+        result = (await printEdition.save()).populate(paginateOptions.populate);
         await new Record({ description, operation: 'update', collectionName: 'printEdition', objectId: printEdition._id, user: userId }).save();
     } catch (error) {
         throw error;
