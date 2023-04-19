@@ -49,8 +49,8 @@ const signInUser = async (req, res) => {
             return res.status(400).send({ message: 'Invalid request', error: resulValidationReq.array() });
         }
 
-        const { email, username, password} = req.body;
-        result =  await userService.signInUser(email, username, password).catch(
+        const { username, password } = req.body;
+        result =  await userService.signInUser(username, password).catch(
             error => {
                 return res.status(error.status).send({ message: error.message });
             }
@@ -77,8 +77,8 @@ const updateUser = async (req, res) => {
     let result;
     try {
         const { userId } = req.params;
-        const { username, password, email, role } = req.body;
-        result = await userService.updateUser(userId, username, password, email, role);
+        const { username, password, email, roleId } = req.body;
+        result = await userService.updateUser(userId, username, password, email, roleId);
         res.status(200).send({message: 'User updated', user: result});
     } catch(error) {
         res.status(400).send(error);
