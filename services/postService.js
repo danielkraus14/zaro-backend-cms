@@ -8,10 +8,13 @@ const Record = require("../models/record");
 
 const { deleteFile } = require('../services/fileService');
 
+const { mongoose } = require("mongoose");
+
 const paginateOptions = {
     page: 1,
     limit: 15,
     sort: { date: -1 },
+    populate: { path: 'images', select: 'url' }
 };
 
 const getPosts = async () => {
@@ -32,7 +35,7 @@ const getPosts = async () => {
 const getPostById = async (postId) => {
     let result;
     try {
-        result = await Post.findById(postId);
+        result = await Post.findById(postId).populate('images', 'url');
     } catch(error) {
         throw error;
     }
@@ -165,7 +168,7 @@ const createPost = async (
         await user.save();
         await section.save();
         await category.save();
-        result = await post.save();
+        result = (await post.save()).populate('images', 'url');
         await new Record({ description: post.title, operation: 'create', collectionName: 'post', objectId: post._id, user: userId }).save();
     } catch (error) {
         throw error;
@@ -204,7 +207,8 @@ const updatePost = async (
         if (status) post.status = status;
         if (imagesIds) {
             for (const imageId of imagesIds) {
-                if (post.images.indexOf(imageId) == -1) {
+                const id = mongoose.Types.ObjectId(imageId);
+                if (post.images.indexOf(id) == -1) {
                     const image = await File.findById(imageId);
                     if (!image) throw new Error("Image not found");
                     image.post = post._id;
@@ -212,7 +216,7 @@ const updatePost = async (
                 };
             };
             for (const imageId of post.images) {
-                if (imagesIds.indexOf(imageId) == -1) {
+                if (imagesIds.indexOf(imageId.toString()) == -1) {
                     await deleteImage(imageId);
                 };
             };
@@ -273,7 +277,7 @@ const updatePost = async (
         post.lastUpdatedBy = userId;
         post.lastUpdatedAt = Date.now();
 
-        result = await post.save();
+        result = (await post.save()).populate('images', 'url');
         await new Record({ description: post.title, operation: 'update', collectionName: 'post', objectId: post._id, user: userId }).save();
     } catch (error) {
         throw error;
