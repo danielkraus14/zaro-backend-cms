@@ -4,7 +4,7 @@ const User = require("../models/user");
 const File = require("../models/file");
 const Record = require("../models/record");
 
-const { deleteFile, readFileById } = require('../services/fileService');
+const { deleteFile } = require('../services/fileService');
 
 const paginateOptions = {
     page: 1,
