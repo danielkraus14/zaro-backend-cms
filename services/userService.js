@@ -4,7 +4,7 @@ const Role = require('../models/role');
 const getUsers = async () => {
     let result;
     try {
-        result = await User.find();
+        result = await User.find().populate('role', 'name');
     } catch(error) {
         throw error;
     }
@@ -14,7 +14,7 @@ const getUsers = async () => {
 const getUserById = async (userId) => {
     let result;
     try {
-        result = await User.findById(userId);
+        result = await User.findById(userId).populate('role', 'name');
     } catch(error) {
         throw error;
     }
@@ -46,7 +46,7 @@ const signUpUser = async (email, username, password, role) => {
                 const roleFound = await Role.findOne({name: 'editor'});
                 candidateUser.role = roleFound._id;
             }
-        result = await candidateUser.save();
+        result = (await candidateUser.save()).populate('role', 'name');
     } catch(error) {
         throw error;
     }
@@ -56,7 +56,7 @@ const signUpUser = async (email, username, password, role) => {
 const signInUser = async (username, password) => {
     let result;
     try {
-        const userFound = await User.findOne({ username }).populate('role');
+        const userFound = await User.findOne({ username }).populate('role', 'name');
         if (!userFound) {
             result = {error: 'User not found'};
             return result;
@@ -101,7 +101,7 @@ const updateUser = async (userId, email, username, password, roleId) => {
             password,
             roleId
         });
-        result = await User.findByIdAndUpdate(userId, candidateUser, { new: true });
+        result = (await User.findByIdAndUpdate(userId, candidateUser, { new: true })).populate('role', 'name');
     } catch(error) {
         throw error;
     }
