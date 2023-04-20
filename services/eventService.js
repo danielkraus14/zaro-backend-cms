@@ -10,7 +10,16 @@ const paginateOptions = {
     page: 1,
     limit: 15,
     sort: { date: -1 },
-    populate: { path: 'billboard', select: 'url' }
+    populate: [
+        {
+            path: 'billboard',
+            select: 'url'
+        },
+        {
+            path: 'venue',
+            select: ['name', 'address', 'slug']
+        }
+    ]
 };
 
 const getEvents = async () => {
@@ -31,7 +40,7 @@ const getEvents = async () => {
 const getEventById = async (eventId) => {
     let result;
     try {
-        result = await Event.findById(eventId).populate('billboard', 'url');
+        result = await Event.findById(eventId).populate(paginateOptions.populate);
     } catch(error) {
         throw error;
     }
@@ -122,7 +131,7 @@ const createEvent = async (
         venue.events.push(event._id);
         await venue.save();
         const venueName = venue.name;
-        result = (await event.save()).populate('billboard', 'url');
+        result = (await event.save()).populate(paginateOptions.populate);
         await new Record({ description: `${event.title} at ${venueName}`, operation: 'create', collectionName: 'event', objectId: event._id, user: userId }).save();
     } catch (error) {
     throw error;
@@ -142,7 +151,7 @@ const updateEvent = async (
 ) => {
     let result;
     try {
-        const event = await Event.findById(eventId);
+        const event = await Event.findById(eventId).populate(paginateOptions.populate);
         if (!event) throw new Error("Event not found");
         let venueName = event.venue.name;
 
@@ -153,7 +162,7 @@ const updateEvent = async (
             if (event.billboard != billboardId) {
                 const file = await File.findById(billboardId);
                 if (!file) throw new Error("Image not found");
-                await deleteFile(event.billboard);
+                await deleteFile(event.billboard, userId);
                 file.event = event._id;
                 await file.save();
                 event.billboard = billboardId;
@@ -179,7 +188,7 @@ const updateEvent = async (
         event.lastUpdatedBy = userId;
         event.lastUpdatedAt = Date.now();
 
-        result = (await event.save()).populate('billboard', 'url');
+        result = (await event.save()).populate(paginateOptions.populate);
         await new Record({ description: `${event.title} at ${venueName}`, operation: 'update', collectionName: 'event', objectId: event._id, user: userId }).save();
     } catch (error) {
         throw error;
@@ -206,7 +215,7 @@ const deleteEvent = async (eventId, userId) => {
 
         //Delete image from S3 server
         if (event.billboard) {
-            await deleteFile(event.billboard);
+            await deleteFile(event.billboard, userId);
         };
 
         const delEventId = event._id;
