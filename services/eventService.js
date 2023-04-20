@@ -10,7 +10,15 @@ const paginateOptions = {
     page: 1,
     limit: 15,
     sort: { date: -1 },
-    populate: { path: 'billboard', select: 'url' }
+    populate: [
+        {
+            path: 'billboard',
+            select: 'url'
+        },
+        {
+            path: 'venue'
+        }
+    ]
 };
 
 const getEvents = async () => {
@@ -31,7 +39,7 @@ const getEvents = async () => {
 const getEventById = async (eventId) => {
     let result;
     try {
-        result = await Event.findById(eventId).populate('billboard', 'url');
+        result = await Event.findById(eventId).populate(paginateOptions.populate);
     } catch(error) {
         throw error;
     }
@@ -122,7 +130,7 @@ const createEvent = async (
         venue.events.push(event._id);
         await venue.save();
         const venueName = venue.name;
-        result = (await event.save()).populate('billboard', 'url');
+        result = (await event.save()).populate(paginateOptions.populate);
         await new Record({ description: `${event.title} at ${venueName}`, operation: 'create', collectionName: 'event', objectId: event._id, user: userId }).save();
     } catch (error) {
     throw error;
@@ -179,7 +187,7 @@ const updateEvent = async (
         event.lastUpdatedBy = userId;
         event.lastUpdatedAt = Date.now();
 
-        result = (await event.save()).populate('billboard', 'url');
+        result = (await event.save()).populate(paginateOptions.populate);
         await new Record({ description: `${event.title} at ${venueName}`, operation: 'update', collectionName: 'event', objectId: event._id, user: userId }).save();
     } catch (error) {
         throw error;

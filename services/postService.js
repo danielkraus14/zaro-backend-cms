@@ -14,7 +14,18 @@ const paginateOptions = {
     page: 1,
     limit: 15,
     sort: { date: -1 },
-    populate: { path: 'images', select: 'url' }
+    populate: [
+        {
+            path: 'images',
+            select: 'url'
+        },
+        {
+            path: 'section'
+        },
+        {
+            path: 'category'
+        }
+    ]
 };
 
 const getPosts = async () => {
@@ -35,7 +46,7 @@ const getPosts = async () => {
 const getPostById = async (postId) => {
     let result;
     try {
-        result = await Post.findById(postId).populate('images', 'url');
+        result = await Post.findById(postId).populate(paginateOptions.populate);
     } catch(error) {
         throw error;
     }
@@ -168,7 +179,7 @@ const createPost = async (
         await user.save();
         await section.save();
         await category.save();
-        result = (await post.save()).populate('images', 'url');
+        result = (await post.save()).populate(paginateOptions.populate);
         await new Record({ description: post.title, operation: 'create', collectionName: 'post', objectId: post._id, user: userId }).save();
     } catch (error) {
         throw error;
@@ -277,7 +288,7 @@ const updatePost = async (
         post.lastUpdatedBy = userId;
         post.lastUpdatedAt = Date.now();
 
-        result = (await post.save()).populate('images', 'url');
+        result = (await post.save()).populate(paginateOptions.populate);
         await new Record({ description: post.title, operation: 'update', collectionName: 'post', objectId: post._id, user: userId }).save();
     } catch (error) {
         throw error;
