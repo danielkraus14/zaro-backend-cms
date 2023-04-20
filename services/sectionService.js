@@ -68,7 +68,7 @@ const updateSection = async (sectionSlug, name, description, imageId, userId) =>
             if (section.image != imageId) {
                 const file = await File.findById(imageId);
                 if (!file) throw new Error("Image not found");
-                await deleteFile(section.image);
+                await deleteFile(section.image, userId);
                 file.section = section._id;
                 await file.save();
                 section.image = imageId;
@@ -100,7 +100,7 @@ const deleteSection = async (sectionSlug, userId) => {
 
         //Delete image from S3 server
         if (section.image) {
-            await deleteFile(section.image);
+            await deleteFile(section.image, userId);
         };
 
         const delSectionId = section._id;

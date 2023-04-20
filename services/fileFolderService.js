@@ -79,7 +79,7 @@ const deleteFileFolder = async (fileFolderSlug, userId) => {
         for (const fileId of fileFolder.files) {
             const file = await File.findById(fileId);
             await deleteFileS3(file.filename);
-            await deleteFile(fileId);
+            await deleteFile(fileId, userId);
         }
         await deleteDirectoryS3(fileFolder.slug);
         const delFileFolderId = fileFolder._id;
