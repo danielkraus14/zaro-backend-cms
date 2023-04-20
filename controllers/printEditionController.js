@@ -28,6 +28,15 @@ const getPrintEditionsByDate = async (req, res) => {
     }
 };
 
+const getPrintEditionsByTag = async (req, res) => {
+    try {
+        const posts = await printEditionService.getPrintEditionsByTag(req.params.tag);
+        res.status(200).send(posts);
+    } catch(error) {
+        res.status(400).send({error, message: "Something went wrong"});
+    }
+};
+
 const createPrintEdition = async (req, res) => {
     try {
         const { date, frontPageId, newsletterPDFId, body, tags, userId } = req.body;
@@ -64,6 +73,7 @@ module.exports = {
     getPrintEditions,
     getPrintEditionById,
     getPrintEditionsByDate,
+    getPrintEditionsByTag,
     createPrintEdition,
     updatePrintEdition,
     deletePrintEdition,

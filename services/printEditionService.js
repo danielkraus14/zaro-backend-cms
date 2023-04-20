@@ -63,6 +63,21 @@ const getPrintEditionsByDate = async (date) => {
     return result;
 };
 
+const getPrintEditionsByTag = async (tag) => {
+    let result;
+    try {
+        await PrintEdition.paginate({ tags: tag }, paginateOptions, function (err, res) {
+            if (err) {
+                throw err;
+            }
+            result = res;
+        })
+    } catch (error) {
+        throw error;
+    }
+    return result;
+};
+
 const createPrintEdition = async (
     date,
     frontPageId,
@@ -230,6 +245,7 @@ module.exports = {
     getPrintEditions,
     getPrintEditionById,
     getPrintEditionsByDate,
+    getPrintEditionsByTag,
     createPrintEdition,
     updatePrintEdition,
     deletePrintEdition,
