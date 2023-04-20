@@ -4,7 +4,7 @@ const Role = require('../models/role');
 const getUsers = async () => {
     let result;
     try {
-        result = await User.find();
+        result = await User.find().populate('role', 'name');
     } catch(error) {
         throw error;
     }
@@ -14,7 +14,7 @@ const getUsers = async () => {
 const getUserById = async (userId) => {
     let result;
     try {
-        result = await User.findById(userId);
+        result = await User.findById(userId).populate('role', 'name');
     } catch(error) {
         throw error;
     }
@@ -46,30 +46,24 @@ const signUpUser = async (email, username, password, role) => {
                 const roleFound = await Role.findOne({name: 'editor'});
                 candidateUser.role = roleFound._id;
             }
-        result = await candidateUser.save();
+        result = (await candidateUser.save()).populate('role', 'name');
     } catch(error) {
         throw error;
     }
     return result;
 }
 
-const signInUser = async (email, username, password) => {
+const signInUser = async (username, password) => {
     let result;
     try {
-        const candidateUser = new User( {
-            email,
-            username,
-            password
-        } );
-
-        const userFound = await User.findOne({email: candidateUser.email, username: candidateUser.username}).populate('role');
+        const userFound = await User.findOne({ username }).populate('role', 'name');
         if (!userFound) {
             result = {error: 'User not found'};
             return result;
         }
-        const isMatch = await userFound.comparePassword(candidateUser.password);
+        const isMatch = await userFound.comparePassword(password);
         if (!isMatch) {
-            result = {error: 'Email, username or password is incorrect'};
+            result = { error: 'Username or password is incorrect' };
             return result;
         }
 
@@ -93,21 +87,21 @@ const deleteUser = async (userId) => {
     return result;
 };
 
-const updateUser = async (userId, email, username, password, role) => {
+const updateUser = async (userId, email, username, password, roleId) => {
     let result;
     try {
         const userFound = await User.findById(userId);
         if (!userFound) {
             result = {error: 'User not found'};
             return result;
-        }
+        };
         const candidateUser = new User({
             email,
             username,
             password,
-            role
+            roleId
         });
-        result = await User.findByIdAndUpdate(userId, candidateUser, { new: true });
+        result = (await User.findByIdAndUpdate(userId, candidateUser, { new: true })).populate('role', 'name');
     } catch(error) {
         throw error;
     }
