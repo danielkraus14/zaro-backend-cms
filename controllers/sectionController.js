@@ -21,10 +21,10 @@ const getSectionBySlug = async (req, res) => {
 };
 
 const createSection = async (req, res) => {
-    const { name, description, imageId, userId } = req.body;
+    const { name, description, imageId, atMenu, userId } = req.body;
     let result;
     try {
-        result = await sectionService.createSection(name, description, imageId, userId);
+        result = await sectionService.createSection(name, description, imageId, atMenu, userId);
         res.status(201).send(result);
     } catch(error) {
         res.status(400).send({error, message: 'Section already exists'});
@@ -34,8 +34,8 @@ const createSection = async (req, res) => {
 const updateSection = async (req, res) => {
     try {
         const { sectionSlug } = req.params;
-        const { name, description, imageId, userId } = req.body;
-        const result = await sectionService.updateSection(sectionSlug, name, description, imageId, userId);
+        const { name, description, imageId, atMenu, userId } = req.body;
+        const result = await sectionService.updateSection(sectionSlug, name, description, imageId, atMenu, userId);
         res.status(200).send({section: result});
     } catch(error) {
         res.status(400).send({error, message: 'Section not found'});

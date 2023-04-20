@@ -27,7 +27,7 @@ const getSectionBySlug = async (sectionSlug) => {
     return result;
 };
 
-const createSection = async (name, description, imageId, userId) => {
+const createSection = async (name, description, imageId, atMenu, userId) => {
     let result;
     try {
         const rawSlug = name.replace(/ /g, '_').toLowerCase();
@@ -36,6 +36,7 @@ const createSection = async (name, description, imageId, userId) => {
             name,
             description,
             slug,
+            atMenu,
             createdBy: userId
         } );
 
@@ -47,6 +48,7 @@ const createSection = async (name, description, imageId, userId) => {
             section.image = imageId;
         };
 
+        // if (atMenu) section.atMenu = atMenu;
         result = (await section.save()).populate('image', 'url');
         await new Record({ description: section.name, operation: 'create', collectionName: 'section', objectId: section._id, user: userId }).save();
     } catch(error) {
@@ -55,7 +57,7 @@ const createSection = async (name, description, imageId, userId) => {
     return result;
 };
 
-const updateSection = async (sectionSlug, name, description, imageId, userId) => {
+const updateSection = async (sectionSlug, name, description, imageId, atMenu, userId) => {
     let result;
     try {
         const section = await Section.findOne({ slug: sectionSlug });
@@ -63,6 +65,7 @@ const updateSection = async (sectionSlug, name, description, imageId, userId) =>
 
         section.name = name;
         section.description = description;
+        section.atMenu = atMenu;
 
         if (imageId) {
             if (section.image != imageId) {

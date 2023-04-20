@@ -29,12 +29,12 @@ const getCategoryBySlug = async (categorySlug) => {
     return result;
 };
 
-const createCategory = async (name, description, userId) => {
+const createCategory = async (name, description, atMenu, userId) => {
     let result;
     try {
         const rawSlug = name.replace(/ /g, '_').toLowerCase();
         const slug = rawSlug.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-        const newCategory = new Category({ name, slug, description, createdBy: userId });
+        const newCategory = new Category({ name, slug, description, atMenu, createdBy: userId });
 
         const category = await Category.findOne({ slug });
         if (category) throw new Error('Category already exists');
@@ -48,7 +48,7 @@ const createCategory = async (name, description, userId) => {
     return result;
 };
 
-const updateCategory = async (categorySlug, name, description, userId) => {
+const updateCategory = async (categorySlug, name, description, atMenu, userId) => {
     let result;
     try {
         const category = await Category.findOne({ slug: categorySlug });
@@ -56,6 +56,7 @@ const updateCategory = async (categorySlug, name, description, userId) => {
 
         category.name = name;
         category.description = description;
+        category.atMenu = atMenu;
         category.lastUpdatedAt = Date.now();
         category.lastUpdatedBy = userId;
         result = await category.save();
