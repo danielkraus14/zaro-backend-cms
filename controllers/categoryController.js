@@ -21,8 +21,8 @@ const getCategoryBySlug = async (req, res) => {
 
 const createCategory = async (req, res) => {
     try {
-        const { name, description, userId } = req.body;
-        const result = await categoryService.createCategory(name, description, userId);
+        const { name, description, atMenu, userId } = req.body;
+        const result = await categoryService.createCategory(name, description, atMenu, userId);
         res.status(201).send({category: result});
     } catch(error) {
         res.status(400).send({error, message: 'Category already exists'});
@@ -32,8 +32,8 @@ const createCategory = async (req, res) => {
 const updateCategory = async (req, res) => {
     try {
         const { categorySlug } = req.params;
-        const { name, description, userId } = req.body;
-        const result = await categoryService.updateCategory(categorySlug, name, description, userId);
+        const { name, description, atMenu, userId } = req.body;
+        const result = await categoryService.updateCategory(categorySlug, name, description, atMenu, userId);
         res.status(200).send({category: result});
     } catch(error) {
         res.status(400).send({error, message: 'Category not found'});

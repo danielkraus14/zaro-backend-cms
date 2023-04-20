@@ -19,6 +19,10 @@ const SectionSchema = new Schema({
         required: true,
         unique: true
     },
+    atMenu: {
+        type: Boolean,
+        default: false
+    },
     posts: [
         {
             type: Schema.Types.ObjectId,
