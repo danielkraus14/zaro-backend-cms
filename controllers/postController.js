@@ -46,6 +46,15 @@ const getPostsByCategory = async (req, res) => {
     }
 };
 
+const getPostsByTag = async (req, res) => {
+    try {
+        const posts = await postService.getPostsByTag(req.params.tag);
+        res.status(200).send(posts);
+    } catch(error) {
+        res.status(400).send({error, message: "Something went wrong"});
+    }
+};
+
 const createPost = async (req, res) => {
     try {
         const { userId, title, subtitle, flywheel, content, type, position, comments, imagesIds, sectionId, categoryId, tags, status } = req.body;
@@ -114,6 +123,7 @@ module.exports = {
     searchPosts,
     getPostsBySection,
     getPostsByCategory,
+    getPostsByTag,
     createPost,
     updatePost,
     deletePost
