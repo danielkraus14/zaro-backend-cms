@@ -320,7 +320,7 @@ const deletePost = async (postId, userId) => {
         //Delete all images
         if (post.images) {
             for (const imageId of post.images) {
-                await deleteFile(imageId);
+                await deleteFile(imageId, userId);
             };
         };
 

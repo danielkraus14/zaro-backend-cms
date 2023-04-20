@@ -4,7 +4,7 @@ const User = require("../models/user");
 const File = require("../models/file");
 const Record = require("../models/record");
 
-const { deleteFile } = require('../services/fileService');
+const { deleteFile, readFileById } = require('../services/fileService');
 
 const paginateOptions = {
     page: 1,
@@ -161,7 +161,7 @@ const updateEvent = async (
             if (event.billboard != billboardId) {
                 const file = await File.findById(billboardId);
                 if (!file) throw new Error("Image not found");
-                await deleteFile(event.billboard);
+                await deleteFile(event.billboard, userId);
                 file.event = event._id;
                 await file.save();
                 event.billboard = billboardId;
@@ -214,7 +214,7 @@ const deleteEvent = async (eventId, userId) => {
 
         //Delete image from S3 server
         if (event.billboard) {
-            await deleteFile(event.billboard);
+            await deleteFile(event.billboard, userId);
         };
 
         const delEventId = event._id;
