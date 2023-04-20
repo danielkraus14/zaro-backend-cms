@@ -20,10 +20,12 @@ const paginateOptions = {
             select: 'url'
         },
         {
-            path: 'section'
+            path: 'section',
+            select: ['name', 'slug', 'image']
         },
         {
-            path: 'category'
+            path: 'category',
+            select: ['name', 'slug']
         }
     ]
 };

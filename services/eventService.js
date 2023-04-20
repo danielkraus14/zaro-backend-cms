@@ -16,7 +16,8 @@ const paginateOptions = {
             select: 'url'
         },
         {
-            path: 'venue'
+            path: 'venue',
+            select: ['name', 'address', 'slug']
         }
     ]
 };
@@ -150,7 +151,7 @@ const updateEvent = async (
 ) => {
     let result;
     try {
-        const event = await Event.findById(eventId);
+        const event = await Event.findById(eventId).populate(paginateOptions.populate);
         if (!event) throw new Error("Event not found");
         let venueName = event.venue.name;
 
