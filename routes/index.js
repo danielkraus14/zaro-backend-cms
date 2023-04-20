@@ -57,17 +57,18 @@ routes.post('/categories/create', isAuth, isAdmin, categoryController.createCate
 routes.put('/categories/update/:categorySlug', isAuth, isAdmin, categoryController.updateCategory);
 routes.delete('/categories/delete/:categorySlug', isAuth, isAdmin, categoryController.deleteCategory);
 
-// Posts - Agregar filtro por tags
+// Posts
 routes.get('/posts', isAuth, postController.getPosts);
 routes.get('/posts/id/:postId', isAuth, postController.getPostById);
 routes.get('/posts/search', isAuth, postController.searchPosts);
 routes.get('/posts/section/:sectionSlug', isAuth, postController.getPostsBySection);
 routes.get('/posts/category/:categorySlug', isAuth, postController.getPostsByCategory);
+routes.get('/posts/tags/:tag', isAuth, postController.getPostsByTag);
 routes.post('/posts/create', isAuth, postController.createPost);
 routes.put('/posts/update/:postId', isAuth, postController.updatePost);
 routes.delete('/posts/delete/:postId', isAuth, postController.deletePost);
 
-// Tags
+// Tags - Agregar editar tags con edición de tags en posts y printEditions
 routes.get('/tags', isAuth, tagController.getTags);
 routes.get('/tags/:tagName', isAuth, tagController.getTagsByName);
 routes.post('/tags/create', isAuth, tagController.createTag);
@@ -83,10 +84,11 @@ routes.post('/funeral-notices/create', isAuth, funeralNoticeController.createFun
 routes.put('/funeral-notices/update/:funeralNoticeId', isAuth, funeralNoticeController.updateFuneralNotice);
 routes.delete('/funeral-notices/delete/:funeralNoticeId', isAuth, funeralNoticeController.deleteFuneralNotice);
 
-// Print Editions - Agregar filtro por tags
+// Print Editions
 routes.get('/print-editions', isAuth, printEditionController.getPrintEditions);
 routes.get('/print-editions/id/:printEditionId', isAuth, printEditionController.getPrintEditionById);
 routes.get('/print-editions/date/:date', isAuth, printEditionController.getPrintEditionsByDate);
+routes.get('/print-editions/tags/:tag', isAuth, printEditionController.getPrintEditionsByTag);
 routes.post('/print-editions/create', isAuth, printEditionController.createPrintEdition);
 routes.put('/print-editions/update/:printEditionId', isAuth, printEditionController.updatePrintEdition);
 routes.delete('/print-editions/delete/:printEditionId', isAuth, printEditionController.deletePrintEdition);
