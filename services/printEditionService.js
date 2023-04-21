@@ -12,10 +12,10 @@ const paginateOptions = {
     sort: { date: -1 },
     populate: [{
         path: 'frontPage',
-        select: 'url'
+        select: ['url', 'filename', 'epigraph']
     }, {
         path: 'newsletterPDF',
-        select: 'url'
+        select: ['url', 'filename', 'epigraph']
     }]
 };
 

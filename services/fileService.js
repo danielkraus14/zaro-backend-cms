@@ -36,7 +36,7 @@ const readFileById = async (fileId) => {
     return result;
 };
 
-const createFile = async (file, fileFolderSlug, userId) => {
+const createFile = async (file, fileFolderSlug, epigraph, userId) => {
     let result;
     try {
         const year = dateFns.format(new Date(), 'yyyy');
@@ -51,12 +51,27 @@ const createFile = async (file, fileFolderSlug, userId) => {
         const filename = `${fileFolder.slug}/${year}/${month}/${day}_${nameFormat}`;
         const url = `https://${process.env.BUCKET_NAME_AWS}.s3.${process.env.BUCKET_REGION_AWS}.amazonaws.com/${filename}`
 
-        const newFile = new File({ filename, url, createdBy: userId, fileFolder: fileFolder._id });
+        const newFile = new File({ filename, url, epigraph, createdBy: userId, fileFolder: fileFolder._id });
         fileFolder.files.push(newFile._id);
         await fileFolder.save();
         await uploadFileS3(file, filename);
         result = await newFile.save();
         await new Record({ description: newFile.filename, operation: 'create', collectionName: 'file', objectId: newFile._id, user: userId }).save();
+    } catch(error) {
+        throw error;
+    }
+    return result;
+};
+
+const updateFile = async (fileId, epigraph, userId) => {
+    let result;
+    try {
+        const file = await File.findById(fileId);
+        if (!file) throw new Error('File not found');
+
+        file.epigraph = epigraph;
+        result = await file.save();
+        await new Record({ description: file.filename, operation: 'update', collectionName: 'file', objectId: file._id, user: userId }).save();
     } catch(error) {
         throw error;
     }
@@ -120,5 +135,6 @@ module.exports = {
     getFiles,
     readFileById,
     createFile,
+    updateFile,
     deleteFile
 };

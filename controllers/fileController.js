@@ -22,11 +22,22 @@ const readFileById = async (req, res) => {
 const createFile = async (req, res) => {
     try {
         const { file } = req.files
-        const { userId, fileFolderSlug } = req.body
-        const result = await fileService.createFile(file, fileFolderSlug, userId);
+        const { fileFolderSlug, epigraph, userId } = req.body
+        const result = await fileService.createFile(file, fileFolderSlug, epigraph, userId);
         res.status(201).send({file: result});
     } catch(error) {
         res.status(400).send({error, message: 'File already exists'});
+    }
+};
+
+const updateFile = async (req, res) => {
+    try {
+        const { fileId } = req.params
+        const { epigraph, userId } = req.body
+        const result = await fileService.updateFile(fileId, epigraph, userId);
+        res.status(200).send({file: result});
+    } catch(error) {
+        res.status(400).send({error});
     }
 };
 
@@ -45,5 +56,6 @@ module.exports = {
     getFiles,
     readFileById,
     createFile,
+    updateFile,
     deleteFile
 };
