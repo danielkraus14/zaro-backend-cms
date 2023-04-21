@@ -68,10 +68,11 @@ routes.post('/posts/create', isAuth, postController.createPost);
 routes.put('/posts/update/:postId', isAuth, postController.updatePost);
 routes.delete('/posts/delete/:postId', isAuth, postController.deletePost);
 
-// Tags - Agregar editar tags con edición de tags en posts y printEditions
+// Tags
 routes.get('/tags', isAuth, tagController.getTags);
 routes.get('/tags/:tagName', isAuth, tagController.getTagsByName);
 routes.post('/tags/create', isAuth, tagController.createTag);
+routes.put('/tags/update/:oldName', isAuth, tagController.updateTag);
 
 // Funeral Notices
 routes.get('/funeral-notices', isAuth, funeralNoticeController.getFuneralNotices);
