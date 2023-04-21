@@ -120,6 +120,7 @@ routes.delete('/file-folders/delete/:fileFolderSlug', isAuth, fileFolderControll
 routes.get('/files', isAuth, fileController.getFiles);
 routes.get('/files/:fileId', isAuth, fileController.readFileById);
 routes.post('/files/create', isAuth, fileController.createFile);
+routes.put('/files/update/:fileId', isAuth, fileController.updateFile);
 routes.delete('/files/delete/:fileId', isAuth, fileController.deleteFile);
 
 // Records - Agregar qué campo se modificó
