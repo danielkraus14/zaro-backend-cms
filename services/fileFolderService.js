@@ -54,15 +54,24 @@ const createFileFolder = async (name, userId) => {
 
 const updateFileFolder = async (fileFolderSlug, name, userId) => {
     let result;
+    let updatedProperties = [];
     try {
         const fileFolder = await FileFolder.findOne({ slug: fileFolderSlug });
         if (!fileFolder) throw new Error('File folder not found');
 
-        fileFolder.name = name;
+        if (name) fileFolder.name = (fileFolder.name != name) ? (updatedProperties.push('name'), name) : fileFolder.name;
+
         fileFolder.lastUpdatedBy = userId;
         fileFolder.lastUpdatedAt = Date.now();
         result = await fileFolder.save();
-        await new Record({ description: fileFolder.name, operation: 'update', collectionName: 'fileFolder', objectId: fileFolder._id, user: userId }).save();
+        await new Record({
+            description: fileFolder.name,
+            operation: 'update',
+            collectionName: 'fileFolder',
+            objectId: fileFolder._id,
+            user: userId,
+            updatedProperties
+        }).save();
     } catch(error) {
         throw error;
     }

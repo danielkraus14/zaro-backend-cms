@@ -222,19 +222,21 @@ const updatePost = async (
     status
 ) => {
     let result;
+    let updatedProperties = [];
     try {
         const post = await Post.findById(postId);
         if (!post) throw new Error("Post not found");
 
-        if (title) post.title = title;
-        if (subtitle) post.subtitle = subtitle;
-        if (flywheel) post.flywheel = flywheel;
-        if (content) post.content = content;
-        if (type) post.type = type;
-        if (position) post.position = position;
-        if (comments) post.comments = comments;
-        if (status) post.status = status;
+        if (title) post.title =  (post.title != title) ? (updatedProperties.push('title'), title) : post.title;
+        if (subtitle) post.subtitle =  (post.subtitle != subtitle) ? (updatedProperties.push('subtitle'), subtitle) : post.subtitle;
+        if (flywheel) post.flywheel =  (post.flywheel != flywheel) ? (updatedProperties.push('flywheel'), flywheel) : post.flywheel;
+        if (content) post.content =  (post.content != content) ? (updatedProperties.push('content'), content) : post.content;
+        if (type) post.type =  (post.type != type) ? (updatedProperties.push('type'), type) : post.type;
+        if (position) post.position =  (post.position != position) ? (updatedProperties.push('position'), position) : post.position;
+        if (comments) post.comments =  (post.comments != comments) ? (updatedProperties.push('comments'), comments) : post.comments;
+        if (status) post.status =  (post.status != status) ? (updatedProperties.push('status'), status) : post.status;
         if (imagesIds) {
+            let updated = false;
             for (const imageId of imagesIds) {
                 const id = mongoose.Types.ObjectId(imageId);
                 if (post.images.indexOf(id) == -1) {
@@ -242,14 +244,17 @@ const updatePost = async (
                     if (!image) throw new Error("Image not found");
                     image.post = post._id;
                     await image.save();
+                    updated = true;
                 };
             };
             for (const imageId of post.images) {
                 if (imagesIds.indexOf(imageId.toString()) == -1) {
                     await deleteImage(imageId);
+                    updated = true;
                 };
             };
             post.images = imagesIds;
+            if (updated) updatedProperties.push('images');
         }
         if (sectionId) {
             if (post.section != sectionId) {
@@ -263,6 +268,7 @@ const updatePost = async (
                 oldSection.posts.pull(post._id);
                 await oldSection.save();
                 post.section = sectionId;
+                updatedProperties.push('section');
             }
         }
         if (categoryId) {
@@ -275,9 +281,11 @@ const updatePost = async (
                 oldCategory.posts.pull(post._id);
                 await oldCategory.save();
                 post.category = categoryId;
+                updatedProperties.push('category');
             }
         }
         if (tags) {
+            let updated = false;
             for (const tag of tags) {
                 if (post.tags.indexOf(tag) == -1) {
                     const tagFound = await Tag.findOne({ name: tag });
@@ -289,6 +297,7 @@ const updatePost = async (
                         tagFound.posts.push(post._id);
                         await tagFound.save();
                     }
+                    updated = true;
                 };
             };
             for (const tag of post.tags) {
@@ -298,16 +307,18 @@ const updatePost = async (
                         tagFound.posts.pull(post._id);
                         await tagFound.save();
                     }
+                    updated = true;
                 }
             };
             post.tags = tags;
+            if (updated) updatedProperties.push('tags');
         };
 
         post.lastUpdatedBy = userId;
         post.lastUpdatedAt = Date.now();
 
         result = (await post.save()).populate(paginateOptions.populate);
-        await new Record({ description: post.title, operation: 'update', collectionName: 'post', objectId: post._id, user: userId }).save();
+        await new Record({ description: post.title, operation: 'update', collectionName: 'post', objectId: post._id, user: userId, updatedProperties }).save();
     } catch (error) {
         throw error;
     }

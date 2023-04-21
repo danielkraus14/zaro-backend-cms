@@ -65,13 +65,14 @@ const createFile = async (file, fileFolderSlug, epigraph, userId) => {
 
 const updateFile = async (fileId, epigraph, userId) => {
     let result;
+    let updatedProperties = [];
     try {
         const file = await File.findById(fileId);
         if (!file) throw new Error('File not found');
 
-        file.epigraph = epigraph;
+        if (epigraph) file.epigraph = (file.epigraph != epigraph) ? (updatedProperties.push('epigraph'), epigraph) : file.epigraph;
         result = await file.save();
-        await new Record({ description: file.filename, operation: 'update', collectionName: 'file', objectId: file._id, user: userId }).save();
+        await new Record({ description: file.filename, operation: 'update', collectionName: 'file', objectId: file._id, user: userId, updatedProperties }).save();
     } catch(error) {
         throw error;
     }

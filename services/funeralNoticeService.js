@@ -158,17 +158,18 @@ const updateFuneralNotice = async (
     content,
 ) => {
     let result;
+    let updatedProperties = [];
     try {
         const funeralNotice = await FuneralNotice.findById(funeralNoticeId);
         if (!funeralNotice) throw new Error("Funeral notice not found");
 
-        if (title) funeralNotice.title = title;
-        if (deceased) funeralNotice.deceased = deceased;
-        if (client) funeralNotice.client = client;
-        if (date) funeralNotice.date = date;
-        if (religion) funeralNotice.religion = religion;
-        if (status) funeralNotice.status = status;
-        if (content) funeralNotice.content = content;
+        if (title) funeralNotice.title = (funeralNotice.title != title) ? (updatedProperties.push('title'), title) : funeralNotice.title;
+        if (deceased) funeralNotice.deceased = (funeralNotice.deceased != deceased) ? (updatedProperties.push('deceased'), deceased) : funeralNotice.deceased;
+        if (client) funeralNotice.client = (funeralNotice.client != client) ? (updatedProperties.push('client'), client) : funeralNotice.client;
+        if (date) funeralNotice.date = (funeralNotice.date != date) ? (updatedProperties.push('date'), date) : funeralNotice.date;
+        if (religion) funeralNotice.religion = (funeralNotice.religion != religion) ? (updatedProperties.push('religion'), religion) : funeralNotice.religion;
+        if (status) funeralNotice.status = (funeralNotice.status != status) ? (updatedProperties.push('status'), status) : funeralNotice.status;
+        if (content) funeralNotice.content = (funeralNotice.content != content) ? (updatedProperties.push('content'), content) : funeralNotice.content;
 
         funeralNotice.lastUpdatedBy = userId;
         funeralNotice.lastUpdatedAt = Date.now();
@@ -179,7 +180,8 @@ const updateFuneralNotice = async (
             operation: 'update',
             collectionName: 'funeralNotice',
             objectId: funeralNotice._id,
-            user: userId
+            user: userId,
+            updatedProperties
         }).save();
     } catch (error) {
         throw error;

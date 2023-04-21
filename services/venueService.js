@@ -58,18 +58,20 @@ const createVenue = async (name, description, address, userId) => {
 
 const updateVenue = async (venueSlug, name, description, address, userId) => {
     let result;
+    let updatedProperties = [];
     try {
         const venue = await Venue.findOne({ slug: venueSlug });
         if (!venue) throw new Error("Venue not found");
 
-        venue.name = name;
-        venue.description = description;
-        venue.address = address;
+        if (name) venue.name = (venue.name != name) ? (updatedProperties.push('name'), name) : venue.name;
+        if (description) venue.description = (venue.description != description) ? (updatedProperties.push('description'), description) : venue.description;
+        if (address) venue.address = (venue.address != address) ? (updatedProperties.push('address'), address) : venue.address;
+
         venue.lastUpdatedAt = Date.now();
         venue.lastUpdatedBy = userId;
 
         result = await venue.save();
-        await new Record({ description: venue.name, operation: 'update', collectionName: 'venue', objectId: venue._id, user: userId }).save();
+        await new Record({ description: venue.name, operation: 'update', collectionName: 'venue', objectId: venue._id, user: userId, updatedProperties }).save();
     } catch(error) {
         throw error;
     }
