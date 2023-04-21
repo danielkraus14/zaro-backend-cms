@@ -28,9 +28,21 @@ const createTag = async (req, res) => {
     }
 };
 
+const updateTag = async (req, res) => {
+    try {
+        const { oldName } = req.params
+        const { newName } = req.body;
+        const result = await tagService.updateTag(oldName, newName);
+        res.status(200).send({tag: result});
+    } catch(error) {
+        res.status(400).send({error, message: "Something went wrong"});
+    }
+};
+
 
 module.exports  =  {
     getTags,
     getTagsByName,
-    createTag
+    createTag,
+    updateTag
 };
