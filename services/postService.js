@@ -173,6 +173,7 @@ const createPost = async (
                 } else {
                     post.tags.push(tagFound.name);
                     tagFound.posts.push(post._id);
+                    await tagFound.save();
                 }
             };
         };
