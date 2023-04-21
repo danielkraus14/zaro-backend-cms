@@ -32,7 +32,13 @@ const RecordSchema = new Schema({
     date: {
         type: Date,
         default: Date.now
-    }
+    },
+    updatedProperties: [
+        {
+            type: String,
+            required: false
+        }
+    ]
 });
 
 RecordSchema.plugin(mongoosePaginate);

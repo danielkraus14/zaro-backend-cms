@@ -50,17 +50,19 @@ const createCategory = async (name, description, atMenu, userId) => {
 
 const updateCategory = async (categorySlug, name, description, atMenu, userId) => {
     let result;
+    let updatedProperties = [];
     try {
         const category = await Category.findOne({ slug: categorySlug });
         if (!category) throw new Error('Category not found');
 
-        category.name = name;
-        category.description = description;
-        category.atMenu = atMenu;
+        if (name) category.name = (category.name != name) ? (updatedProperties.push('name'), name) : category.name;
+        if (description) category.description = (category.description != description) ? (updatedProperties.push('description'), description) : category.description;
+        if (atMenu) category.atMenu = (category.atMenu != atMenu) ? (updatedProperties.push('atMenu'), atMenu) : category.atMenu;
+
         category.lastUpdatedAt = Date.now();
         category.lastUpdatedBy = userId;
         result = await category.save();
-        await new Record({ description: category.name, operation: 'update', collectionName: 'category', objectId: category._id, user: userId }).save();
+        await new Record({ description: category.name, operation: 'update', collectionName: 'category', objectId: category._id, user: userId, updatedProperties }).save();
     } catch(error) {
         throw error;
     }
