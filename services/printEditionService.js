@@ -105,6 +105,7 @@ const createPrintEdition = async (
                 } else {
                     printEdition.tags.push(tagFound.name);
                     tagFound.printEditions.push(printEdition._id);
+                    await tagFound.save();
                 }
             };
         };
