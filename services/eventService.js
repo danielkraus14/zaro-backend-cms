@@ -132,7 +132,13 @@ const createEvent = async (
         await venue.save();
         const venueName = venue.name;
         result = (await event.save()).populate(paginateOptions.populate);
-        await new Record({ description: `${event.title} at ${venueName}`, operation: 'create', collectionName: 'event', objectId: event._id, user: userId }).save();
+        await new Record({
+            description: `${event.title} at ${venueName}`,
+            operation: 'create',
+            collectionName: 'event',
+            objectId: event._id,
+            user: userId
+        }).save();
     } catch (error) {
     throw error;
     }
@@ -150,13 +156,16 @@ const updateEvent = async (
     userId
 ) => {
     let result;
+    let updatedProperties = [];
     try {
         const event = await Event.findById(eventId).populate(paginateOptions.populate);
         if (!event) throw new Error("Event not found");
         let venueName = event.venue.name;
 
-        if (title) event.title = title;
-        if (description) event.description = description;
+        if (title) event.title = (event.title != title) ? (updatedProperties.push('title'), title) : event.title;
+        if (description) event.description = (event.description != description) ? (updatedProperties.push('description'), description) : event.description;
+        if (dateStarts) event.dateStarts = (event.dateStarts != dateStarts) ? (updatedProperties.push('dateStarts'), dateStarts) : event.dateStarts;
+        if (dateEnds) event.dateEnds = (event.dateEnds != dateEnds) ? (updatedProperties.push('dateEnds'), dateEnds) : event.dateEnds;
 
         if (billboardId) {
             if (event.billboard != billboardId) {
@@ -166,11 +175,10 @@ const updateEvent = async (
                 file.event = event._id;
                 await file.save();
                 event.billboard = billboardId;
+                updatedProperties.push('billboard');
             }
         };
 
-        if (dateStarts) event.dateStarts = dateStarts;
-        if (dateEnds) event.dateEnds = dateEnds;
         if (venueId) {
             if (event.venue._id != venueId) {
                 const oldVenue = await Venue.findById(event.venue);
@@ -182,6 +190,7 @@ const updateEvent = async (
                 await oldVenue.save();
                 event.venue = venueId;
                 venueName = newVenue.name;
+                updatedProperties.push('venue');
             }
         };
 
@@ -189,7 +198,14 @@ const updateEvent = async (
         event.lastUpdatedAt = Date.now();
 
         result = (await event.save()).populate(paginateOptions.populate);
-        await new Record({ description: `${event.title} at ${venueName}`, operation: 'update', collectionName: 'event', objectId: event._id, user: userId }).save();
+        await new Record({
+            description: `${event.title} at ${venueName}`,
+            operation: 'update',
+            collectionName: 'event',
+            objectId: event._id,
+            user: userId,
+            updatedProperties
+        }).save();
     } catch (error) {
         throw error;
     }

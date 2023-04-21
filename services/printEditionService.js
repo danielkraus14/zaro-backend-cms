@@ -146,11 +146,13 @@ const updatePrintEdition = async (
     userId
 ) => {
     let result;
+    let updatedProperties = [];
     try {
         const printEdition = await PrintEdition.findById(printEditionId);
         if (!printEdition) throw new Error("Print edition not found");
-        if (date) printEdition.date = date;
-        if (body) printEdition.body = body;
+
+        if (date) printEdition.date = (printEdition.date != date) ? (updatedProperties.push('date'), date) : printEdition.date;
+        if (body) printEdition.body = (printEdition.body != body) ? (updatedProperties.push('body'), body) : printEdition.body;
 
         if (frontPageId) {
             if (printEdition.frontPage != frontPageId) {
@@ -160,6 +162,7 @@ const updatePrintEdition = async (
                 file.printEditionFP = printEdition._id;
                 await file.save();
                 printEdition.frontPage = frontPageId;
+                updatedProperties.push('frontPage');
             }
         };
         if (newsletterPDFId) {
@@ -170,10 +173,12 @@ const updatePrintEdition = async (
                 file.printEditionPDF = printEdition._id;
                 await file.save();
                 printEdition.newsletterPDF = newsletterPDFId;
+                updatedProperties.push('newsletterPDF');
             }
         };
 
         if (tags) {
+            let updated = false;
             for (const tag of tags) {
                 if (printEdition.tags.indexOf(tag) == -1) {
                     const tagFound = await Tag.findOne({ name: tag });
@@ -185,6 +190,7 @@ const updatePrintEdition = async (
                         tagFound.printEditions.push(printEdition._id);
                         await tagFound.save();
                     }
+                    updated = true;
                 }
             };
             for (const tag of printEdition.tags) {
@@ -194,9 +200,11 @@ const updatePrintEdition = async (
                         tagFound.printEditions.pull(printEdition._id);
                         await tagFound.save();
                     }
+                    updated = true;
                 }
             };
             printEdition.tags = tags;
+            if (updated) updatedProperties.push('tags');
         };
 
         printEdition.lastUpdatedBy = userId;
@@ -205,7 +213,7 @@ const updatePrintEdition = async (
         const description = `${printEdition.date.toISOString().split('T')[0]} - ${printEdition.body}`;
 
         result = (await printEdition.save()).populate(paginateOptions.populate);
-        await new Record({ description, operation: 'update', collectionName: 'printEdition', objectId: printEdition._id, user: userId }).save();
+        await new Record({ description, operation: 'update', collectionName: 'printEdition', objectId: printEdition._id, user: userId, updatedProperties }).save();
     } catch (error) {
         throw error;
     }

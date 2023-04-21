@@ -59,13 +59,14 @@ const createSection = async (name, description, imageId, atMenu, userId) => {
 
 const updateSection = async (sectionSlug, name, description, imageId, atMenu, userId) => {
     let result;
+    let updatedProperties = [];
     try {
         const section = await Section.findOne({ slug: sectionSlug });
         if (!section) throw new Error("Section not found");
 
-        section.name = name;
-        section.description = description;
-        section.atMenu = atMenu;
+        if (name) section.name = (section.name != name) ? (updatedProperties.push('name'), name) : section.name;
+        if (description) section.description = (section.description != description) ? (updatedProperties.push('description'), description) : section.description;
+        if (atMenu) section.atMenu = (section.atMenu != atMenu) ? (updatedProperties.push('atMenu'), atMenu) : section.atMenu;
 
         if (imageId) {
             if (section.image != imageId) {
@@ -75,6 +76,7 @@ const updateSection = async (sectionSlug, name, description, imageId, atMenu, us
                 file.section = section._id;
                 await file.save();
                 section.image = imageId;
+                updatedProperties.push('image');
             }
         };
 
@@ -82,7 +84,7 @@ const updateSection = async (sectionSlug, name, description, imageId, atMenu, us
         section.lastUpdatedAt = Date.now();
 
         result = (await section.save()).populate('image', 'url');
-        await new Record({ description: section.name, operation: 'update', collectionName: 'section', objectId: section._id, user: userId }).save();
+        await new Record({ description: section.name, operation: 'update', collectionName: 'section', objectId: section._id, user: userId, updatedProperties }).save();
     } catch(error) {
         throw error;
     }
