@@ -13,7 +13,7 @@ const paginateOptions = {
     populate: [
         {
             path: 'billboard',
-            select: 'url'
+            select: ['url', 'filename', 'epigraph']
         },
         {
             path: 'venue',

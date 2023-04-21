@@ -15,6 +15,10 @@ const FileSchema = new Schema({
         ref: 'FileFolder',
         required: true
     },
+    epigraph: {
+        type: String,
+        required: false
+    },
     post: {
         type: Schema.Types.ObjectId,
         ref: 'Post',

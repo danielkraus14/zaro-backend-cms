@@ -17,7 +17,7 @@ const paginateOptions = {
     populate: [
         {
             path: 'images',
-            select: 'url'
+            select: ['url', 'filename', 'epigraph']
         },
         {
             path: 'section',
