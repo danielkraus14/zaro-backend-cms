@@ -1,10 +1,10 @@
 const { recordService } = require('../services');
 
 const getRecords = async (req, res) => {
-    let result;
     try {
-        result = await recordService.getRecords();
-        res.status(200).send(result);
+        const { page } = req.query;
+        const records = await recordService.getRecords(page);
+        res.status(200).send(records);
     } catch(error) {
         res.status(404).send({ error: error.message });
     }

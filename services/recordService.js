@@ -15,8 +15,9 @@ const paginateOptions = {
     sort: { date: -1 },
 };
 
-const getRecords = async () => {
+const getRecords = async (page) => {
     let result;
+    if (page) paginateOptions.page = page;
     try {
         await Record.paginate({}, paginateOptions, function (err, res) {
             if (err) {
@@ -32,6 +33,7 @@ const getRecords = async () => {
 
 const searchRecords = async (search) => {
     let result;
+    if (search.page) paginateOptions.page = search.page;
     try {
         let query = {};
         if (search.collectionName) {

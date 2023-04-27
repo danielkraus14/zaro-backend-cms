@@ -2,7 +2,8 @@ const { funeralNoticeService } = require('../services');
 
 const getFuneralNotices = async (req, res) => {
     try {
-        const funeralNotices = await funeralNoticeService.getFuneralNotices();
+        const { page } = req.query;
+        const funeralNotices = await funeralNoticeService.getFuneralNotices(page);
         res.status(200).send(funeralNotices);
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});
@@ -21,7 +22,9 @@ const getFuneralNoticeById = async (req, res) => {
 
 const getFuneralNoticesByReligion = async (req, res) => {
     try {
-        const funeralNotices = await funeralNoticeService.getFuneralNoticesByReligion(req.params.religion);
+        const { page } = req.query;
+        const { religion } = req.params;
+        const funeralNotices = await funeralNoticeService.getFuneralNoticesByReligion(religion, page);
         res.status(200).send(funeralNotices);
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});
@@ -30,7 +33,9 @@ const getFuneralNoticesByReligion = async (req, res) => {
 
 const getFuneralNoticesByDate = async (req, res) => {
     try {
-        const funeralNotices = await funeralNoticeService.getFuneralNoticesByDate(req.params.date);
+        const { page } = req.query;
+        const { date } = req.params;
+        const funeralNotices = await funeralNoticeService.getFuneralNoticesByDate(date, page);
         res.status(200).send(funeralNotices);
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});
@@ -39,7 +44,9 @@ const getFuneralNoticesByDate = async (req, res) => {
 
 const getFuneralNoticesByStatus = async (req, res) => {
     try {
-        const funeralNotices = await funeralNoticeService.getFuneralNoticesByStatus(req.params.status);
+        const { page } = req.query;
+        const { status } = req.params;
+        const funeralNotices = await funeralNoticeService.getFuneralNoticesByStatus(status, page);
         res.status(200).send(funeralNotices);
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});

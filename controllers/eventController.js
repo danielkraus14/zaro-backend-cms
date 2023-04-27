@@ -2,7 +2,8 @@ const { eventService } = require('../services');
 
 const getEvents = async (req, res) => {
     try {
-        const events = await eventService.getEvents();
+        const { page } = req.query;
+        const events = await eventService.getEvents(page);
         res.status(200).send(events);
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});
@@ -21,7 +22,9 @@ const getEventById = async (req, res) => {
 
 const getEventsByVenue = async (req, res) => {
     try {
-        const events = await eventService.getEventsByVenue(req.params.venueSlug);
+        const { page } = req.query;
+        const { venueSlug } = req.params;
+        const events = await eventService.getEventsByVenue(venueSlug, page);
         res.status(200).send(events);
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});

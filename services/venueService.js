@@ -9,8 +9,9 @@ const paginateOptions = {
     sort: { date: -1 },
 }
 
-const getVenues = async () => {
+const getVenues = async (page) => {
     let result;
+    if (page) paginateOptions.page = page;
     try {
         await Venue.paginate({}, paginateOptions, function(err, res) {
             if (err) {
