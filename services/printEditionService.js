@@ -19,8 +19,9 @@ const paginateOptions = {
     }]
 };
 
-const getPrintEditions = async () => {
+const getPrintEditions = async (page) => {
     let result;
+    if (page) paginateOptions.page = page;
     try {
         await PrintEdition.paginate({}, paginateOptions, function (err, res) {
             if (err) {
@@ -44,8 +45,9 @@ const getPrintEditionById = async (printEditionId) => {
     return result;
 };
 
-const getPrintEditionsByDate = async (date) => {
+const getPrintEditionsByDate = async (date, page) => {
     let result;
+    if (page) paginateOptions.page = page;
     try {
         const start = new Date(date);
         start.setUTCHours(0, 0, 0, 0);
@@ -63,8 +65,9 @@ const getPrintEditionsByDate = async (date) => {
     return result;
 };
 
-const getPrintEditionsByTag = async (tag) => {
+const getPrintEditionsByTag = async (tag, page) => {
     let result;
+    if (page) paginateOptions.page = page;
     try {
         await PrintEdition.paginate({ tags: tag }, paginateOptions, function (err, res) {
             if (err) {

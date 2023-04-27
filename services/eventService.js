@@ -22,8 +22,9 @@ const paginateOptions = {
     ]
 };
 
-const getEvents = async () => {
+const getEvents = async (page) => {
     let result;
+    if (page) paginateOptions.page = page;
     try {
         await Event.paginate({}, paginateOptions, function(err, res) {
             if (err) {
@@ -47,8 +48,9 @@ const getEventById = async (eventId) => {
     return result;
 };
 
-const getEventsByVenue = async (venueSlug) => {
+const getEventsByVenue = async (venueSlug, page) => {
     let result;
+    if (page) paginateOptions.page = page;
     try {
         const venue = await Venue.findOne({ slug: venueSlug });
         if (!venue) throw new Error("Venue not found");
@@ -66,6 +68,7 @@ const getEventsByVenue = async (venueSlug) => {
 
 const searchEvents = async (search) => {
     let result;
+    if (search.page) paginateOptions.page = search.page;
     try {
         let query = {};
         if (search.title) {

@@ -3,7 +3,8 @@ const { venueService } = require('../services');
 const getVenues = async (req, res) => {
     let result;
     try {
-        result = await venueService.getVenues();
+        const { page } = req.query;
+        result = await venueService.getVenues(page);
     } catch(error) {
         throw error;
     }

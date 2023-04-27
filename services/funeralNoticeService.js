@@ -8,8 +8,9 @@ const paginateOptions = {
     sort: { date: -1 },
 };
 
-const getFuneralNotices = async () => {
+const getFuneralNotices = async (page) => {
     let result;
+    if (page) paginateOptions.page = page;
     try {
         await FuneralNotice.paginate({}, paginateOptions, function (err, res) {
             if (err) {
@@ -33,8 +34,9 @@ const getFuneralNoticeById = async (funeralNoticeId) => {
     return result;
 };
 
-const getFuneralNoticesByReligion = async (religion) => {
+const getFuneralNoticesByReligion = async (religion, page) => {
     let result;
+    if (page) paginateOptions.page = page;
     try {
         await FuneralNotice.paginate({ religion }, paginateOptions, function (err, res) {
             if (err) {
@@ -48,8 +50,9 @@ const getFuneralNoticesByReligion = async (religion) => {
     return result;
 };
 
-const getFuneralNoticesByDate = async (date) => {
+const getFuneralNoticesByDate = async (date, page) => {
     let result;
+    if (page) paginateOptions.page = page;
     try {
         const start = new Date(date);
         start.setUTCHours(0, 0, 0, 0);
@@ -67,8 +70,9 @@ const getFuneralNoticesByDate = async (date) => {
     return result;
 };
 
-const getFuneralNoticesByStatus = async (status) => {
+const getFuneralNoticesByStatus = async (status, page) => {
     let result;
+    if (page) paginateOptions.page = page;
     try {
         await FuneralNotice.paginate({ status }, paginateOptions, function (err, res) {
             if (err) {
@@ -84,6 +88,7 @@ const getFuneralNoticesByStatus = async (status) => {
 
 const searchFuneralNotice = async (search) => {
     let result;
+    if (search.page) paginateOptions.page = search.page;
     try {
         let query = {};
         if (search.deceased) {
