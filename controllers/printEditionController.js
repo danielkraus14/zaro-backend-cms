@@ -2,7 +2,8 @@ const { printEditionService } = require('../services');
 
 const getPrintEditions = async (req, res) => {
     try {
-        const printEditions = await printEditionService.getPrintEditions();
+        const { page } = req.query;
+        const printEditions = await printEditionService.getPrintEditions(page);
         res.status(200).send(printEditions);
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});
@@ -21,7 +22,9 @@ const getPrintEditionById = async (req, res) => {
 
 const getPrintEditionsByDate = async (req, res) => {
     try {
-        const printEditions = await printEditionService.getPrintEditionsByDate(req.params.date);
+        const { page } = req.query;
+        const { date } = req.params;
+        const printEditions = await printEditionService.getPrintEditionsByDate(date, page);
         res.status(200).send(printEditions);
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});
@@ -30,7 +33,9 @@ const getPrintEditionsByDate = async (req, res) => {
 
 const getPrintEditionsByTag = async (req, res) => {
     try {
-        const posts = await printEditionService.getPrintEditionsByTag(req.params.tag);
+        const { page } = req.query;
+        const { tag } = req.params;
+        const posts = await printEditionService.getPrintEditionsByTag(tag, page);
         res.status(200).send(posts);
     } catch(error) {
         res.status(400).send({error, message: "Something went wrong"});

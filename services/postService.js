@@ -30,8 +30,9 @@ const paginateOptions = {
     ]
 };
 
-const getPosts = async () => {
+const getPosts = async (page) => {
     let result;
+    if (page) paginateOptions.page = page;
     try {
         await Post.paginate({}, paginateOptions, function (err, res) {
             if (err) {
@@ -55,8 +56,9 @@ const getPostById = async (postId) => {
     return result;
 };
 
-const getPostsBySection = async (sectionSlug) => {
+const getPostsBySection = async (sectionSlug, page) => {
     let result;
+    if (page) paginateOptions.page = page;
     try {
         const section = await Section.findOne({ slug: sectionSlug });
         if(!section) throw new Error('Section not found');
@@ -72,8 +74,9 @@ const getPostsBySection = async (sectionSlug) => {
     return result;
 };
 
-const getPostsByCategory = async (categorySlug) => {
+const getPostsByCategory = async (categorySlug, page) => {
     let result;
+    if (page) paginateOptions.page = page;
     try {
         const category = await Category.findOne({ slug: categorySlug });
         if(!category) throw new Error('Category not found');
@@ -89,8 +92,9 @@ const getPostsByCategory = async (categorySlug) => {
     return result;
 };
 
-const getPostsByTag = async (tag) => {
+const getPostsByTag = async (tag, page) => {
     let result;
+    if (page) paginateOptions.page = page;
     try {
         await Post.paginate({ tags: tag }, paginateOptions, function (err, res) {
             if (err) {
@@ -106,6 +110,7 @@ const getPostsByTag = async (tag) => {
 
 const searchPosts = async (search) => {
     let result;
+    if (search.page) paginateOptions.page = search.page;
     try {
         let query = {};
         if (search.title) {
