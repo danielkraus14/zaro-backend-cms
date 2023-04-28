@@ -10,13 +10,24 @@ const paginateOptions = {
     page: 1,
     limit: 15,
     sort: { date: -1 },
-    populate: [{
-        path: 'frontPage',
-        select: ['url', 'filename', 'epigraph']
-    }, {
-        path: 'newsletterPDF',
-        select: ['url', 'filename', 'epigraph']
-    }]
+    populate: [
+        {
+            path: 'frontPage',
+            select: ['url', 'filename', 'epigraph']
+        },
+        {
+            path: 'newsletterPDF',
+            select: ['url', 'filename', 'epigraph']
+        },
+        {
+            path: 'createdBy',
+            select: ['username', 'email']
+        },
+        {
+            path: 'lastUpdatedBy',
+            select: ['username', 'email']
+        }
+    ]
 };
 
 const getPrintEditions = async (page) => {

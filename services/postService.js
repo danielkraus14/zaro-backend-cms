@@ -26,6 +26,14 @@ const paginateOptions = {
         {
             path: 'category',
             select: ['name', 'slug']
+        },
+        {
+            path: 'createdBy',
+            select: ['username', 'email']
+        },
+        {
+            path: 'lastUpdatedBy',
+            select: ['username', 'email']
         }
     ]
 };

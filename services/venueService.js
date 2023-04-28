@@ -7,6 +7,16 @@ const paginateOptions = {
     page: 1,
     limit: 15,
     sort: { date: -1 },
+    populate: [
+        {
+            path: 'createdBy',
+            select: ['username', 'email']
+        },
+        {
+            path: 'lastUpdatedBy',
+            select: ['username', 'email']
+        }
+    ]
 }
 
 const getVenues = async (page) => {
@@ -28,7 +38,7 @@ const getVenues = async (page) => {
 const getVenueBySlug = async (venueSlug) => {
     let result;
     try {
-        const venue = await Venue.findOne({ slug: venueSlug });
+        const venue = await Venue.findOne({ slug: venueSlug }).populate(paginateOptions.populate);
         if (!venue) throw new Error('Venue not found');
         result = venue;
     } catch(error) {
@@ -49,7 +59,7 @@ const createVenue = async (name, description, address, userId) => {
             slug,
             createdBy: userId
         });
-        result = await venue.save();
+        result = (await venue.save()).populate(paginateOptions.populate);
         await new Record({ description: venue.name, operation: 'create', collectionName: 'venue', objectId: venue._id, user: userId }).save();
     } catch(error) {
         throw error;
@@ -71,7 +81,7 @@ const updateVenue = async (venueSlug, name, description, address, userId) => {
         venue.lastUpdatedAt = Date.now();
         venue.lastUpdatedBy = userId;
 
-        result = await venue.save();
+        result = (await venue.save()).populate(paginateOptions.populate);
         await new Record({ description: venue.name, operation: 'update', collectionName: 'venue', objectId: venue._id, user: userId, updatedProperties }).save();
     } catch(error) {
         throw error;

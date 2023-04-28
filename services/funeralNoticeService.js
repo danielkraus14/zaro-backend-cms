@@ -6,6 +6,16 @@ const paginateOptions = {
     page: 1,
     limit: 15,
     sort: { date: -1 },
+    populate: [
+        {
+            path: 'createdBy',
+            select: ['username', 'email']
+        },
+        {
+            path: 'lastUpdatedBy',
+            select: ['username', 'email']
+        }
+    ]
 };
 
 const getFuneralNotices = async (page) => {
@@ -27,7 +37,7 @@ const getFuneralNotices = async (page) => {
 const getFuneralNoticeById = async (funeralNoticeId) => {
     let result;
     try {
-        result = await FuneralNotice.findById(funeralNoticeId);
+        result = await FuneralNotice.findById(funeralNoticeId).populate(paginateOptions.populate);
     } catch(error) {
         throw error;
     }
@@ -137,7 +147,7 @@ const createFuneralNotice = async (
 
         user.funeralNotices.push(funeralNotice._id);
         await user.save();
-        result = await funeralNotice.save();
+        result = (await funeralNotice.save()).populate(paginateOptions.populate);
         await new Record({
             description: `${funeralNotice.deceased} by ${funeralNotice.client}`,
             operation: 'create',
@@ -179,7 +189,7 @@ const updateFuneralNotice = async (
         funeralNotice.lastUpdatedBy = userId;
         funeralNotice.lastUpdatedAt = Date.now();
 
-        result = await funeralNotice.save();
+        result = (await funeralNotice.save()).populate(paginateOptions.populate);
         await new Record({
             description: `${funeralNotice.deceased} by ${funeralNotice.client}`,
             operation: 'update',

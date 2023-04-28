@@ -5,10 +5,25 @@ const Record = require('../models/record');
 const { deletePost } = require('../services/postService');
 const { deleteFile } = require('../services/fileService');
 
+const populate = [
+    {
+        path: 'createdBy',
+        select: ['username', 'email']
+    },
+    {
+        path: 'lastUpdatedBy',
+        select: ['username', 'email']
+    },
+    {
+        path: 'image',
+        select: 'url'
+    }
+]
+
 const getSections = async () => {
     let result;
     try {
-        result = await Section.find().populate('image', 'url');
+        result = await Section.find().populate(populate);
     } catch(error) {
         throw error;
     }
@@ -18,7 +33,7 @@ const getSections = async () => {
 const getSectionBySlug = async (sectionSlug) => {
     let result;
     try {
-        const section = await Section.findOne({ slug: sectionSlug }).populate('image', 'url');
+        const section = await Section.findOne({ slug: sectionSlug }).populate(populate);
         if (!section) throw new Error("Section not found");
         result = section;
     } catch(error) {
@@ -49,7 +64,7 @@ const createSection = async (name, description, imageId, atMenu, userId) => {
         };
 
         // if (atMenu) section.atMenu = atMenu;
-        result = (await section.save()).populate('image', 'url');
+        result = (await section.save()).populate(populate);
         await new Record({ description: section.name, operation: 'create', collectionName: 'section', objectId: section._id, user: userId }).save();
     } catch(error) {
         throw error;
@@ -83,7 +98,7 @@ const updateSection = async (sectionSlug, name, description, imageId, atMenu, us
         section.lastUpdatedBy = userId;
         section.lastUpdatedAt = Date.now();
 
-        result = (await section.save()).populate('image', 'url');
+        result = (await section.save()).populate(populate);
         await new Record({ description: section.name, operation: 'update', collectionName: 'section', objectId: section._id, user: userId, updatedProperties }).save();
     } catch(error) {
         throw error;
