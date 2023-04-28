@@ -81,7 +81,7 @@ const updateSection = async (sectionSlug, name, description, imageId, atMenu, us
 
         if (name) section.name = (section.name != name) ? (updatedProperties.push('name'), name) : section.name;
         if (description) section.description = (section.description != description) ? (updatedProperties.push('description'), description) : section.description;
-        if (atMenu) section.atMenu = (section.atMenu != atMenu) ? (updatedProperties.push('atMenu'), atMenu) : section.atMenu;
+        section.atMenu = (section.atMenu != atMenu) ? (updatedProperties.push('atMenu'), atMenu) : section.atMenu;
 
         if (imageId) {
             if (section.image != imageId) {
