@@ -10,10 +10,21 @@ const { uploadFileS3, readFileS3, deleteFileS3 } = require('../s3');
 
 const dateFns = require('date-fns');
 
+const populate = [
+    {
+        path: 'createdBy',
+        select: ['username', 'email']
+    },
+    {
+        path: 'lastUpdatedBy',
+        select: ['username', 'email']
+    }
+]
+
 const getFiles = async () => {
     let result;
     try {
-        const files = await File.find();
+        const files = await File.find().populate(populate);
         if (!files) {
             result = [];
         };
@@ -27,7 +38,7 @@ const getFiles = async () => {
 const readFileById = async (fileId) => {
     let result;
     try {
-        const file = await File.findById(fileId);
+        const file = await File.findById(fileId).populate(populate);
         if (!file) throw new Error('File not found');
         result = await readFileS3(file.filename);
     } catch(error) {
@@ -55,7 +66,7 @@ const createFile = async (file, fileFolderSlug, epigraph, userId) => {
         fileFolder.files.push(newFile._id);
         await fileFolder.save();
         await uploadFileS3(file, filename);
-        result = await newFile.save();
+        result = (await newFile.save()).populate(populate);
         await new Record({ description: newFile.filename, operation: 'create', collectionName: 'file', objectId: newFile._id, user: userId }).save();
     } catch(error) {
         throw error;
@@ -71,7 +82,10 @@ const updateFile = async (fileId, epigraph, userId) => {
         if (!file) throw new Error('File not found');
 
         if (epigraph) file.epigraph = (file.epigraph != epigraph) ? (updatedProperties.push('epigraph'), epigraph) : file.epigraph;
-        result = await file.save();
+
+        file.lastUpdatedAt = Date.now();
+        file.lastUpdatedBy = userId;
+        result = (await file.save()).populate(populate);
         await new Record({ description: file.filename, operation: 'update', collectionName: 'file', objectId: file._id, user: userId, updatedProperties }).save();
     } catch(error) {
         throw error;

@@ -6,10 +6,25 @@ const { deleteFile } = require('../services/fileService');
 
 const { deleteFileS3, createDirectoryS3, deleteDirectoryS3 } = require('../s3');
 
+const populate = [
+    {
+        path: 'createdBy',
+        select: ['username', 'email']
+    },
+    {
+        path: 'lastUpdatedBy',
+        select: ['username', 'email']
+    },
+    {
+        path: 'files',
+        select: 'url'
+    }
+]
+
 const getFileFolders = async () => {
     let result;
     try {
-        const fileFolders = await FileFolder.find();
+        const fileFolders = await FileFolder.find().populate(populate);
         if (!fileFolders) {
             result = [];
         };
@@ -23,7 +38,7 @@ const getFileFolders = async () => {
 const getFileFolderBySlug = async (fileFolderSlug) => {
     let result;
     try {
-        const fileFolder = await FileFolder.findOne({ slug: fileFolderSlug }).populate('files', 'url');
+        const fileFolder = await FileFolder.findOne({ slug: fileFolderSlug }).populate(populate);
         if (!fileFolder) throw new Error('File folder not found');
         result = fileFolder;
     } catch(error) {
@@ -44,7 +59,7 @@ const createFileFolder = async (name, userId) => {
         if (fileFolder) throw new Error('File folder already exists');
 
         await createDirectoryS3(slug);
-        result = await newFileFolder.save();
+        result = (await newFileFolder.save()).populate(populate);
         await new Record({ description: newFileFolder.name, operation: 'create', collectionName: 'fileFolder', objectId: newFileFolder._id, user: userId }).save();
     } catch(error) {
         throw error;
@@ -63,7 +78,7 @@ const updateFileFolder = async (fileFolderSlug, name, userId) => {
 
         fileFolder.lastUpdatedBy = userId;
         fileFolder.lastUpdatedAt = Date.now();
-        result = await fileFolder.save();
+        result = (await fileFolder.save()).populate(populate);
         await new Record({
             description: fileFolder.name,
             operation: 'update',
