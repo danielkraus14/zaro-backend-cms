@@ -68,7 +68,7 @@ const updateCategory = async (categorySlug, name, description, atMenu, userId) =
 
         if (name) category.name = (category.name != name) ? (updatedProperties.push('name'), name) : category.name;
         if (description) category.description = (category.description != description) ? (updatedProperties.push('description'), description) : category.description;
-        if (atMenu) category.atMenu = (category.atMenu != atMenu) ? (updatedProperties.push('atMenu'), atMenu) : category.atMenu;
+        category.atMenu = (category.atMenu != atMenu) ? (updatedProperties.push('atMenu'), atMenu) : category.atMenu;
 
         category.lastUpdatedAt = Date.now();
         category.lastUpdatedBy = userId;
