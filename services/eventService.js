@@ -18,6 +18,14 @@ const paginateOptions = {
         {
             path: 'venue',
             select: ['name', 'address', 'slug']
+        },
+        {
+            path: 'createdBy',
+            select: ['username', 'email']
+        },
+        {
+            path: 'lastUpdatedBy',
+            select: ['username', 'email']
         }
     ]
 };

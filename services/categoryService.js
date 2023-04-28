@@ -3,10 +3,21 @@ const Record = require('../models/record');
 
 const { deletePost } = require('../services/postService');
 
+const populate = [
+    {
+        path: 'createdBy',
+        select: ['username', 'email']
+    },
+    {
+        path: 'lastUpdatedBy',
+        select: ['username', 'email']
+    }
+]
+
 const getCategories = async () => {
     let result;
     try {
-        const categories = await Category.find();
+        const categories = await Category.find().populate(populate);
         if (!categories) {
             result = [];
         };
@@ -20,7 +31,7 @@ const getCategories = async () => {
 const getCategoryBySlug = async (categorySlug) => {
     let result;
     try {
-        const category = await Category.findOne({ slug: categorySlug });
+        const category = await Category.findOne({ slug: categorySlug }).populate(populate);
         if (!category) throw new Error('Category not found');
         result = category;
     } catch(error) {
@@ -39,7 +50,7 @@ const createCategory = async (name, description, atMenu, userId) => {
         const category = await Category.findOne({ slug });
         if (category) throw new Error('Category already exists');
 
-        result = await newCategory.save();
+        result = (await newCategory.save()).populate(populate);
         await new Record({ description: newCategory.name, operation: 'create', collectionName: 'category', objectId: newCategory._id, user: userId }).save();
     } catch(error) {
         throw error;
@@ -61,7 +72,7 @@ const updateCategory = async (categorySlug, name, description, atMenu, userId) =
 
         category.lastUpdatedAt = Date.now();
         category.lastUpdatedBy = userId;
-        result = await category.save();
+        result = (await category.save()).populate(populate);
         await new Record({ description: category.name, operation: 'update', collectionName: 'category', objectId: category._id, user: userId, updatedProperties }).save();
     } catch(error) {
         throw error;

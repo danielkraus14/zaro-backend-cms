@@ -13,6 +13,10 @@ const paginateOptions = {
     page: 1,
     limit: 15,
     sort: { date: -1 },
+    populate: {
+        path: 'user',
+        select: ['username', 'email']
+    }
 };
 
 const getRecords = async (page) => {
