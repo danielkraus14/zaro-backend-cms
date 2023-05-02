@@ -50,7 +50,7 @@ const signInUser = async (req, res) => {
         }
 
         const { username, password } = req.body;
-        result =  await userService.signInUser(username, password).catch(
+        result = await userService.signInUser(username, password).catch(
             error => {
                 return res.status(error.status).send({ message: error.message });
             }
