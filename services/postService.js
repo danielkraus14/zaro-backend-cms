@@ -240,14 +240,14 @@ const updatePost = async (
         const post = await Post.findById(postId);
         if (!post) throw new Error("Post not found");
 
-        if (title) post.title =  (post.title != title) ? (updatedProperties.push('title'), title) : post.title;
-        if (subtitle) post.subtitle =  (post.subtitle != subtitle) ? (updatedProperties.push('subtitle'), subtitle) : post.subtitle;
-        if (flywheel) post.flywheel =  (post.flywheel != flywheel) ? (updatedProperties.push('flywheel'), flywheel) : post.flywheel;
-        if (content) post.content =  (post.content != content) ? (updatedProperties.push('content'), content) : post.content;
-        if (type) post.type =  (post.type != type) ? (updatedProperties.push('type'), type) : post.type;
-        if (position) post.position =  (post.position != position) ? (updatedProperties.push('position'), position) : post.position;
-        if (comments !== undefined) post.comments =  (post.comments != comments) ? (updatedProperties.push('comments'), comments) : post.comments;
-        if (status) post.status =  (post.status != status) ? (updatedProperties.push('status'), status) : post.status;
+        if (title) post.title = (post.title != title) ? (updatedProperties.push('title'), title) : post.title;
+        if (subtitle) post.subtitle = (post.subtitle != subtitle) ? (updatedProperties.push('subtitle'), subtitle) : post.subtitle;
+        if (flywheel) post.flywheel = (post.flywheel != flywheel) ? (updatedProperties.push('flywheel'), flywheel) : post.flywheel;
+        if (content) post.content = (post.content != content) ? (updatedProperties.push('content'), content) : post.content;
+        if (type) post.type = (post.type != type) ? (updatedProperties.push('type'), type) : post.type;
+        if (position) post.position = (post.position != position) ? (updatedProperties.push('position'), position) : post.position;
+        if (comments !== undefined) post.comments = (post.comments != comments) ? (updatedProperties.push('comments'), comments) : post.comments;
+        if (status) post.status = (post.status != status) ? (updatedProperties.push('status'), status) : post.status;
         if (imagesIds) {
             let updated = false;
             for (const imageId of imagesIds) {
