@@ -246,7 +246,7 @@ const updatePost = async (
         if (content) post.content =  (post.content != content) ? (updatedProperties.push('content'), content) : post.content;
         if (type) post.type =  (post.type != type) ? (updatedProperties.push('type'), type) : post.type;
         if (position) post.position =  (post.position != position) ? (updatedProperties.push('position'), position) : post.position;
-        post.comments =  (post.comments != comments) ? (updatedProperties.push('comments'), comments) : post.comments;
+        if (comments !== undefined) post.comments =  (post.comments != comments) ? (updatedProperties.push('comments'), comments) : post.comments;
         if (status) post.status =  (post.status != status) ? (updatedProperties.push('status'), status) : post.status;
         if (imagesIds) {
             let updated = false;
