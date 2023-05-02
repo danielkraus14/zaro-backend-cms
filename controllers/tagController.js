@@ -40,7 +40,7 @@ const updateTag = async (req, res) => {
 };
 
 
-module.exports  = {
+module.exports = {
     getTags,
     getTagsByName,
     createTag,
