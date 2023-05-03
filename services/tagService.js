@@ -25,6 +25,8 @@ const getTagsByName = async (tagName) => {
 const createTag = async (name) => {
     let result;
     try {
+        const foundTag = await Tag.findOne({ name });
+        if (foundTag) throw new Error('Tag already exists');
         const tag = new Tag({
             name
         });
@@ -38,6 +40,8 @@ const createTag = async (name) => {
 const updateTag = async (oldName, newName) => {
     let result;
     try {
+        const foundTag = await Tag.findOne({ name: newName });
+        if (foundTag) throw new Error('Tag already exists');
         const tag = await Tag.findOne({ name: oldName });
         tag.name = newName;
         for (const postId of tag.posts) {
