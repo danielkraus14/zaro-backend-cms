@@ -64,6 +64,7 @@ routes.get('/posts/search', postController.searchPosts);
 routes.get('/posts/section/:sectionSlug', postController.getPostsBySection);
 routes.get('/posts/category/:categorySlug', postController.getPostsByCategory);
 routes.get('/posts/tags/:tag', postController.getPostsByTag);
+routes.get('/posts/position/:position', postController.getPostsByPosition);
 routes.post('/posts/create', isAuth, postController.createPost);
 routes.put('/posts/update/:postId', isAuth, postController.updatePost);
 routes.delete('/posts/delete/:postId', isAuth, postController.deletePost);
