@@ -5,6 +5,7 @@ const TagSchema = new Schema({
     name: {
         type: String,
         required: true,
+        unique: true
     },
     posts: [
         {
