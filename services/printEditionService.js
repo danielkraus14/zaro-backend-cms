@@ -7,7 +7,6 @@ const Record = require("../models/record");
 const { deleteFile } = require('../services/fileService');
 
 const paginateOptions = {
-    page: 1,
     limit: 15,
     sort: { createdAt: -1 },
     populate: [
@@ -32,7 +31,7 @@ const paginateOptions = {
 
 const getPrintEditions = async (page) => {
     let result;
-    if (page) paginateOptions.page = page;
+    paginateOptions.page = page ? page : 1;
     try {
         await PrintEdition.paginate({}, paginateOptions, function (err, res) {
             if (err) {
@@ -58,7 +57,7 @@ const getPrintEditionById = async (printEditionId) => {
 
 const getPrintEditionsByDate = async (date, page) => {
     let result;
-    if (page) paginateOptions.page = page;
+    paginateOptions.page = page ? page : 1;
     try {
         const start = new Date(date);
         start.setUTCHours(0, 0, 0, 0);
@@ -78,7 +77,7 @@ const getPrintEditionsByDate = async (date, page) => {
 
 const getPrintEditionsByTag = async (tag, page) => {
     let result;
-    if (page) paginateOptions.page = page;
+    paginateOptions.page = page ? page : 1;
     try {
         await PrintEdition.paginate({ tags: tag }, paginateOptions, function (err, res) {
             if (err) {

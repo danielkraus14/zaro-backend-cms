@@ -10,7 +10,6 @@ const Section = require('../models/section');
 const Venue = require('../models/venue');
 
 const paginateOptions = {
-    page: 1,
     limit: 15,
     sort: { date: -1 },
     populate: {
@@ -21,7 +20,7 @@ const paginateOptions = {
 
 const getRecords = async (page) => {
     let result;
-    if (page) paginateOptions.page = page;
+    paginateOptions.page = page ? page : 1;
     try {
         await Record.paginate({}, paginateOptions, function (err, res) {
             if (err) {
@@ -37,7 +36,7 @@ const getRecords = async (page) => {
 
 const searchRecords = async (search) => {
     let result;
-    if (search.page) paginateOptions.page = search.page;
+    paginateOptions.page = search.page ? search.page : 1;
     try {
         let query = {};
         if (search.collectionName) {

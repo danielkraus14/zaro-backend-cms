@@ -11,7 +11,6 @@ const { deleteFile } = require('../services/fileService');
 const { mongoose } = require("mongoose");
 
 const paginateOptions = {
-    page: 1,
     limit: 15,
     sort: { createdAt: -1 },
     populate: [
@@ -40,7 +39,7 @@ const paginateOptions = {
 
 const getPosts = async (page) => {
     let result;
-    if (page) paginateOptions.page = page;
+    paginateOptions.page = page ? page : 1;
     try {
         await Post.paginate({}, paginateOptions, function (err, res) {
             if (err) {
@@ -66,7 +65,7 @@ const getPostById = async (postId) => {
 
 const getPostsBySection = async (sectionSlug, page) => {
     let result;
-    if (page) paginateOptions.page = page;
+    paginateOptions.page = page ? page : 1;
     try {
         const section = await Section.findOne({ slug: sectionSlug });
         if(!section) throw new Error('Section not found');
@@ -84,7 +83,7 @@ const getPostsBySection = async (sectionSlug, page) => {
 
 const getPostsByCategory = async (categorySlug, page) => {
     let result;
-    if (page) paginateOptions.page = page;
+    paginateOptions.page = page ? page : 1;
     try {
         const category = await Category.findOne({ slug: categorySlug });
         if(!category) throw new Error('Category not found');
@@ -102,7 +101,7 @@ const getPostsByCategory = async (categorySlug, page) => {
 
 const getPostsByTag = async (tag, page) => {
     let result;
-    if (page) paginateOptions.page = page;
+    paginateOptions.page = page ? page : 1;
     try {
         await Post.paginate({ tags: tag }, paginateOptions, function (err, res) {
             if (err) {
@@ -118,7 +117,7 @@ const getPostsByTag = async (tag, page) => {
 
 const getPostsByPosition = async (position, page) => {
     let result;
-    if (page) paginateOptions.page = page;
+    paginateOptions.page = page ? page : 1;
     try {
         await Post.paginate({ position }, paginateOptions, function (err, res) {
             if (err) {
@@ -134,7 +133,7 @@ const getPostsByPosition = async (position, page) => {
 
 const searchPosts = async (search) => {
     let result;
-    if (search.page) paginateOptions.page = search.page;
+    paginateOptions.page = search.page ? search.page : 1;
     try {
         let query = {};
         if (search.title) {

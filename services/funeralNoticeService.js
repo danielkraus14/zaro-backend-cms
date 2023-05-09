@@ -3,7 +3,6 @@ const FuneralNotice = require("../models/funeralNotice");
 const Record = require("../models/record");
 
 const paginateOptions = {
-    page: 1,
     limit: 15,
     sort: { createdAt: -1 },
     populate: [
@@ -20,7 +19,7 @@ const paginateOptions = {
 
 const getFuneralNotices = async (page) => {
     let result;
-    if (page) paginateOptions.page = page;
+    paginateOptions.page = page ? page : 1;
     try {
         await FuneralNotice.paginate({}, paginateOptions, function (err, res) {
             if (err) {
@@ -46,7 +45,7 @@ const getFuneralNoticeById = async (funeralNoticeId) => {
 
 const getFuneralNoticesByReligion = async (religion, page) => {
     let result;
-    if (page) paginateOptions.page = page;
+    paginateOptions.page = page ? page : 1;
     try {
         await FuneralNotice.paginate({ religion }, paginateOptions, function (err, res) {
             if (err) {
@@ -62,7 +61,7 @@ const getFuneralNoticesByReligion = async (religion, page) => {
 
 const getFuneralNoticesByDate = async (date, page) => {
     let result;
-    if (page) paginateOptions.page = page;
+    paginateOptions.page = page ? page : 1;
     try {
         const start = new Date(date);
         start.setUTCHours(0, 0, 0, 0);
@@ -82,7 +81,7 @@ const getFuneralNoticesByDate = async (date, page) => {
 
 const getFuneralNoticesByStatus = async (status, page) => {
     let result;
-    if (page) paginateOptions.page = page;
+    paginateOptions.page = page ? page : 1;
     try {
         await FuneralNotice.paginate({ status }, paginateOptions, function (err, res) {
             if (err) {
@@ -98,7 +97,7 @@ const getFuneralNoticesByStatus = async (status, page) => {
 
 const searchFuneralNotice = async (search) => {
     let result;
-    if (search.page) paginateOptions.page = search.page;
+    paginateOptions.page = search.page ? search.page : 1;
     try {
         let query = {};
         if (search.deceased) {

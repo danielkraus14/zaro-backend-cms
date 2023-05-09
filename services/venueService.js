@@ -4,7 +4,6 @@ const Record = require('../models/record');
 const { deleteEvent } = require('../services/eventService');
 
 const paginateOptions = {
-    page: 1,
     limit: 15,
     sort: { createdAt: -1 },
     populate: [
@@ -21,7 +20,7 @@ const paginateOptions = {
 
 const getVenues = async (page) => {
     let result;
-    if (page) paginateOptions.page = page;
+    paginateOptions.page = page ? page : 1;
     try {
         await Venue.paginate({}, paginateOptions, function(err, res) {
             if (err) {
