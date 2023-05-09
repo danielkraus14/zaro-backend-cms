@@ -7,7 +7,6 @@ const Record = require("../models/record");
 const { deleteFile } = require('../services/fileService');
 
 const paginateOptions = {
-    page: 1,
     limit: 15,
     sort: { createdAt: -1 },
     populate: [
@@ -32,7 +31,7 @@ const paginateOptions = {
 
 const getEvents = async (page) => {
     let result;
-    if (page) paginateOptions.page = page;
+    paginateOptions.page = page ? page : 1;
     try {
         await Event.paginate({}, paginateOptions, function(err, res) {
             if (err) {
@@ -58,7 +57,7 @@ const getEventById = async (eventId) => {
 
 const getEventsByVenue = async (venueSlug, page) => {
     let result;
-    if (page) paginateOptions.page = page;
+    paginateOptions.page = page ? page : 1;
     try {
         const venue = await Venue.findOne({ slug: venueSlug });
         if (!venue) throw new Error("Venue not found");
@@ -76,7 +75,7 @@ const getEventsByVenue = async (venueSlug, page) => {
 
 const searchEvents = async (search) => {
     let result;
-    if (search.page) paginateOptions.page = search.page;
+    paginateOptions.page = search.page ? search.page : 1;
     try {
         let query = {};
         if (search.title) {

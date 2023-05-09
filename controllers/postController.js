@@ -75,12 +75,14 @@ const getPostsByPosition = async (req, res) => {
 
 const createPost = async (req, res) => {
     try {
-        const { userId, title, subtitle, flywheel, content, type, position, comments, imagesIds, sectionId, categoryId, tags, status } = req.body;
+        const { userId, title, subtitle, flywheel, excerpt, liveSports, content, type, position, comments, imagesIds, sectionId, categoryId, tags, status } = req.body;
         const result = await postService.createPost(
             userId,
             title,
             subtitle,
             flywheel,
+            excerpt,
+            liveSports,
             content,
             type,
             position,
@@ -100,13 +102,15 @@ const createPost = async (req, res) => {
 const updatePost = async (req, res) => {
     try {
         const { postId } = req.params
-        const { userId, title, subtitle, flywheel, content, type, position, comments, imagesIds, sectionId, categoryId, tags, status } = req.body;
+        const { userId, title, subtitle, flywheel, excerpt, liveSports, content, type, position, comments, imagesIds, sectionId, categoryId, tags, status } = req.body;
         const result = await postService.updatePost(
             postId,
             userId,
             title,
             subtitle,
             flywheel,
+            excerpt,
+            liveSports,
             content,
             type,
             position,
