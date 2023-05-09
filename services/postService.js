@@ -13,7 +13,7 @@ const { mongoose } = require("mongoose");
 const paginateOptions = {
     page: 1,
     limit: 15,
-    sort: { date: -1 },
+    sort: { createdAt: -1 },
     populate: [
         {
             path: 'images',
