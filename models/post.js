@@ -19,6 +19,14 @@ const PostSchema = new Schema({
         type: String,
         required: false
     },
+    excerpt: {
+        type: String,
+        required: false
+    },
+    liveSports: {
+        type: String,
+        required: false
+    },
     content: {
         type: String,
         required: true

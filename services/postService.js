@@ -160,6 +160,8 @@ const createPost = async (
     title,
     subtitle,
     flywheel,
+    excerpt,
+    liveSports,
     content,
     type,
     position,
@@ -174,8 +176,6 @@ const createPost = async (
     try {
         const post = new Post({
             title,
-            subtitle,
-            flywheel,
             content,
             section: sectionId,
             category: categoryId,
@@ -186,8 +186,12 @@ const createPost = async (
 
         const section = await Section.findById(sectionId);
         const category = await Category.findById(categoryId);
+        if (subtitle) post.subtitle = subtitle;
+        if (flywheel) post.flywheel = flywheel;
+        if (excerpt) post.excerpt = excerpt;
+        if (liveSports) post.liveSports = liveSports;
         if (status) post.status = status;
-        if (comments) post.comments = comments;
+        if (comments !== undefined) post.comments = comments;
         if (type) post.type = type;
         if (position) post.position = position;
         if (tags) {
@@ -240,6 +244,8 @@ const updatePost = async (
     title,
     subtitle,
     flywheel,
+    excerpt,
+    liveSports,
     content,
     type,
     position,
@@ -259,6 +265,8 @@ const updatePost = async (
         if (title) post.title = (post.title != title) ? (updatedProperties.push('title'), title) : post.title;
         if (subtitle) post.subtitle = (post.subtitle != subtitle) ? (updatedProperties.push('subtitle'), subtitle) : post.subtitle;
         if (flywheel) post.flywheel = (post.flywheel != flywheel) ? (updatedProperties.push('flywheel'), flywheel) : post.flywheel;
+        if (excerpt) post.excerpt = (post.excerpt != excerpt) ? (updatedProperties.push('excerpt'), excerpt) : post.excerpt;
+        if (liveSports) post.liveSports = (post.liveSports != liveSports) ? (updatedProperties.push('liveSports'), liveSports) : post.liveSports;
         if (content) post.content = (post.content != content) ? (updatedProperties.push('content'), content) : post.content;
         if (type) post.type = (post.type != type) ? (updatedProperties.push('type'), type) : post.type;
         if (position) post.position = (post.position != position) ? (updatedProperties.push('position'), position) : post.position;
