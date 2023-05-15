@@ -11,6 +11,9 @@ const populate = [
     {
         path: 'lastUpdatedBy',
         select: ['username', 'email']
+    },
+    {
+        path: 'posts'
     }
 ]
 
