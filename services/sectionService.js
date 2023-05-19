@@ -19,7 +19,11 @@ const populate = [
         select: 'url'
     },
     {
-        path: 'posts'
+        path: 'posts',
+        populate: {
+            path: 'images',
+            select: 'url'
+        }
     }
 ]
 

@@ -13,7 +13,11 @@ const populate = [
         select: ['username', 'email']
     },
     {
-        path: 'posts'
+        path: 'posts',
+        populate: {
+            path: 'images',
+            select: 'url'
+        }
     }
 ]
 
