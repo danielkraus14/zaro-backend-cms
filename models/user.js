@@ -51,6 +51,12 @@ const UserSchema = new Schema({
             ref: 'Event'
         }
     ],
+    adServers: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'AdServer'
+        }
+    ],
     isActive: {
         type: Boolean,
         default: true

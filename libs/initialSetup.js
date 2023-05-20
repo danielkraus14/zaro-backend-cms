@@ -1,7 +1,7 @@
 const Role = require('../models/role');
 const FileFolder = require('../models/fileFolder');
 
-const { createFileFolder } = require('../services/fileFolderService')
+const { createDirectoryS3 } = require('../s3');
 
 const createRoles = async () => {
     try {
@@ -17,7 +17,26 @@ const createRoles = async () => {
     } catch (error) {
         console.error(error);
     }
-}
+};
+
+const createFileFolder = async (name) => {
+    let result;
+    try {
+        const rawSlug = name.replace(/ /g, '_').toLowerCase();
+        const slug = rawSlug.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+        const url = `https://${process.env.BUCKET_NAME_AWS}.s3.${process.env.BUCKET_REGION_AWS}.amazonaws.com/${slug}/`;
+        const newFileFolder = new FileFolder({ name, slug, url, createdBy: userId });
+
+        const fileFolder = await FileFolder.findOne({ slug });
+        if (fileFolder) throw new Error('File folder already exists');
+
+        await createDirectoryS3(slug);
+        result = await newFileFolder.save();
+    } catch(error) {
+        throw error;
+    }
+    return result;
+};
 
 const createInitialFileFolders = async () => {
     try {
@@ -47,6 +66,13 @@ const createInitialFileFolders = async () => {
             const sectionsFileFolder = await createFileFolder(process.env.SECTIONS_FILE_FOLDER_NAME);
             sectionsFileFolder.collectionName = 'section';
             await sectionsFileFolder.save();
+        };
+
+        const adServersFileFolder = await FileFolder.findOne({ name: process.env.AD_SERVERS_FILE_FOLDER_NAME });
+        if (!adServersFileFolder) {
+            const adServersFileFolder = await createFileFolder(process.env.AD_SERVERS_FILE_FOLDER_NAME);
+            adServersFileFolder.collectionName = 'adServer';
+            await adServersFileFolder.save();
         };
     } catch (error) {
         console.error(error);

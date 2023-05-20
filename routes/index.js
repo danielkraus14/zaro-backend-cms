@@ -15,7 +15,8 @@ const {
     fileFolderController,
     venueController,
     eventController,
-    recordController
+    recordController,
+    adServerController
 } = require('../controllers');
 
 // Import Auth Middlewares
@@ -118,16 +119,25 @@ routes.post('/file-folders/create', isAuth, fileFolderController.createFileFolde
 routes.put('/file-folders/update/:fileFolderSlug', isAuth, fileFolderController.updateFileFolder);
 routes.delete('/file-folders/delete/:fileFolderSlug', isAuth, fileFolderController.deleteFileFolder);
 
-// Files - Agregar epígrafe
+// Files
 routes.get('/files', fileController.getFiles);
 routes.get('/files/:fileId', fileController.readFileById);
 routes.post('/files/create', isAuth, fileController.createFile);
 routes.put('/files/update/:fileId', isAuth, fileController.updateFile);
 routes.delete('/files/delete/:fileId', isAuth, fileController.deleteFile);
 
-// Records - Agregar qué campo se modificó
+// Records
 routes.get('/records', isAuth, isDirective, recordController.getRecords);
 routes.get('/records/search', isAuth, isDirective, recordController.searchRecords);
 routes.get('/records/object/:recordId', isAuth, isDirective, recordController.getObjectOfRecord);
+
+// Ad Servers
+routes.get('/ad-servers', adServerController.getAdServers);
+routes.get('/ad-servers/id/:adServerId', adServerController.getAdServerById);
+routes.get('/ad-servers/search', adServerController.searchAdServers);
+routes.get('/ad-servers/position/:position', adServerController.getAdServersByPosition);
+routes.post('/ad-servers/create', isAuth, adServerController.createAdServer);
+routes.put('/ad-servers/update/:adServerId', isAuth, adServerController.updateAdServer);
+routes.delete('/ad-servers/delete/:adServerId', isAuth, adServerController.deleteAdServer);
 
 module.exports = routes;
