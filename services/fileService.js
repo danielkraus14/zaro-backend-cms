@@ -4,6 +4,7 @@ const Post = require('../models/post');
 const PrintEdition = require('../models/printEdition');
 const Event = require('../models/event');
 const Section = require('../models/section');
+const AdServer = require('../models/adServer');
 const Record = require('../models/record');
 
 const { uploadFileS3, readFileS3, deleteFileS3 } = require('../s3');
@@ -131,6 +132,18 @@ const deleteFile = async (fileId, userId) => {
         if (file.section) {
             await Section.updateOne(
                 { image: file.section },
+                { $unset: { image: 1 } }
+            );
+        };
+        if (file.adServerDesktop) {
+            await AdServer.updateOne(
+                { desktopImage: file.section },
+                { $unset: { image: 1 } }
+            );
+        };
+        if (file.adServerMobile) {
+            await AdServer.updateOne(
+                { mobileImage: file.section },
                 { $unset: { image: 1 } }
             );
         };

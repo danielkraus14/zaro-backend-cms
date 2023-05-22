@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const collectionNames = ['post', 'printEdition', 'event', 'section'];
+const collectionNames = ['post', 'printEdition', 'event', 'section', 'adServer'];
 
 const FileFolderSchema = new Schema({
     name: {

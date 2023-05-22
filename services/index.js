@@ -12,6 +12,7 @@ const venueService = require('./venueService');
 const fileService = require('./fileService');
 const fileFolderService = require('./fileFolderService');
 const recordService = require('./recordService');
+const adServerService = require('./adServerService');
 
 module.exports = {
     authService,
@@ -27,5 +28,6 @@ module.exports = {
     venueService,
     fileService,
     fileFolderService,
-    recordService
+    recordService,
+    adServerService
 };

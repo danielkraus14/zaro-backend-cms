@@ -44,6 +44,16 @@ const FileSchema = new Schema({
         ref: 'Section',
         required: false
     },
+    adServerDesktop: {
+        type: Schema.Types.ObjectId,
+        ref: 'AdServer',
+        required: false
+    },
+    adServerMobile: {
+        type: Schema.Types.ObjectId,
+        ref: 'AdServer',
+        required: false
+    },
     createdBy: {
         type: Schema.Types.ObjectId,
         ref: 'User'

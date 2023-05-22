@@ -11,6 +11,7 @@ const venueController = require('./venueController');
 const fileController = require('./fileController');
 const fileFolderController = require('./fileFolderController');
 const recordController = require('./recordController');
+const adServerController = require('./adServerController');
 
 module.exports = {
     userController,
@@ -25,5 +26,6 @@ module.exports = {
     venueController,
     fileController,
     fileFolderController,
-    recordController
+    recordController,
+    adServerController
 };
