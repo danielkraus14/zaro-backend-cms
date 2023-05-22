@@ -79,12 +79,11 @@ const searchAdServers = async (search) => {
         let query = {};
         if (search.title) {
             query.title = { $regex: new RegExp(search.title), $options: "i" };
-        }
+        };
         if (search.dateFrom) {
             const date = new Date(search.dateFrom);
             date.setUTCHours(0, 0, 0, 0);
-            query.dateEnds = { $gte: date };
-            query.dateStarts = { $lte: date };
+            query.$or = [ { dateEnds: { $gte: date } }, { unlimited: true } ]
         };
         if (search.dateUntil) {
             const date = new Date(search.dateUntil);
@@ -96,7 +95,7 @@ const searchAdServers = async (search) => {
                 throw err;
             }
             result = res;
-        })
+        });
     } catch (error) {
         throw error;
     }
