@@ -1,7 +1,7 @@
 const User = require('../../models/user');
 
 
-const isComertial = async (req, res, next) => {
+const isReviser = async (req, res, next) => {
     const userId = req.userId;
     const user = await User.findById(userId).populate('role');
     if (user.role.name == 'admin') {
@@ -12,10 +12,10 @@ const isComertial = async (req, res, next) => {
         next();
         return;
     }
-    if (user.role.name !== 'comertial') {
-        return res.status(403).json({ message: 'Require comertial role' });
+    if (user.role.name !== 'reviser') {
+        return res.status(403).json({ message: 'Require reviser role' });
     }
     next();
 }
 
-module.exports = isComertial;
+module.exports = isReviser;
