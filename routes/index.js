@@ -24,7 +24,8 @@ const {
     isAuth,
     isAdmin,
     isDirective,
-    isComertial
+    isComertial,
+    isReviser
 } = require('../middlewares');
 
 // Schema validation
