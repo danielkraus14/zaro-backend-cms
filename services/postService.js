@@ -131,6 +131,22 @@ const getPostsByPosition = async (position, page) => {
     return result;
 };
 
+const getPostsByStatus = async (status, page) => {
+    let result;
+    paginateOptions.page = page ? page : 1;
+    try {
+        await Post.paginate({ status }, paginateOptions, function (err, res) {
+            if (err) {
+                throw err;
+            }
+            result = res;
+        })
+    } catch (error) {
+        throw error;
+    }
+    return result;
+};
+
 const searchPosts = async (search) => {
     let result;
     paginateOptions.page = search.page ? search.page : 1;
@@ -409,6 +425,7 @@ module.exports = {
     getPostsByCategory,
     getPostsByTag,
     getPostsByPosition,
+    getPostsByStatus,
     createPost,
     searchPosts,
     updatePost,

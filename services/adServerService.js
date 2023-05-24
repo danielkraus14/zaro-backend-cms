@@ -72,6 +72,22 @@ const getAdServersByPosition = async (position, page) => {
     return result;
 };
 
+const getAdServersByStatus = async (status, page) => {
+    let result;
+    paginateOptions.page = page ? page : 1;
+    try {
+        await AdServer.paginate({ status }, paginateOptions, function (err, res) {
+            if (err) {
+                throw err;
+            }
+            result = res;
+        })
+    } catch (error) {
+        throw error;
+    }
+    return result;
+};
+
 const searchAdServers = async (search) => {
     let result;
     paginateOptions.page = search.page ? search.page : 1;
@@ -274,6 +290,7 @@ module.exports = {
     getAdServers,
     getAdServerById,
     getAdServersByPosition,
+    getAdServersByStatus,
     searchAdServers,
     createAdServer,
     updateAdServer,

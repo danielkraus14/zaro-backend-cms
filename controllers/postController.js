@@ -73,6 +73,17 @@ const getPostsByPosition = async (req, res) => {
     }
 };
 
+const getPostsByStatus = async (req, res) => {
+    try {
+        const { page } = req.query;
+        const { status } = req.params;
+        const posts = await postService.getPostsByStatus(status, page);
+        res.status(200).send(posts);
+    } catch(error) {
+        res.status(400).send({error, message: "Something went wrong"});
+    }
+};
+
 const createPost = async (req, res) => {
     try {
         const { userId, title, subtitle, flywheel, excerpt, liveSports, content, type, position, comments, imagesIds, sectionId, categoryId, tags, status } = req.body;
@@ -147,6 +158,7 @@ module.exports = {
     getPostsByCategory,
     getPostsByTag,
     getPostsByPosition,
+    getPostsByStatus,
     createPost,
     updatePost,
     deletePost
