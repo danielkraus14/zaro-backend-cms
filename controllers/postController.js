@@ -10,10 +10,10 @@ const getPosts = async (req, res) => {
     }
 };
 
-const getPostById = async (req, res) => {
+const getPostBySlug = async (req, res) => {
     try {
-        const { postId } = req.params;
-        const post = await postService.getPostById(postId);
+        const { postSlug } = req.params;
+        const post = await postService.getPostBySlug(postSlug);
         res.status(200).send(post);
     } catch(error) {
         res.status(400).send({error, message: 'Post not found'});
@@ -106,7 +106,7 @@ const createPost = async (req, res) => {
         );
         res.status(201).send({post: result});
     } catch(error) {
-        res.status(400).send({error, message: "Something went wrong"});
+        res.status(400).send({error: error.message});
     }
 };
 
@@ -149,10 +149,9 @@ const deletePost = async (req, res) => {
     }
 };
 
-
 module.exports = {
     getPosts,
-    getPostById,
+    getPostBySlug,
     searchPosts,
     getPostsBySection,
     getPostsByCategory,
