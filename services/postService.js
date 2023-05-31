@@ -183,7 +183,12 @@ const getValidSlug = async (title) => {
 
     while (slugFound) {
         count++;
-        slug = slug + '-' + count.toString();
+        if (count == 1) {
+            slug = slug + '-' + count.toString();
+        } else {
+            words = slug.split('-');
+            slug = words.slice(0, words.length - 1).join('-') + '-' + count.toString();
+        };
         slugFound = await Post.findOne({ slug });
     };
     return slug;
