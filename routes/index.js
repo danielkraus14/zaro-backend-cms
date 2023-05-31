@@ -61,7 +61,7 @@ routes.delete('/categories/delete/:categorySlug', isAuth, isAdmin, categoryContr
 
 // Posts
 routes.get('/posts', postController.getPosts);
-routes.get('/posts/id/:postId', postController.getPostById);
+routes.get('/posts/slug/:postSlug', postController.getPostBySlug);
 routes.get('/posts/search', postController.searchPosts);
 routes.get('/posts/section/:sectionSlug', postController.getPostsBySection);
 routes.get('/posts/category/:categorySlug', postController.getPostsByCategory);

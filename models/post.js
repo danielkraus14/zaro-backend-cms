@@ -11,6 +11,11 @@ const PostSchema = new Schema({
         type: String,
         required: true
     },
+    slug: {
+        type: String,
+        required: true,
+        unique: true
+    },
     subtitle: {
         type: String,
         required: false

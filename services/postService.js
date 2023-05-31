@@ -9,6 +9,7 @@ const Record = require("../models/record");
 const { deleteFile } = require('../services/fileService');
 
 const { mongoose } = require("mongoose");
+const dateFns = require('date-fns');
 
 const paginateOptions = {
     limit: 15,
@@ -53,10 +54,10 @@ const getPosts = async (page) => {
     return result;
 };
 
-const getPostById = async (postId) => {
+const getPostBySlug = async (postSlug) => {
     let result;
     try {
-        result = await Post.findById(postId).populate(paginateOptions.populate);
+        result = await Post.findOne({ slug: postSlug }).populate(paginateOptions.populate);
     } catch(error) {
         throw error;
     }
@@ -170,6 +171,24 @@ const searchPosts = async (search) => {
     return result;
 };
 
+const getValidSlug = async (title) => {
+    const year = dateFns.format(new Date(), 'yyyy');
+    const month = dateFns.format(new Date(), 'MM');
+    const day = dateFns.format(new Date(), 'dd');
+
+    let slug = `${year}-${month}-${day}-${title.toLowerCase().replace(/ /g, '-')}`;
+    slug = slug.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    let slugFound = await Post.findOne({ slug });
+    let count = 0;
+
+    while (slugFound) {
+        count++;
+        slug = slug + '-' + count.toString();
+        slugFound = await Post.findOne({ slug });
+    };
+    return slug;
+};
+
 const createPost = async (
     userId,
     title,
@@ -198,6 +217,8 @@ const createPost = async (
         });
         const user = await User.findById(userId);
         if (!user) throw new Error("User not found");
+
+        post.slug = await getValidSlug(title);
 
         const section = await Section.findById(sectionId);
         const category = await Category.findById(categoryId);
@@ -420,7 +441,7 @@ const deletePost = async (postId, userId) => {
 
 module.exports = {
     getPosts,
-    getPostById,
+    getPostBySlug,
     getPostsBySection,
     getPostsByCategory,
     getPostsByTag,
@@ -429,5 +450,5 @@ module.exports = {
     createPost,
     searchPosts,
     updatePost,
-    deletePost,
+    deletePost
 };
