@@ -70,7 +70,7 @@ routes.get('/posts/position/:position', postController.getPostsByPosition);
 routes.get('/posts/status/:status', postController.getPostsByStatus);
 routes.post('/posts/create', isAuth, postController.createPost);
 routes.put('/posts/update/:postId', isAuth, postController.updatePost);
-routes.delete('/posts/delete/:postId', isAuth, postController.deletePost);
+routes.delete('/posts/delete/:postId', isAuth, isReviser, postController.deletePost);
 
 // Tags
 routes.get('/tags', tagController.getTags);
@@ -139,8 +139,8 @@ routes.get('/ad-servers/id/:adServerId', adServerController.getAdServerById);
 routes.get('/ad-servers/search', adServerController.searchAdServers);
 routes.get('/ad-servers/position/:position', adServerController.getAdServersByPosition);
 routes.get('/ad-servers/status/:status', adServerController.getAdServersByStatus);
-routes.post('/ad-servers/create', isAuth, adServerController.createAdServer);
-routes.put('/ad-servers/update/:adServerId', isAuth, adServerController.updateAdServer);
-routes.delete('/ad-servers/delete/:adServerId', isAuth, adServerController.deleteAdServer);
+routes.post('/ad-servers/create', isAuth, isComertial, adServerController.createAdServer);
+routes.put('/ad-servers/update/:adServerId', isAuth, isComertial, adServerController.updateAdServer);
+routes.delete('/ad-servers/delete/:adServerId', isAuth, isComertial, adServerController.deleteAdServer);
 
 module.exports = routes;

@@ -79,7 +79,7 @@ const PostSchema = new Schema({
         type: String,
         enum: statusTypes,
         required: true,
-        default: 'published'
+        default: 'draft'
     },
     createdBy: {
         type: Schema.Types.ObjectId,
