@@ -220,7 +220,7 @@ const createPost = async (
             category: categoryId,
             createdBy: userId
         });
-        const user = await User.findById(userId);
+        const user = await User.findById(userId).populate('role');
         if (!user) throw new Error("User not found");
 
         post.slug = await getValidSlug(title);
@@ -231,7 +231,11 @@ const createPost = async (
         if (flywheel) post.flywheel = flywheel;
         if (excerpt) post.excerpt = excerpt;
         if (liveSports) post.liveSports = liveSports;
-        if (status) post.status = status;
+        if (user.role.name == 'editor') {
+            post.status = 'draft';
+        } else {
+            if (status) post.status = status;
+        };
         if (comments !== undefined) post.comments = comments;
         if (type) post.type = type;
         if (position) post.position = position;
