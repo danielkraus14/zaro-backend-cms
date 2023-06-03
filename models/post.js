@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const mongoosePaginate = require('mongoose-paginate-v2');
 
-const postTypes = ['digital', 'print'];
+const postTypes = ['digital', 'print', 'both'];
 const positionTypes = ['urgent', 'super_highlight', 'highlight', 'top', 'front', 'video', 'photo_galery', 'section'];
 const statusTypes = ['draft', 'published', 'programmed'];
 
@@ -40,7 +40,7 @@ const PostSchema = new Schema({
         type: String,
         enum: postTypes,
         required: true,
-        default: 'digital'
+        default: 'both'
     },
     position: {
         type: String,
@@ -65,6 +65,14 @@ const PostSchema = new Schema({
             ref: 'File'
         }
     ],
+    pdf: {
+        type: Schema.Types.ObjectId,
+        ref: 'File'
+    },
+    views: {
+        type: Number,
+        default: 0
+    },
     section: {
         type: Schema.Types.ObjectId,
         ref: 'Section',

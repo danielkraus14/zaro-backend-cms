@@ -95,6 +95,14 @@ const AdServerSchema = new Schema({
         required: true,
         default: 'published'
     },
+    views: {
+        type: Number,
+        default: 0
+    },
+    clicks: {
+        type: Number,
+        default: 0
+    },
     createdBy: {
         type: Schema.Types.ObjectId,
         ref: 'User'

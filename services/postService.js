@@ -20,6 +20,10 @@ const paginateOptions = {
             select: ['url', 'filename', 'epigraph']
         },
         {
+            path: 'pdf',
+            select: ['url', 'filename', 'epigraph']
+        },
+        {
             path: 'section',
             select: ['name', 'slug', 'image']
         },
@@ -206,6 +210,7 @@ const createPost = async (
     position,
     comments,
     imagesIds,
+    pdfId,
     sectionId,
     categoryId,
     tags,
@@ -265,6 +270,15 @@ const createPost = async (
             };
             post.images = imagesIds;
         };
+        if (post.images == false) throw new Error("You must upload at least one image");
+
+        if (pdfId) {
+            const file = await File.findById(pdfId);
+            if (!file) throw new Error("File not found");
+            file.postPDF = post._id;
+            await file.save();
+            post.pdf = pdfId;
+        };
 
         if (!section) throw new Error("Section not found");
         if (!category) throw new Error("Category not found");
@@ -296,6 +310,7 @@ const updatePost = async (
     position,
     comments,
     imagesIds,
+    pdfId,
     sectionId,
     categoryId,
     tags,
@@ -317,6 +332,7 @@ const updatePost = async (
         if (position) post.position = (post.position != position) ? (updatedProperties.push('position'), position) : post.position;
         if (comments !== undefined) post.comments = (post.comments != comments) ? (updatedProperties.push('comments'), comments) : post.comments;
         if (status) post.status = (post.status != status) ? (updatedProperties.push('status'), status) : post.status;
+
         if (imagesIds) {
             let updated = false;
             for (const imageId of imagesIds) {
@@ -337,7 +353,21 @@ const updatePost = async (
             };
             post.images = imagesIds;
             if (updated) updatedProperties.push('images');
-        }
+        };
+        if (post.images == false) throw new Error("You must upload at least one image");
+
+        if (pdfId) {
+            if (post.pdf != pdfId) {
+                const file = await File.findById(pdfId);
+                if (!file) throw new Error("Image not found");
+                await deleteFile(post.pdf, userId);
+                file.postPDF = post._id;
+                await file.save();
+                post.pdf = pdfId;
+                updatedProperties.push('pdf');
+            };
+        };
+
         if (sectionId) {
             if (post.section != sectionId) {
                 const oldSection = await Section.findById(
@@ -352,7 +382,8 @@ const updatePost = async (
                 post.section = sectionId;
                 updatedProperties.push('section');
             }
-        }
+        };
+
         if (categoryId) {
             if (post.category != categoryId) {
                 const oldCategory = await Category.findById(post.category);
@@ -365,7 +396,8 @@ const updatePost = async (
                 post.category = categoryId;
                 updatedProperties.push('category');
             }
-        }
+        };
+
         if (tags) {
             let updated = false;
             for (const tag of tags) {
@@ -428,11 +460,14 @@ const deletePost = async (postId, userId) => {
         if (!category) throw new Error("Category not found");
         if (category.posts.indexOf(post._id) != -1) category.posts.pull(post._id);
 
-        //Delete all images
+        //Delete all images and PDF
         if (post.images) {
             for (const imageId of post.images) {
                 await deleteFile(imageId, userId);
             };
+        };
+        if (post.pdf) {
+            await deleteFile(post.pdf, userId);
         };
 
         await category.save();
