@@ -24,6 +24,11 @@ const FileSchema = new Schema({
         ref: 'Post',
         required: false
     },
+    postPDF: {
+        type: Schema.Types.ObjectId,
+        ref: 'Post',
+        required: false
+    },
     printEditionFP: {
         type: Schema.Types.ObjectId,
         ref: 'PrintEdition',

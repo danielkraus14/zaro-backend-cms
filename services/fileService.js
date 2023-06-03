@@ -111,6 +111,12 @@ const deleteFile = async (fileId, userId) => {
             if (post.images.indexOf(file._id) != -1) post.images.pull(file._id);
             await post.save();
         };
+        if (file.postPDF) {
+            await Post.updateOne(
+                { pdf: file.postPDF },
+                { $unset: { pdf: 1 } }
+            );
+        };
         if (file.printEditionFP) {
             await PrintEdition.updateOne(
                 { frontPage: file.printEditionFP },
