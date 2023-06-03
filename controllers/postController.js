@@ -6,7 +6,7 @@ const getPosts = async (req, res) => {
         const posts = await postService.getPosts(page);
         res.status(200).send(posts);
     } catch(error) {
-        res.status(400).send({error, message: "Something went wrong"});
+        res.status(400).send({ error: error.message });
     }
 };
 
@@ -16,7 +16,7 @@ const getPostBySlug = async (req, res) => {
         const post = await postService.getPostBySlug(postSlug);
         res.status(200).send(post);
     } catch(error) {
-        res.status(400).send({error, message: 'Post not found'});
+        res.status(400).send({ error: error.message });
     }
 };
 
@@ -25,7 +25,7 @@ const searchPosts = async (req, res) => {
         const result = await postService.searchPosts(req.query);
         res.status(200).send(result);
     } catch(error) {
-        res.status(400).send({error, message: "Something went wrong when searching posts"});
+        res.status(400).send({ error: error.message });
     }
 };
 
@@ -36,7 +36,7 @@ const getPostsBySection = async (req, res) => {
         const posts = await postService.getPostsBySection(sectionSlug, page);
         res.status(200).send(posts);
     } catch(error) {
-        res.status(400).send({error, message: "Something went wrong"});
+        res.status(400).send({ error: error.message });
     }
 };
 
@@ -47,7 +47,7 @@ const getPostsByCategory = async (req, res) => {
         const posts = await postService.getPostsByCategory(categorySlug, page);
         res.status(200).send(posts);
     } catch(error) {
-        res.status(400).send({error, message: "Something went wrong"});
+        res.status(400).send({ error: error.message });
     }
 };
 
@@ -58,7 +58,7 @@ const getPostsByTag = async (req, res) => {
         const posts = await postService.getPostsByTag(tag, page);
         res.status(200).send(posts);
     } catch(error) {
-        res.status(400).send({error, message: "Something went wrong"});
+        res.status(400).send({ error: error.message });
     }
 };
 
@@ -69,7 +69,7 @@ const getPostsByPosition = async (req, res) => {
         const posts = await postService.getPostsByPosition(position, page);
         res.status(200).send(posts);
     } catch(error) {
-        res.status(400).send({error, message: "Something went wrong"});
+        res.status(400).send({ error: error.message });
     }
 };
 
@@ -80,13 +80,30 @@ const getPostsByStatus = async (req, res) => {
         const posts = await postService.getPostsByStatus(status, page);
         res.status(200).send(posts);
     } catch(error) {
-        res.status(400).send({error, message: "Something went wrong"});
+        res.status(400).send({ error: error.message });
     }
 };
 
 const createPost = async (req, res) => {
     try {
-        const { userId, title, subtitle, flywheel, excerpt, liveSports, content, type, position, comments, imagesIds, sectionId, categoryId, tags, status } = req.body;
+        const {
+            userId,
+            title,
+            subtitle,
+            flywheel,
+            excerpt,
+            liveSports,
+            content,
+            type,
+            position,
+            comments,
+            imagesIds,
+            pdfId,
+            sectionId,
+            categoryId,
+            tags,
+            status
+        } = req.body;
         const result = await postService.createPost(
             userId,
             title,
@@ -99,21 +116,39 @@ const createPost = async (req, res) => {
             position,
             comments,
             imagesIds,
+            pdfId,
             sectionId,
             categoryId,
             tags,
             status
         );
-        res.status(201).send({post: result});
+        res.status(201).send({ post: result });
     } catch(error) {
-        res.status(400).send({error: error.message});
+        res.status(400).send({ error: error.message });
     }
 };
 
 const updatePost = async (req, res) => {
     try {
         const { postId } = req.params
-        const { userId, title, subtitle, flywheel, excerpt, liveSports, content, type, position, comments, imagesIds, sectionId, categoryId, tags, status } = req.body;
+        const {
+            userId,
+            title,
+            subtitle,
+            flywheel,
+            excerpt,
+            liveSports,
+            content,
+            type,
+            position,
+            comments,
+            imagesIds,
+            pdfId,
+            sectionId,
+            categoryId,
+            tags,
+            status
+        } = req.body;
         const result = await postService.updatePost(
             postId,
             userId,
@@ -127,14 +162,15 @@ const updatePost = async (req, res) => {
             position,
             comments,
             imagesIds,
+            pdfId,
             sectionId,
             categoryId,
             tags,
             status
         );
-        res.status(200).send({post: result});
+        res.status(200).send({ post: result });
     } catch(error) {
-        res.status(400).send({error, message: "Something went wrong"});
+        res.status(400).send({ error: error.message });
     }
 };
 
@@ -143,9 +179,9 @@ const deletePost = async (req, res) => {
         const { postId } = req.params;
         const { userId } = req.body;
         const result = await postService.deletePost(postId, userId);
-        res.status(204).send({post: result});
+        res.status(204).send({ post: result });
     } catch(error) {
-        res.status(400).send({error, message: "Something went wrong"});
+        res.status(400).send({ error: error.message });
     }
 };
 
