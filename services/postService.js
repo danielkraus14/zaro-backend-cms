@@ -105,6 +105,24 @@ const getPostsByCategory = async (categorySlug, page) => {
     return result;
 };
 
+const getPostsByCreator = async (userId, page) => {
+    let result;
+    paginateOptions.page = page ? page : 1;
+    try {
+        const user = await User.findById(userId);
+        if(!user) throw new Error('User not found');
+        await Post.paginate({ createdBy: user._id }, paginateOptions, function (err, res) {
+            if (err) {
+                throw err;
+            }
+            result = res;
+        })
+    } catch (error) {
+        throw error;
+    }
+    return result;
+};
+
 const getPostsByTag = async (tag, page) => {
     let result;
     paginateOptions.page = page ? page : 1;
@@ -160,10 +178,25 @@ const searchPosts = async (search) => {
         let query = {};
         if (search.title) {
             query.title = { $regex: new RegExp(search.title), $options: "i" };
-        }
+        };
         if (search.content) {
             query.content = { $regex: new RegExp(search.content), $options: "i" };
-        }
+        };
+        if (search.dateFrom && search.dateUntil) {
+            const dateFrom = new Date(search.dateFrom);
+            dateFrom.setUTCHours(0, 0, 0, 0);
+            const dateUntil = new Date(search.dateUntil);
+            dateUntil.setUTCHours(23, 59, 59, 999);
+            query.createdAt = { $gte: dateFrom, $lte: dateUntil };
+        } else if (search.dateFrom) {
+            const date = new Date(search.dateFrom);
+            date.setUTCHours(0, 0, 0, 0);
+            query.createdAt = { $gte: date };
+        } else if (search.dateUntil) {
+            const date = new Date(search.dateUntil);
+            date.setUTCHours(23, 59, 59, 999);
+            query.createdAt = { $lte: date };
+        };
         await Post.paginate(query, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
@@ -491,6 +524,7 @@ module.exports = {
     getPostBySlug,
     getPostsBySection,
     getPostsByCategory,
+    getPostsByCreator,
     getPostsByTag,
     getPostsByPosition,
     getPostsByStatus,

@@ -65,6 +65,7 @@ routes.get('/posts/slug/:postSlug', postController.getPostBySlug);
 routes.get('/posts/search', postController.searchPosts);
 routes.get('/posts/section/:sectionSlug', postController.getPostsBySection);
 routes.get('/posts/category/:categorySlug', postController.getPostsByCategory);
+routes.get('/posts/creator/:userId', postController.getPostsByCreator);
 routes.get('/posts/tags/:tag', postController.getPostsByTag);
 routes.get('/posts/position/:position', postController.getPostsByPosition);
 routes.get('/posts/status/:status', postController.getPostsByStatus);
