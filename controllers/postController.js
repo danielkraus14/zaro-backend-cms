@@ -51,6 +51,17 @@ const getPostsByCategory = async (req, res) => {
     }
 };
 
+const getPostsByCreator = async (req, res) => {
+    try {
+        const { page } = req.query;
+        const { userId } = req.params;
+        const posts = await postService.getPostsByCreator(userId, page);
+        res.status(200).send(posts);
+    } catch(error) {
+        res.status(400).send({ error: error.message });
+    }
+};
+
 const getPostsByTag = async (req, res) => {
     try {
         const { page } = req.query;
@@ -191,6 +202,7 @@ module.exports = {
     searchPosts,
     getPostsBySection,
     getPostsByCategory,
+    getPostsByCreator,
     getPostsByTag,
     getPostsByPosition,
     getPostsByStatus,
