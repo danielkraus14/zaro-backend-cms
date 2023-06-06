@@ -39,7 +39,8 @@ const paginateOptions = {
             path: 'lastUpdatedBy',
             select: ['username', 'email']
         }
-    ]
+    ],
+    allowDiskUse: true,
 };
 
 const getPosts = async (page) => {
@@ -182,6 +183,8 @@ const getValidSlug = async (title) => {
 
     let slug = `${year}-${month}-${day}-${title.toLowerCase().replace(/ /g, '-')}`;
     slug = slug.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    slug = slug.replace(/[^a-zA-Z0-9_-\s]/g, "");
+    slug = slug.replace(/--+/g, '-');
     let slugFound = await Post.findOne({ slug });
     let count = 0;
 
