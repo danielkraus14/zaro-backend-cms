@@ -102,16 +102,19 @@ const searchFuneralNotice = async (search) => {
         let query = {};
         if (search.deceased) {
             query.deceased = { $regex: new RegExp(search.deceased), $options: "i" };
-        }
+        };
         if (search.content) {
             query.content = { $regex: new RegExp(search.content), $options: "i" };
-        }
+        };
+        if (search.title) {
+            query.title = { $regex: new RegExp(search.title), $options: "i" };
+        };
         await FuneralNotice.paginate(query, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
             result = res;
-        })
+        });
     } catch (error) {
         throw error;
     }
