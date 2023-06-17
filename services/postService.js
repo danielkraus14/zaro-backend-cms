@@ -187,15 +187,15 @@ const searchPosts = async (search) => {
             dateFrom.setUTCHours(0, 0, 0, 0);
             const dateUntil = new Date(search.dateUntil);
             dateUntil.setUTCHours(23, 59, 59, 999);
-            query.createdAt = { $gte: dateFrom, $lte: dateUntil };
+            query.publicationDate = { $gte: dateFrom, $lte: dateUntil };
         } else if (search.dateFrom) {
             const date = new Date(search.dateFrom);
             date.setUTCHours(0, 0, 0, 0);
-            query.createdAt = { $gte: date };
+            query.publicationDate = { $gte: date };
         } else if (search.dateUntil) {
             const date = new Date(search.dateUntil);
             date.setUTCHours(23, 59, 59, 999);
-            query.createdAt = { $lte: date };
+            query.publicationDate = { $lte: date };
         };
         await Post.paginate(query, paginateOptions, function (err, res) {
             if (err) {
@@ -250,7 +250,8 @@ const createPost = async (
     sectionId,
     categoryId,
     tags,
-    status
+    status,
+    publicationDate
 ) => {
     let result;
     try {
@@ -280,6 +281,7 @@ const createPost = async (
         if (comments !== undefined) post.comments = comments;
         if (type) post.type = type;
         if (position) post.position = position;
+        if (publicationDate) post.publicationDate = publicationDate;
         if (tags) {
             for (const tag of tags) {
                 const tagFound = await Tag.findOne({ name: tag });
@@ -350,7 +352,8 @@ const updatePost = async (
     sectionId,
     categoryId,
     tags,
-    status
+    status,
+    publicationDate
 ) => {
     let result;
     let updatedProperties = [];
@@ -368,6 +371,7 @@ const updatePost = async (
         if (position) post.position = (post.position != position) ? (updatedProperties.push('position'), position) : post.position;
         if (comments !== undefined) post.comments = (post.comments != comments) ? (updatedProperties.push('comments'), comments) : post.comments;
         if (status) post.status = (post.status != status) ? (updatedProperties.push('status'), status) : post.status;
+        if (publicationDate) post.publicationDate = (post.publicationDate != publicationDate) ? (updatedProperties.push('publicationDate'), publicationDate) : post.publicationDate;
 
         if (imagesIds) {
             let updated = false;
