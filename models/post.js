@@ -89,6 +89,10 @@ const PostSchema = new Schema({
         required: true,
         default: 'draft'
     },
+    publicationDate: {
+        type: Date,
+        default: Date.now
+    },
     createdBy: {
         type: Schema.Types.ObjectId,
         ref: 'User'

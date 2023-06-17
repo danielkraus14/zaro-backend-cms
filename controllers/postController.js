@@ -113,7 +113,8 @@ const createPost = async (req, res) => {
             sectionId,
             categoryId,
             tags,
-            status
+            status,
+            publicationDate
         } = req.body;
         const result = await postService.createPost(
             userId,
@@ -131,7 +132,8 @@ const createPost = async (req, res) => {
             sectionId,
             categoryId,
             tags,
-            status
+            status,
+            publicationDate
         );
         res.status(201).send({ post: result });
     } catch(error) {
@@ -158,7 +160,8 @@ const updatePost = async (req, res) => {
             sectionId,
             categoryId,
             tags,
-            status
+            status,
+            publicationDate
         } = req.body;
         const result = await postService.updatePost(
             postId,
@@ -177,7 +180,8 @@ const updatePost = async (req, res) => {
             sectionId,
             categoryId,
             tags,
-            status
+            status,
+            publicationDate
         );
         res.status(200).send({ post: result });
     } catch(error) {
