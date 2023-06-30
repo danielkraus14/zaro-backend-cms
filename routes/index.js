@@ -68,7 +68,7 @@ routes.get('/posts/category/:categorySlug', postController.getPostsByCategory);
 routes.get('/posts/creator/:userId', postController.getPostsByCreator);
 routes.get('/posts/tags/:tag', postController.getPostsByTag);
 routes.get('/posts/position/:position', postController.getPostsByPosition);
-routes.get('/posts/status/:status', postController.getPostsByStatus);
+routes.get('/posts/status/:status', isAuth, postController.getPostsByStatus);
 routes.post('/posts/create', isAuth, postController.createPost);
 routes.put('/posts/update/:postId', isAuth, postController.updatePost);
 routes.delete('/posts/delete/:postId', isAuth, isReviser, postController.deletePost);
