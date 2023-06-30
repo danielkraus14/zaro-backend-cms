@@ -47,7 +47,7 @@ const getPosts = async (page) => {
     let result;
     paginateOptions.page = page ? page : 1;
     try {
-        await Post.paginate({}, paginateOptions, function (err, res) {
+        await Post.paginate({ status: 'published' }, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
@@ -75,7 +75,7 @@ const getPostsBySection = async (sectionSlug, page) => {
     try {
         const section = await Section.findOne({ slug: sectionSlug });
         if(!section) throw new Error('Section not found');
-        await Post.paginate({ section: section._id }, paginateOptions, function (err, res) {
+        await Post.paginate({ section: section._id, status: 'published' }, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
@@ -93,7 +93,7 @@ const getPostsByCategory = async (categorySlug, page) => {
     try {
         const category = await Category.findOne({ slug: categorySlug });
         if(!category) throw new Error('Category not found');
-        await Post.paginate({ category: category._id }, paginateOptions, function (err, res) {
+        await Post.paginate({ category: category._id, status: 'published' }, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
@@ -111,7 +111,7 @@ const getPostsByCreator = async (userId, page) => {
     try {
         const user = await User.findById(userId);
         if(!user) throw new Error('User not found');
-        await Post.paginate({ createdBy: user._id }, paginateOptions, function (err, res) {
+        await Post.paginate({ createdBy: user._id, status: 'published' }, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
@@ -127,7 +127,7 @@ const getPostsByTag = async (tag, page) => {
     let result;
     paginateOptions.page = page ? page : 1;
     try {
-        await Post.paginate({ tags: tag }, paginateOptions, function (err, res) {
+        await Post.paginate({ tags: tag, status: 'published' }, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
@@ -143,7 +143,7 @@ const getPostsByPosition = async (position, page) => {
     let result;
     paginateOptions.page = page ? page : 1;
     try {
-        await Post.paginate({ position }, paginateOptions, function (err, res) {
+        await Post.paginate({ position, status: 'published' }, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
@@ -176,6 +176,7 @@ const searchPosts = async (search) => {
     paginateOptions.page = search.page ? search.page : 1;
     try {
         let query = {};
+        query.status = 'published';
         if (search.title) {
             query.title = { $regex: new RegExp(search.title), $options: "i" };
         };
