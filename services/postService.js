@@ -47,7 +47,7 @@ const getPosts = async (page) => {
     let result;
     paginateOptions.page = page ? page : 1;
     try {
-        await Post.paginate({ status: 'published' }, paginateOptions, function (err, res) {
+        await Post.paginate({}, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
