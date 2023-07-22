@@ -176,8 +176,12 @@ const getPostsByPosition = async (position, page) => {
 const getPostsByStatus = async (status, page) => {
     let result;
     paginateOptions.page = page ? page : 1;
+    let limitDate = new Date();
     try {
-        await Post.paginate({ status }, paginateOptions, function (err, res) {
+        limitDate.setDate(limitDate.getDate() - 15);
+        limitDate.setUTCHours(0, 0, 0, 0);
+        const query = { status, publicationDate: { $gte: limitDate } };
+        await Post.paginate(query, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
