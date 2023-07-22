@@ -46,8 +46,12 @@ const paginateOptions = {
 const getPosts = async (page) => {
     let result;
     paginateOptions.page = page ? page : 1;
+    let limitDate = new Date();
     try {
-        await Post.paginate({}, paginateOptions, function (err, res) {
+        limitDate.setDate(limitDate.getDate() - 15);
+        limitDate.setUTCHours(0, 0, 0, 0);
+        const query = { publicationDate: { $gte: limitDate } };
+        await Post.paginate({ query }, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
@@ -72,10 +76,14 @@ const getPostBySlug = async (postSlug) => {
 const getPostsBySection = async (sectionSlug, page) => {
     let result;
     paginateOptions.page = page ? page : 1;
+    let limitDate = new Date();
     try {
+        limitDate.setDate(limitDate.getDate() - 30);
+        limitDate.setUTCHours(0, 0, 0, 0);
         const section = await Section.findOne({ slug: sectionSlug });
         if(!section) throw new Error('Section not found');
-        await Post.paginate({ section: section._id, status: 'published' }, paginateOptions, function (err, res) {
+        const query = { section: section._id, status: 'published', publicationDate: { $gte: limitDate } };
+        await Post.paginate({ query }, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
@@ -90,10 +98,14 @@ const getPostsBySection = async (sectionSlug, page) => {
 const getPostsByCategory = async (categorySlug, page) => {
     let result;
     paginateOptions.page = page ? page : 1;
+    let limitDate = new Date();
     try {
+        limitDate.setDate(limitDate.getDate() - 30);
+        limitDate.setUTCHours(0, 0, 0, 0);
         const category = await Category.findOne({ slug: categorySlug });
         if(!category) throw new Error('Category not found');
-        await Post.paginate({ category: category._id, status: 'published' }, paginateOptions, function (err, res) {
+        const query = { category: category._id, status: 'published', publicationDate: { $gte: limitDate } };
+        await Post.paginate({ query }, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
@@ -111,7 +123,8 @@ const getPostsByCreator = async (userId, page) => {
     try {
         const user = await User.findById(userId);
         if(!user) throw new Error('User not found');
-        await Post.paginate({ createdBy: user._id, status: 'published' }, paginateOptions, function (err, res) {
+        const query = { createdBy: user._id, status: 'published' };
+        await Post.paginate({ query }, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
@@ -127,7 +140,8 @@ const getPostsByTag = async (tag, page) => {
     let result;
     paginateOptions.page = page ? page : 1;
     try {
-        await Post.paginate({ tags: tag, status: 'published' }, paginateOptions, function (err, res) {
+        const query = { tags: tag, status: 'published' };
+        await Post.paginate({ query }, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
@@ -142,8 +156,12 @@ const getPostsByTag = async (tag, page) => {
 const getPostsByPosition = async (position, page) => {
     let result;
     paginateOptions.page = page ? page : 1;
+    let limitDate = new Date();
     try {
-        await Post.paginate({ position, status: 'published' }, paginateOptions, function (err, res) {
+        limitDate.setDate(limitDate.getDate() - 15);
+        limitDate.setUTCHours(0, 0, 0, 0);
+        const query = { position, status: 'published', publicationDate: { $gte: limitDate } };
+        await Post.paginate({ query }, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
@@ -173,6 +191,7 @@ const getPostsByStatus = async (status, page) => {
 
 const searchPosts = async (search) => {
     let result;
+    let limitDate = new Date();
     paginateOptions.page = search.page ? search.page : 1;
     try {
         let query = {};
@@ -192,11 +211,19 @@ const searchPosts = async (search) => {
         } else if (search.dateFrom) {
             const date = new Date(search.dateFrom);
             date.setUTCHours(0, 0, 0, 0);
-            query.publicationDate = { $gte: date };
+            limitDate.setDate(date.getDate() + 15);
+            limitDate.setUTCHours(23, 59, 59, 999);
+            query.publicationDate = { $gte: date, $lte: limitDate };
         } else if (search.dateUntil) {
             const date = new Date(search.dateUntil);
             date.setUTCHours(23, 59, 59, 999);
-            query.publicationDate = { $lte: date };
+            limitDate.setDate(date.getDate() - 15);
+            limitDate.setUTCHours(0, 0, 0, 0);
+            query.publicationDate = { $lte: date, $gte: limitDate };
+        } else {
+            limitDate.setDate(limitDate.getDate() - 15);
+            limitDate.setUTCHours(0, 0, 0, 0);
+            query.publicationDate = { $gte: limitDate };
         };
         await Post.paginate(query, paginateOptions, function (err, res) {
             if (err) {
