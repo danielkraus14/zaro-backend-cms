@@ -51,7 +51,7 @@ const getPosts = async (page) => {
         limitDate.setDate(limitDate.getDate() - 15);
         limitDate.setUTCHours(0, 0, 0, 0);
         const query = { publicationDate: { $gte: limitDate } };
-        await Post.paginate({ query }, paginateOptions, function (err, res) {
+        await Post.paginate(query, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
@@ -83,7 +83,7 @@ const getPostsBySection = async (sectionSlug, page) => {
         const section = await Section.findOne({ slug: sectionSlug });
         if(!section) throw new Error('Section not found');
         const query = { section: section._id, status: 'published', publicationDate: { $gte: limitDate } };
-        await Post.paginate({ query }, paginateOptions, function (err, res) {
+        await Post.paginate(query, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
@@ -105,7 +105,7 @@ const getPostsByCategory = async (categorySlug, page) => {
         const category = await Category.findOne({ slug: categorySlug });
         if(!category) throw new Error('Category not found');
         const query = { category: category._id, status: 'published', publicationDate: { $gte: limitDate } };
-        await Post.paginate({ query }, paginateOptions, function (err, res) {
+        await Post.paginate(query, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
@@ -124,7 +124,7 @@ const getPostsByCreator = async (userId, page) => {
         const user = await User.findById(userId);
         if(!user) throw new Error('User not found');
         const query = { createdBy: user._id, status: 'published' };
-        await Post.paginate({ query }, paginateOptions, function (err, res) {
+        await Post.paginate(query, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
@@ -141,7 +141,7 @@ const getPostsByTag = async (tag, page) => {
     paginateOptions.page = page ? page : 1;
     try {
         const query = { tags: tag, status: 'published' };
-        await Post.paginate({ query }, paginateOptions, function (err, res) {
+        await Post.paginate(query, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
@@ -161,7 +161,7 @@ const getPostsByPosition = async (position, page) => {
         limitDate.setDate(limitDate.getDate() - 15);
         limitDate.setUTCHours(0, 0, 0, 0);
         const query = { position, status: 'published', publicationDate: { $gte: limitDate } };
-        await Post.paginate({ query }, paginateOptions, function (err, res) {
+        await Post.paginate(query, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
             }
