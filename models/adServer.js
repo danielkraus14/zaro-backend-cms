@@ -126,4 +126,7 @@ const AdServerSchema = new Schema({
 
 AdServerSchema.plugin(mongoosePaginate);
 
-module.exports = mongoose.model('AdServer', AdServerSchema);
+module.exports = {
+    AdServer: mongoose.model('AdServer', AdServerSchema),
+    positionTypes,
+};
