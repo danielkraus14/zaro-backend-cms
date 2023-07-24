@@ -51,6 +51,16 @@ const getAdServersByStatus = async (req, res) => {
     }
 };
 
+const getPositionTypes = async (req, res) => {
+    try {
+        const { page } = req.query;
+        const positionTypes = await adServerService.getPositionTypes(page);
+        res.status(200).send(positionTypes);
+    } catch(error) {
+        res.status(400).send({error: error.message});
+    }
+};
+
 const createAdServer = async (req, res) => {
     try {
         const { userId, position, site, dateStarts, dateEnds, unlimited, title, htmlContent, desktopImageId, mobileImageId, url, client, status } = req.body;
@@ -118,6 +128,7 @@ module.exports = {
     getAdServersByPosition,
     getAdServersByStatus,
     searchAdServers,
+    getPositionTypes,
     createAdServer,
     updateAdServer,
     deleteAdServer

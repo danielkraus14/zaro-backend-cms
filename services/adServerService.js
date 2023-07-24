@@ -1,7 +1,8 @@
 const User = require("../models/user");
-const AdServer = require("../models/adServer");
+const AdServer = require("../models/adServer").AdServer;
 const File = require("../models/file");
 const Record = require("../models/record");
+const positionTypes = require("../models/adServer").positionTypes;
 
 const { deleteFile } = require('../services/fileService');
 
@@ -112,6 +113,16 @@ const searchAdServers = async (search) => {
             }
             result = res;
         });
+    } catch (error) {
+        throw error;
+    }
+    return result;
+};
+
+const getPositionTypes = async () => {
+    let result;
+    try {
+        result = positionTypes;
     } catch (error) {
         throw error;
     }
@@ -292,6 +303,7 @@ module.exports = {
     getAdServersByPosition,
     getAdServersByStatus,
     searchAdServers,
+    getPositionTypes,
     createAdServer,
     updateAdServer,
     deleteAdServer

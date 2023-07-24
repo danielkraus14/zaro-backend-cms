@@ -140,6 +140,7 @@ routes.get('/ad-servers/id/:adServerId', adServerController.getAdServerById);
 routes.get('/ad-servers/search', adServerController.searchAdServers);
 routes.get('/ad-servers/position/:position', adServerController.getAdServersByPosition);
 routes.get('/ad-servers/status/:status', adServerController.getAdServersByStatus);
+routes.get('/ad-servers/position-types', adServerController.getPositionTypes);
 routes.post('/ad-servers/create', isAuth, isComertial, adServerController.createAdServer);
 routes.put('/ad-servers/update/:adServerId', isAuth, isComertial, adServerController.updateAdServer);
 routes.delete('/ad-servers/delete/:adServerId', isAuth, isComertial, adServerController.deleteAdServer);
