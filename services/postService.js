@@ -117,6 +117,19 @@ const getPostsByCategory = async (categorySlug, page) => {
     return result;
 };
 
+const getPostsByCategoryLimited = async (categorySlug, postsLimit) => {
+    let result;
+    try {
+        const category = await Category.findOne({ slug: categorySlug });
+        if(!category) throw new Error('Category not found');
+        const query = { category: category.id, status: 'published' };
+        result = await Post.find(query).sort(paginateOptions.sort).limit(postsLimit).populate(paginateOptions.populate);
+    } catch (error) {
+        throw error;
+    }
+    return result;
+};
+
 const getPostsByCreator = async (userId, page) => {
     let result;
     paginateOptions.page = page ? page : 1;
@@ -571,6 +584,7 @@ module.exports = {
     getPostBySlug,
     getPostsBySection,
     getPostsByCategory,
+    getPostsByCategoryLimited,
     getPostsByCreator,
     getPostsByTag,
     getPostsByPosition,
