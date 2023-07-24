@@ -42,9 +42,14 @@ const getPostsBySection = async (req, res) => {
 
 const getPostsByCategory = async (req, res) => {
     try {
-        const { page } = req.query;
+        let posts;
+        const { page, postsLimit } = req.query;
         const { categorySlug } = req.params;
-        const posts = await postService.getPostsByCategory(categorySlug, page);
+        if (postsLimit) {
+            posts = await postService.getPostsByCategoryLimited(categorySlug, postsLimit);
+        } else {
+            posts = await postService.getPostsByCategory(categorySlug, page);
+        };
         res.status(200).send(posts);
     } catch(error) {
         res.status(400).send({ error: error.message });
@@ -75,9 +80,14 @@ const getPostsByTag = async (req, res) => {
 
 const getPostsByPosition = async (req, res) => {
     try {
-        const { page } = req.query;
+        let posts;
+        const { page, postsLimit } = req.query;
         const { position } = req.params;
-        const posts = await postService.getPostsByPosition(position, page);
+        if (postsLimit) {
+            posts = await postService.getPostsByPositionLimited(position, postsLimit);
+        } else {
+            posts = await postService.getPostsByPosition(position, page);
+        };
         res.status(200).send(posts);
     } catch(error) {
         res.status(400).send({ error: error.message });

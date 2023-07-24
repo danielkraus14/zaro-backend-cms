@@ -13,7 +13,7 @@ const dateFns = require('date-fns');
 
 const paginateOptions = {
     limit: 15,
-    sort: { createdAt: -1 },
+    sort: { publicationDate: -1 },
     populate: [
         {
             path: 'images',
@@ -117,6 +117,19 @@ const getPostsByCategory = async (categorySlug, page) => {
     return result;
 };
 
+const getPostsByCategoryLimited = async (categorySlug, postsLimit) => {
+    let result;
+    try {
+        const category = await Category.findOne({ slug: categorySlug });
+        if(!category) throw new Error('Category not found');
+        const query = { category: category.id, status: 'published' };
+        result = await Post.find(query).sort(paginateOptions.sort).limit(postsLimit).populate(paginateOptions.populate);
+    } catch (error) {
+        throw error;
+    }
+    return result;
+};
+
 const getPostsByCreator = async (userId, page) => {
     let result;
     paginateOptions.page = page ? page : 1;
@@ -167,6 +180,17 @@ const getPostsByPosition = async (position, page) => {
             }
             result = res;
         })
+    } catch (error) {
+        throw error;
+    }
+    return result;
+};
+
+const getPostsByPositionLimited = async (position, postsLimit) => {
+    let result;
+    try {
+        const query = { position, status: 'published' };
+        result = await Post.find(query).sort(paginateOptions.sort).limit(postsLimit).populate(paginateOptions.populate);
     } catch (error) {
         throw error;
     }
@@ -560,9 +584,11 @@ module.exports = {
     getPostBySlug,
     getPostsBySection,
     getPostsByCategory,
+    getPostsByCategoryLimited,
     getPostsByCreator,
     getPostsByTag,
     getPostsByPosition,
+    getPostsByPositionLimited,
     getPostsByStatus,
     createPost,
     searchPosts,
