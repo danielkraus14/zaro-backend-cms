@@ -75,12 +75,13 @@ const getPostsByTag = async (req, res) => {
 
 const getPostsByPosition = async (req, res) => {
     try {
+        let posts
         const { page, postsLimit } = req.query;
         const { position } = req.params;
         if (postsLimit) {
-            const posts = await postService.getPostsByPositionLimited(position, postsLimit);
+            posts = await postService.getPostsByPositionLimited(position, postsLimit);
         } else {
-            const posts = await postService.getPostsByPosition(position, page);
+            posts = await postService.getPostsByPosition(position, page);
         };
         res.status(200).send(posts);
     } catch(error) {

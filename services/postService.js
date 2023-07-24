@@ -13,7 +13,7 @@ const dateFns = require('date-fns');
 
 const paginateOptions = {
     limit: 15,
-    sort: { createdAt: -1 },
+    sort: { publicationDate: -1 },
     populate: [
         {
             path: 'images',
@@ -176,8 +176,8 @@ const getPostsByPosition = async (position, page) => {
 const getPostsByPositionLimited = async (position, postsLimit) => {
     let result;
     try {
-        const query = { position, status: 'published', publicationDate: { $gte: limitDate } };
-        result = await Post.find(query).limit(postsLimit).populate(paginateOptions.populate);
+        const query = { position, status: 'published' };
+        result = await Post.find(query).sort(paginateOptions.sort).limit(postsLimit).populate(paginateOptions.populate);
     } catch (error) {
         throw error;
     }
