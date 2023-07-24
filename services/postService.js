@@ -173,6 +173,17 @@ const getPostsByPosition = async (position, page) => {
     return result;
 };
 
+const getPostsByPositionLimited = async (position, postsLimit) => {
+    let result;
+    try {
+        const query = { position, status: 'published', publicationDate: { $gte: limitDate } };
+        result = await Post.find(query).limit(postsLimit).populate(paginateOptions.populate);
+    } catch (error) {
+        throw error;
+    }
+    return result;
+};
+
 const getPostsByStatus = async (status, page) => {
     let result;
     paginateOptions.page = page ? page : 1;
@@ -563,6 +574,7 @@ module.exports = {
     getPostsByCreator,
     getPostsByTag,
     getPostsByPosition,
+    getPostsByPositionLimited,
     getPostsByStatus,
     createPost,
     searchPosts,
