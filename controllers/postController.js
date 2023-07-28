@@ -10,6 +10,16 @@ const getPosts = async (req, res) => {
     }
 };
 
+const getPostById = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const post = await postService.getPostById(postId);
+        res.status(200).send(post);
+    } catch(error) {
+        res.status(400).send({ error: error.message });
+    }
+};
+
 const getPostBySlug = async (req, res) => {
     try {
         const { postSlug } = req.params;
@@ -212,6 +222,7 @@ const deletePost = async (req, res) => {
 
 module.exports = {
     getPosts,
+    getPostById,
     getPostBySlug,
     searchPosts,
     getPostsBySection,
