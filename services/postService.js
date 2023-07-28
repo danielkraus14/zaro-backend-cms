@@ -63,6 +63,16 @@ const getPosts = async (page) => {
     return result;
 };
 
+const getPostById = async (postId) => {
+    let result;
+    try {
+        result = await Post.findById(postId).populate(paginateOptions.populate);
+    } catch(error) {
+        throw error;
+    }
+    return result;
+};
+
 const getPostBySlug = async (postSlug) => {
     let result;
     try {
@@ -581,6 +591,7 @@ const deletePost = async (postId, userId) => {
 
 module.exports = {
     getPosts,
+    getPostById,
     getPostBySlug,
     getPostsBySection,
     getPostsByCategory,
