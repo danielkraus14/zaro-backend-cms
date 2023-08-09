@@ -258,7 +258,7 @@ const searchPosts = async (search) => {
             limitDate.setDate(date.getDate() - 15);
             limitDate.setUTCHours(0, 0, 0, 0);
             query.publicationDate = { $lte: date, $gte: limitDate };
-        } else {
+        } else if (!search.title && !search.content) {
             limitDate.setDate(limitDate.getDate() - 15);
             limitDate.setUTCHours(0, 0, 0, 0);
             query.publicationDate = { $gte: limitDate };
