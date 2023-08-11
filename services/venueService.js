@@ -4,7 +4,7 @@ const Record = require('../models/record');
 const { deleteEvent } = require('../services/eventService');
 
 const paginateOptions = {
-    limit: 15,
+    limit: 14,
     sort: { createdAt: -1 },
     populate: [
         {

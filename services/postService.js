@@ -12,7 +12,7 @@ const { mongoose } = require("mongoose");
 const dateFns = require('date-fns');
 
 const paginateOptions = {
-    limit: 15,
+    limit: 14,
     sort: { publicationDate: -1 },
     populate: [
         {

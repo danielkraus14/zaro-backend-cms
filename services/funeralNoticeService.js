@@ -3,7 +3,7 @@ const FuneralNotice = require("../models/funeralNotice");
 const Record = require("../models/record");
 
 const paginateOptions = {
-    limit: 15,
+    limit: 14,
     sort: { createdAt: -1 },
     populate: [
         {
