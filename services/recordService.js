@@ -10,7 +10,7 @@ const Section = require('../models/section');
 const Venue = require('../models/venue');
 
 const paginateOptions = {
-    limit: 15,
+    limit: 14,
     sort: { date: -1 },
     populate: {
         path: 'user',
