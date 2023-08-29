@@ -35,7 +35,11 @@ const positionTypes = [
     'horizontal_8',
     'horizontal_9',
     'horizontal_10',
-    'horizontal_11'
+    'horizontal_11',
+    'horizontal_12',
+    'horizontal_13',
+    'horizontal_14',
+    'horizontal_15'
 ];
 const siteTypes = ['el_heraldo', 'other'];
 const statusTypes = ['expired', 'published', 'programmed'];
