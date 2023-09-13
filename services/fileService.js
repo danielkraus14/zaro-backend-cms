@@ -156,13 +156,13 @@ const deleteFile = async (fileId, userId) => {
         };
         if (file.adServerDesktop) {
             await AdServer.updateOne(
-                { desktopImage: file.section },
+                { desktopImage: file.adServerDesktop },
                 { $unset: { image: 1 } }
             );
         };
         if (file.adServerMobile) {
             await AdServer.updateOne(
-                { mobileImage: file.section },
+                { mobileImage: file.adServerMobile },
                 { $unset: { image: 1 } }
             );
         };
