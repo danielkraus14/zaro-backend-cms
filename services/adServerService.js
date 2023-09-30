@@ -119,6 +119,25 @@ const searchAdServers = async (search) => {
     return result;
 };
 
+const publicGetAdServersByPosition = async (position, page) => {
+    let result;
+    let query = {};
+    paginateOptions.page = page ? page : 1;
+    try {
+        query = { position, status: 'published' };
+        query.$or = [ { dateEnds: { $gte: new Date().setUTCHours(0, 0, 0, 0) } }, { unlimited: true } ]
+        await AdServer.paginate(query, paginateOptions, function (err, res) {
+            if (err) {
+                throw err;
+            }
+            result = res;
+        })
+    } catch (error) {
+        throw error;
+    }
+    return result;
+};
+
 const getPositionTypes = async () => {
     let result;
     try {
@@ -304,6 +323,7 @@ module.exports = {
     getAdServersByStatus,
     searchAdServers,
     getPositionTypes,
+    publicGetAdServersByPosition,
     createAdServer,
     updateAdServer,
     deleteAdServer
