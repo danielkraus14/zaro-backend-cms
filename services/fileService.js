@@ -73,7 +73,7 @@ const createFile = async (file, fileFolderSlug, epigraph, userId) => {
         const fileFolder = await FileFolder.findOne({ slug: fileFolderSlug });
         if (!fileFolder) throw new Error("File folder not found");
 
-        const filename = getValidFileName(file.name, fileFolder.slug);
+        const filename = await getValidFileName(file.name, fileFolder.slug);
         const url = `https://${process.env.BUCKET_NAME_AWS}.s3.${process.env.BUCKET_REGION_AWS}.amazonaws.com/${filename}`
 
         const newFile = new File({ filename, url, epigraph, createdBy: userId, fileFolder: fileFolder._id });
