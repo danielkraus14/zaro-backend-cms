@@ -48,7 +48,7 @@ const readFileById = async (fileId) => {
     return result;
 };
 
-const getValidFileName = async (name, fileFolder) => {
+/* const getValidFileName = async (name, fileFolder) => {
 
     const year = dateFns.format(new Date(), 'yyyy');
     const month = dateFns.format(new Date(), 'MM');
@@ -65,15 +65,26 @@ const getValidFileName = async (name, fileFolder) => {
     const valid_filename = `${fileFolder}/${year}/${month}/${day}_${filename}.${extension}`;
 
     return valid_filename;
-};
+}; */
 
 const createFile = async (file, fileFolderSlug, epigraph, userId) => {
     let result;
     try {
+        /* const fileFolder = await FileFolder.findOne({ slug: fileFolderSlug });
+        if (!fileFolder) throw new Error("File folder not found");
+
+        const filename = getValidFileName(file.name, fileFolder.slug);
+        const url = `https://${process.env.BUCKET_NAME_AWS}.s3.${process.env.BUCKET_REGION_AWS}.amazonaws.com/${filename}` */
+        const year = dateFns.format(new Date(), 'yyyy');
+        const month = dateFns.format(new Date(), 'MM');
+        const day = dateFns.format(new Date(), 'dd');
+
         const fileFolder = await FileFolder.findOne({ slug: fileFolderSlug });
         if (!fileFolder) throw new Error("File folder not found");
 
-        const filename = await getValidFileName(file.name, fileFolder.slug);
+        //replace spaces with underscores
+        const nameFormat = file.name.replace(/ /g, '_');
+        const filename = `${fileFolder.slug}/${year}/${month}/${day}_${nameFormat}`;
         const url = `https://${process.env.BUCKET_NAME_AWS}.s3.${process.env.BUCKET_REGION_AWS}.amazonaws.com/${filename}`
 
         const newFile = new File({ filename, url, epigraph, createdBy: userId, fileFolder: fileFolder._id });
