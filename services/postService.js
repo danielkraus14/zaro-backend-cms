@@ -163,7 +163,7 @@ const getPostsByTag = async (tag, page) => {
     let result;
     paginateOptions.page = page ? page : 1;
     try {
-        const query = { tags: tag, status: 'published' };
+        const query = { tags: { $elemMatch: { $eq: tag } }, status: 'published' };
         await Post.paginate(query, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
