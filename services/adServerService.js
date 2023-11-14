@@ -124,16 +124,16 @@ const publicGetAdServers = async (page) => {
     let query = {};
     paginateOptions.page = page ? page : 1;
     try {
-        query = { position, status: 'published' };
+        query = { status: 'published' };
         query.$or = [ { dateEnds: { $gte: new Date().setUTCHours(0, 0, 0, 0) } }, { unlimited: true } ];
         const adServers = await AdServer.find(query).populate(paginateOptions.populate);
         for (position in positionTypes) {
-            query.position = position;
+            query.position = positionTypes[position];
             await AdServer.paginate(query, paginateOptions, function (err, res) {
                 if (err) {
                     throw err;
                 }
-                result[position] = res;
+                result[positionTypes[position]] = res;
             });
         };
     } catch (error) {
