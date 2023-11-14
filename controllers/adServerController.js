@@ -51,6 +51,16 @@ const getAdServersByStatus = async (req, res) => {
     }
 };
 
+const publicGetAdServers = async (req, res) => {
+    try {
+        const { page } = req.query;
+        const adServers = await adServerService.publicGetAdServers(page);
+        res.status(200).send(adServers);
+    } catch(error) {
+        res.status(400).send({error: error.message});
+    }
+};
+
 const publicGetAdServersByPosition = async (req, res) => {
     try {
         const { page } = req.query;
@@ -139,6 +149,7 @@ module.exports = {
     getAdServersByPosition,
     getAdServersByStatus,
     searchAdServers,
+    publicGetAdServers,
     publicGetAdServersByPosition,
     getPositionTypes,
     createAdServer,

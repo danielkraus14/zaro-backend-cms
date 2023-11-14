@@ -119,13 +119,36 @@ const searchAdServers = async (search) => {
     return result;
 };
 
+const publicGetAdServers = async (page) => {
+    let result = {};
+    let query = {};
+    paginateOptions.page = page ? page : 1;
+    try {
+        query = { status: 'published' };
+        query.$or = [ { dateEnds: { $gte: new Date().setUTCHours(0, 0, 0, 0) } }, { unlimited: true } ];
+        const adServers = await AdServer.find(query).populate(paginateOptions.populate);
+        for (position in positionTypes) {
+            query.position = positionTypes[position];
+            await AdServer.paginate(query, paginateOptions, function (err, res) {
+                if (err) {
+                    throw err;
+                }
+                result[positionTypes[position]] = res;
+            });
+        };
+    } catch (error) {
+        throw error;
+    }
+    return result;
+};
+
 const publicGetAdServersByPosition = async (position, page) => {
     let result;
     let query = {};
     paginateOptions.page = page ? page : 1;
     try {
         query = { position, status: 'published' };
-        query.$or = [ { dateEnds: { $gte: new Date().setUTCHours(0, 0, 0, 0) } }, { unlimited: true } ]
+        query.$or = [ { dateEnds: { $gte: new Date().setUTCHours(0, 0, 0, 0) } }, { unlimited: true } ];
         await AdServer.paginate(query, paginateOptions, function (err, res) {
             if (err) {
                 throw err;
@@ -323,6 +346,7 @@ module.exports = {
     getAdServersByStatus,
     searchAdServers,
     getPositionTypes,
+    publicGetAdServers,
     publicGetAdServersByPosition,
     createAdServer,
     updateAdServer,
