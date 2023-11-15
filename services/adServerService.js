@@ -126,7 +126,6 @@ const publicGetAdServers = async (page) => {
     try {
         query = { status: 'published' };
         query.$or = [ { dateEnds: { $gte: new Date().setUTCHours(0, 0, 0, 0) } }, { unlimited: true } ];
-        const adServers = await AdServer.find(query).populate(paginateOptions.populate);
         for (position in positionTypes) {
             query.position = positionTypes[position];
             await AdServer.paginate(query, paginateOptions, function (err, res) {
