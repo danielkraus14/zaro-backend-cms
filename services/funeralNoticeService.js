@@ -143,8 +143,7 @@ const publicGetFuneralNotices = async (page) => {
             query.title = title;
 
             try {
-                const res = await FuneralNotice.paginate(query, paginateOptions);
-                result[title] = res;
+                result[title] = await FuneralNotice.paginate(query, paginateOptions);
             } catch (error) {
                 throw error;
             };

@@ -135,8 +135,7 @@ const publicGetAdServers = async (page) => {
             query.position = position;
 
             try {
-                const res = await AdServer.paginate(query, paginateOptions);
-                result[position] = res;
+                result[position] = await AdServer.paginate(query, paginateOptions);
             } catch (error) {
                 throw error;
             };
