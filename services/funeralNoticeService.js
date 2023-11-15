@@ -125,26 +125,35 @@ const publicGetFuneralNotices = async (page) => {
     let result = {};
     let query = {};
     paginateOptions.page = page ? page : 1;
-    let limitDate = new Date();
+    
     try {
+        const result = {};
+        const query = { status: 'published' };
+
+        const limitDate = new Date();
         limitDate.setDate(limitDate.getDate() - 10);
         limitDate.setUTCHours(0, 0, 0, 0);
-        query = { status: 'published' };
+
+        query.createdAt = { $gte: limitDate };
+        
         const funeralNotices = await FuneralNotice.find(query);
         const titles = [...new Set(funeralNotices.map(funeralNotice => funeralNotice.title))]
-        for (const title in titles) {
-            query.title = titles[title];
-            await FuneralNotice.paginate(query, paginateOptions, function (err, res) {
-                if (err) {
-                    throw err;
-                }
-                result[titles[title]] = res;
-            });
+        
+        for (const title of titles) {
+            query.title = title;
+
+            try {
+                const res = await FuneralNotice.paginate(query, paginateOptions);
+                result[title] = res;
+            } catch (error) {
+                throw error;
+            };
         };
+
+        return result;
     } catch (error) {
         throw error;
-    }
-    return result;
+    };
 };
 
 const createFuneralNotice = async (
