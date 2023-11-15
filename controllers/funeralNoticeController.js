@@ -53,6 +53,16 @@ const getFuneralNoticesByStatus = async (req, res) => {
     }
 };
 
+const publicGetFuneralNotices = async (req, res) => {
+    try {
+        const { page } = req.query;
+        const funeralNotices = await funeralNoticeService.publicGetFuneralNotices(page);
+        res.status(200).send(funeralNotices);
+    } catch (error) {
+        res.status(400).send({ error, message: "Something went wrong" });
+    }
+};
+
 const createFuneralNotice = async (req, res) => {
     try {
         const { userId, title, deceased, client, date, religion, status, content } = req.body;
@@ -100,6 +110,7 @@ module.exports = {
     getFuneralNoticesByReligion,
     getFuneralNoticesByDate,
     getFuneralNoticesByStatus,
+    publicGetFuneralNotices,
     createFuneralNotice,
     updateFuneralNotice,
     deleteFuneralNotice,
