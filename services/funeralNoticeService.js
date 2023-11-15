@@ -121,6 +121,40 @@ const searchFuneralNotice = async (search) => {
     return result;
 };
 
+const publicGetFuneralNotices = async (page) => {
+    let result = {};
+    let query = {};
+    paginateOptions.page = page ? page : 1;
+    
+    try {
+        const result = {};
+        const query = { status: 'published' };
+
+        const limitDate = new Date();
+        limitDate.setDate(limitDate.getDate() - 10);
+        limitDate.setUTCHours(0, 0, 0, 0);
+
+        query.createdAt = { $gte: limitDate };
+        
+        const funeralNotices = await FuneralNotice.find(query);
+        const titles = [...new Set(funeralNotices.map(funeralNotice => funeralNotice.title))]
+        
+        for (const title of titles) {
+            query.title = title;
+
+            try {
+                result[title] = await FuneralNotice.paginate(query, paginateOptions);
+            } catch (error) {
+                throw error;
+            };
+        };
+
+        return result;
+    } catch (error) {
+        throw error;
+    };
+};
+
 const createFuneralNotice = async (
     userId,
     title,
@@ -236,6 +270,7 @@ module.exports = {
     getFuneralNoticesByReligion,
     getFuneralNoticesByDate,
     getFuneralNoticesByStatus,
+    publicGetFuneralNotices,
     updateFuneralNotice,
     deleteFuneralNotice,
 };

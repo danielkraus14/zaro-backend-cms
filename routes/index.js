@@ -87,6 +87,7 @@ routes.get('/funeral-notices/search', funeralNoticeController.searchFuneralNotic
 routes.get('/funeral-notices/religion/:religion', funeralNoticeController.getFuneralNoticesByReligion);
 routes.get('/funeral-notices/date/:date', funeralNoticeController.getFuneralNoticesByDate);
 routes.get('/funeral-notices/status/:status', funeralNoticeController.getFuneralNoticesByStatus);
+routes.get('/funeral-notices/public', funeralNoticeController.publicGetFuneralNotices);
 routes.post('/funeral-notices/create', isAuth, funeralNoticeController.createFuneralNotice);
 routes.put('/funeral-notices/update/:funeralNoticeId', isAuth, funeralNoticeController.updateFuneralNotice);
 routes.delete('/funeral-notices/delete/:funeralNoticeId', isAuth, funeralNoticeController.deleteFuneralNotice);
