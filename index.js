@@ -17,8 +17,8 @@ dotenv.config();
 
 //Init express
 const app = express();
-createRoles();
-createInitialFileFolders();
+// createRoles();
+// createInitialFileFolders();
 
 // Cors
 app.use(cors(
