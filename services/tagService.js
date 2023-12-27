@@ -5,7 +5,7 @@ const PrintEdition = require('../models/printEdition');
 const getTags = async () => {
     let result;
     try {
-        result = await Tag.find().populate('printEditions');
+        result = await Tag.find().select('-posts -printEditions');
     } catch(error) {
         throw error;
     }
@@ -15,7 +15,7 @@ const getTags = async () => {
 const getTagsByName = async (tagName) => {
     let result;
     try {
-        result = await Tag.findOne({ name: tagName }).populate('printEditions');
+        result = await Tag.findOne({ name: tagName });
     } catch(error) {
         throw error;
     }

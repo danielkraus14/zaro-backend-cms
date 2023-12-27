@@ -122,11 +122,8 @@ const searchFuneralNotice = async (search) => {
 };
 
 const publicGetFuneralNotices = async (page) => {
-    let result = {};
-    let query = {};
-    paginateOptions.page = page ? page : 1;
-    
     try {
+        paginateOptions.page = page || 1;
         const result = {};
         const query = { status: 'published' };
 
