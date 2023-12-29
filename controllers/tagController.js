@@ -9,6 +9,24 @@ const getTags = async (req, res) => {
     }
 };
 
+const getTagsLimited = async (req, res) => {
+    try {
+        const tags = await tagService.getTagsLimited();
+        res.status(200).send(tags);
+    } catch(error) {
+        res.status(400).send({error, message: "Something went wrong"});
+    }
+};
+
+const searchTags = async (req, res) => {
+    try {
+        const tags = await tagService.searchTags(req.query);
+        res.status(200).send(tags);
+    } catch(error) {
+        res.status(400).send({error, message: "Something went wrong"});
+    }
+};
+
 const getTagsByName = async (req, res) => {
     try {
         const tags = await tagService.getTagsByName(req.params.tagName);
@@ -42,6 +60,8 @@ const updateTag = async (req, res) => {
 
 module.exports = {
     getTags,
+    getTagsLimited,
+    searchTags,
     getTagsByName,
     createTag,
     updateTag
