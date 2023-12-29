@@ -76,6 +76,8 @@ routes.delete('/posts/delete/:postId', isAuth, isReviser, postController.deleteP
 
 // Tags
 routes.get('/tags', tagController.getTags);
+routes.get('/tags/popular', tagController.getTagsLimited);
+routes.get('/tags/search', tagController.searchTags);
 routes.get('/tags/:tagName', tagController.getTagsByName);
 routes.post('/tags/create', isAuth, tagController.createTag);
 routes.put('/tags/update/:oldName', isAuth, tagController.updateTag);
