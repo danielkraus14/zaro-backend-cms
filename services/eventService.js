@@ -136,8 +136,6 @@ const createEvent = async (
         if (dateStarts) event.dateStarts = dateStarts;
         if (dateEnds) event.dateEnds = dateEnds;
 
-        user.events.push(event._id);
-        await user.save();
         venue.events.push(event._id);
         await venue.save();
         const venueName = venue.name;
@@ -228,11 +226,6 @@ const deleteEvent = async (eventId, userId) => {
         const event = await Event.findById(eventId);
         if (!event) throw new Error("Event not found");
 
-        //Find the user and delete the event._id from the user's events array
-        const user = await User.findById(event.createdBy);
-        if (!user) throw new Error("User not found");
-        if (user.events.indexOf(event._id) != -1) user.events.pull(event._id);
-
         //Find the venue and delete the event._id from the venue's events array
         const venue = await Venue.findById(event.venue);
         if (!venue) throw new Error("Venue not found");
@@ -247,7 +240,6 @@ const deleteEvent = async (eventId, userId) => {
         const delEventId = event._id;
         const description = `${event.title} at ${venueName}`;
 
-        await user.save();
         await venue.save();
         result = await event.remove();
         await new Record({ description, operation: 'delete', collectionName: 'event', objectId: delEventId, user: userId }).save();

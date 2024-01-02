@@ -233,8 +233,6 @@ const createAdServer = async (
             throw new Error("At least one of the following is required: html content, desktop image, mobile image, url");
         };
 
-        user.adServers.push(adServer._id);
-        await user.save();
         result = (await adServer.save()).populate(paginateOptions.populate);
         await new Record({ description: adServer.title, operation: 'create', collectionName: 'adServer', objectId: adServer._id, user: userId }).save();
     } catch (error) {
@@ -324,16 +322,10 @@ const deleteAdServer = async (adServerId, userId) => {
         const adServer = await AdServer.findById(adServerId);
         if (!adServer) throw new Error("Ad server not found");
 
-        //Find the ad server and delete the adServer._id from the user's ad servers array
-        const user = await User.findById(adServer.createdBy);
-        if (!user) throw new Error("User not found");
-        if (user.adServers.indexOf(adServer._id) != -1) user.adServers.pull(adServer._id);
-
         //Delete all images
         if (adServer.desktopImage) await deleteFile(adServer.desktopImage, userId);
         if (adServer.mobileImage) await deleteFile(adServer.mobileImage, userId);
 
-        await user.save();
         const delAdServerId = adServer._id;
         const description = adServer.title;
         result = await adServer.remove();

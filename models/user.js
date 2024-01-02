@@ -27,36 +27,6 @@ const UserSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    posts: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Post'
-        }
-    ],
-    printEditions: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'PrintEdition'
-        }
-    ],
-    funeralNotices: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'FuneralNotice'
-        }
-    ],
-    events: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Event'
-        }
-    ],
-    adServers: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'AdServer'
-        }
-    ],
     isActive: {
         type: Boolean,
         default: true

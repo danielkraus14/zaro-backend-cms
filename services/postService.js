@@ -387,8 +387,6 @@ const createPost = async (
         if (!section) throw new Error("Section not found");
         if (!category) throw new Error("Category not found");
 
-        user.posts.push(post._id);
-        await user.save();
         result = (await post.save()).populate(paginateOptions.populate);
         await new Record({ description: post.title, operation: 'create', collectionName: 'post', objectId: post._id, user: userId }).save();
     } catch (error) {
@@ -535,11 +533,6 @@ const deletePost = async (postId, userId) => {
         const post = await Post.findById(postId);
         if (!post) throw new Error("Post not found");
 
-        //Find the user and delete the post._id from the user's posts array
-        const user = await User.findById(post.createdBy);
-        if (!user) throw new Error("User not found");
-        if (user.posts.indexOf(post._id) != -1) user.posts.pull(post._id);
-
         //Delete all images and PDF
         if (post.images) {
             for (const imageId of post.images) {
@@ -550,7 +543,6 @@ const deletePost = async (postId, userId) => {
             await deleteFile(post.pdf, userId);
         };
 
-        await user.save();
         const delPostId = post._id;
         const description = post.title;
         result = await post.remove();
