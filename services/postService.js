@@ -389,10 +389,8 @@ const createPost = async (
 
         user.posts.push(post._id);
         section.posts.push(post._id);
-        category.posts.push(post._id);
         await user.save();
         await section.save();
-        await category.save();
         result = (await post.save()).populate(paginateOptions.populate);
         await new Record({ description: post.title, operation: 'create', collectionName: 'post', objectId: post._id, user: userId }).save();
     } catch (error) {
@@ -492,13 +490,8 @@ const updatePost = async (
 
         if (categoryId) {
             if (post.category != categoryId) {
-                const oldCategory = await Category.findById(post.category);
-                const newCategory = await Category.findById(categoryId);
-                if (!newCategory) throw new Error("Category not found");
-                newCategory.posts.push(post._id);
-                await newCategory.save();
-                oldCategory.posts.pull(post._id);
-                await oldCategory.save();
+                const category = await Category.findById(categoryId);
+                if (!category) throw new Error("Category not found");
                 post.category = categoryId;
                 updatedProperties.push('category');
             }
@@ -561,11 +554,6 @@ const deletePost = async (postId, userId) => {
         if (!section) throw new Error("Section not found");
         if (section.posts.indexOf(post._id) != -1) section.posts.pull(post._id);
 
-        //Find the category and delete the post._id from the category's posts array
-        const category = await Category.findById(post.category);
-        if (!category) throw new Error("Category not found");
-        if (category.posts.indexOf(post._id) != -1) category.posts.pull(post._id);
-
         //Delete all images and PDF
         if (post.images) {
             for (const imageId of post.images) {
@@ -576,7 +564,6 @@ const deletePost = async (postId, userId) => {
             await deleteFile(post.pdf, userId);
         };
 
-        await category.save();
         await section.save();
         await user.save();
         const delPostId = post._id;

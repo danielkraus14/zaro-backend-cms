@@ -1,4 +1,5 @@
 const Category = require('../models/category');
+const Post = require('../models/post');
 const Record = require('../models/record');
 
 const { deletePost } = require('../services/postService');
@@ -87,8 +88,10 @@ const deleteCategory = async (categorySlug, userId) => {
         const category = await Category.findOne({ slug: categorySlug });
         if (!category) throw new Error('Category not found');
 
-        for (const postId of category.posts) {
-            await deletePost(postId);
+        const posts = await Post.find({ category: category._id });
+
+        for (const post of posts) {
+            await deletePost(post._id, userId);
         };
         const delCategoryId = category._id;
         const description = category.name;
