@@ -17,12 +17,6 @@ const FileFolderSchema = new Schema({
         type: String,
         required: false
     },
-    files: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'File'
-        }
-    ],
     collectionName: {
         type: String,
         enum: collectionNames,
