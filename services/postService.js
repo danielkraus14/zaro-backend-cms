@@ -388,9 +388,7 @@ const createPost = async (
         if (!category) throw new Error("Category not found");
 
         user.posts.push(post._id);
-        section.posts.push(post._id);
         await user.save();
-        await section.save();
         result = (await post.save()).populate(paginateOptions.populate);
         await new Record({ description: post.title, operation: 'create', collectionName: 'post', objectId: post._id, user: userId }).save();
     } catch (error) {
@@ -474,15 +472,8 @@ const updatePost = async (
 
         if (sectionId) {
             if (post.section != sectionId) {
-                const oldSection = await Section.findById(
-                    post.section
-                );
-                const newSection = await Section.findById(sectionId);
-                if (!newSection) throw new Error("Section not found");
-                newSection.posts.push(post._id);
-                await newSection.save();
-                oldSection.posts.pull(post._id);
-                await oldSection.save();
+                const section = await Section.findById(sectionId);
+                if (!section) throw new Error("Section not found");
                 post.section = sectionId;
                 updatedProperties.push('section');
             }
@@ -549,11 +540,6 @@ const deletePost = async (postId, userId) => {
         if (!user) throw new Error("User not found");
         if (user.posts.indexOf(post._id) != -1) user.posts.pull(post._id);
 
-        //Find the section and delete the post._id from the section's posts array
-        const section = await Section.findById(post.section);
-        if (!section) throw new Error("Section not found");
-        if (section.posts.indexOf(post._id) != -1) section.posts.pull(post._id);
-
         //Delete all images and PDF
         if (post.images) {
             for (const imageId of post.images) {
@@ -564,7 +550,6 @@ const deletePost = async (postId, userId) => {
             await deleteFile(post.pdf, userId);
         };
 
-        await section.save();
         await user.save();
         const delPostId = post._id;
         const description = post.title;

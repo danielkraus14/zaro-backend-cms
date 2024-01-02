@@ -1,5 +1,6 @@
 const Section = require('../models/section');
 const File = require("../models/file");
+const Post = require('../models/post');
 const Record = require('../models/record');
 
 const { deletePost } = require('../services/postService');
@@ -113,9 +114,10 @@ const deleteSection = async (sectionSlug, userId) => {
         const section = await Section.findOne({ slug: sectionSlug });
         if(!section) throw new Error('Section not found');
 
-        //Delete all posts in section
-        for (const postId of section.posts) {
-            await deletePost(postId);
+        const posts = await Post.find({ section: section._id });
+
+        for (const post of posts) {
+            await deletePost(post._id, userId);
         };
 
         //Delete image from S3 server
