@@ -20,12 +20,6 @@ const VenueSchema = new Schema({
         required: true,
         unique: true
     },
-    events: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Event'
-        }
-    ],
     createdBy: {
         type: Schema.Types.ObjectId,
         ref: 'User'
