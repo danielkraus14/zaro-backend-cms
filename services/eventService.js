@@ -227,7 +227,6 @@ const deleteEvent = async (eventId, userId) => {
         const delEventId = event._id;
         const description = `${event.title} at ${venueName}`;
 
-        await venue.save();
         result = await event.remove();
         await new Record({ description, operation: 'delete', collectionName: 'event', objectId: delEventId, user: userId }).save();
     } catch (error) {
