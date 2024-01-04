@@ -124,11 +124,6 @@ const deleteFile = async (fileId, userId) => {
         const file = await File.findById(fileId);
         if(!file) throw new Error('File not found');
 
-        const fileFolder = await FileFolder.findById(file.fileFolder);
-        if(!fileFolder) throw new Error('File folder not found');
-        fileFolder.files.pull(file._id);
-        await fileFolder.save();
-
         if (file.post) {
             const post = await Post.findById(file.post);
             if (!post) throw new Error('Post not found');

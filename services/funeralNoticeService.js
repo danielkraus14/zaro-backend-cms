@@ -178,8 +178,6 @@ const createFuneralNotice = async (
         if (religion) funeralNotice.religion = religion;
         if (status) funeralNotice.status = status;
 
-        user.funeralNotices.push(funeralNotice._id);
-        await user.save();
         result = (await funeralNotice.save()).populate(paginateOptions.populate);
         await new Record({
             description: `${funeralNotice.deceased} by ${funeralNotice.client}`,
@@ -242,12 +240,6 @@ const deleteFuneralNotice = async (funeralNoticeId, userId) => {
     try {
         const funeralNotice = await FuneralNotice.findById(funeralNoticeId);
         if (!funeralNotice) throw new Error("Funeral notice not found");
-
-        //Find the user and delete the funeralNotice._id from the user's funeral notices array
-        const user = await User.findById(funeralNotice.createdBy);
-        if (!user) throw new Error("User not found");
-        if (user.funeralNotices.indexOf(funeralNotice._id) != -1) user.funeralNotices.pull(funeralNotice._id);
-        await user.save();
 
         const delFuneralNoticeId = funeralNotice._id;
         const description = `${funeralNotice.deceased} by ${funeralNotice.client}`;

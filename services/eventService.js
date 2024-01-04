@@ -136,10 +136,6 @@ const createEvent = async (
         if (dateStarts) event.dateStarts = dateStarts;
         if (dateEnds) event.dateEnds = dateEnds;
 
-        user.events.push(event._id);
-        await user.save();
-        venue.events.push(event._id);
-        await venue.save();
         const venueName = venue.name;
         result = (await event.save()).populate(paginateOptions.populate);
         await new Record({
@@ -191,15 +187,10 @@ const updateEvent = async (
 
         if (venueId) {
             if (event.venue._id != venueId) {
-                const oldVenue = await Venue.findById(event.venue);
-                const newVenue = await Venue.findById(venueId);
-                if (!newVenue) throw new Error("Venue not found");
-                newVenue.events.push(event._id);
-                await newVenue.save();
-                oldVenue.events.pull(event._id);
-                await oldVenue.save();
+                const venue = await Venue.findById(venueId);
+                if (!venue) throw new Error("Venue not found");
                 event.venue = venueId;
-                venueName = newVenue.name;
+                venueName = venue.name;
                 updatedProperties.push('venue');
             }
         };
@@ -228,17 +219,6 @@ const deleteEvent = async (eventId, userId) => {
         const event = await Event.findById(eventId);
         if (!event) throw new Error("Event not found");
 
-        //Find the user and delete the event._id from the user's events array
-        const user = await User.findById(event.createdBy);
-        if (!user) throw new Error("User not found");
-        if (user.events.indexOf(event._id) != -1) user.events.pull(event._id);
-
-        //Find the venue and delete the event._id from the venue's events array
-        const venue = await Venue.findById(event.venue);
-        if (!venue) throw new Error("Venue not found");
-        const venueName = venue.name;
-        if (venue.events.indexOf(event._id) != -1) venue.events.pull(event._id);
-
         //Delete image from S3 server
         if (event.billboard) {
             await deleteFile(event.billboard, userId);
@@ -247,8 +227,6 @@ const deleteEvent = async (eventId, userId) => {
         const delEventId = event._id;
         const description = `${event.title} at ${venueName}`;
 
-        await user.save();
-        await venue.save();
         result = await event.remove();
         await new Record({ description, operation: 'delete', collectionName: 'event', objectId: delEventId, user: userId }).save();
     } catch (error) {

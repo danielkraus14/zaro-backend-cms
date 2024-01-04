@@ -23,12 +23,6 @@ const SectionSchema = new Schema({
         type: Boolean,
         default: false
     },
-    posts: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Post'
-        }
-    ],
     createdBy: {
         type: Schema.Types.ObjectId,
         ref: 'User',
