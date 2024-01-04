@@ -88,8 +88,6 @@ const createFile = async (file, fileFolderSlug, epigraph, userId) => {
         const url = `https://${process.env.BUCKET_NAME_AWS}.s3.${process.env.BUCKET_REGION_AWS}.amazonaws.com/${filename}`
 
         const newFile = new File({ filename, url, epigraph, createdBy: userId, fileFolder: fileFolder._id });
-        fileFolder.files.push(newFile._id);
-        await fileFolder.save();
         await uploadFileS3(file, filename);
         result = (await newFile.save()).populate(populate);
         await new Record({ description: newFile.filename, operation: 'create', collectionName: 'file', objectId: newFile._id, user: userId }).save();
