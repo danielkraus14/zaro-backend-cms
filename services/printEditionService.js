@@ -239,11 +239,6 @@ const deletePrintEdition = async (printEditionId, userId) => {
         const printEdition = await PrintEdition.findById(printEditionId);
         if (!printEdition) throw new Error("Print edition not found");
 
-        //Find the user and delete the printEdition._id from the user's print editions array
-        const user = await User.findById(printEdition.createdBy);
-        if (!user) throw new Error("User not found");
-        if (user.printEditions.indexOf(printEdition._id) != -1) user.printEditions.pull(printEdition._id);
-
         //Delete frontPage and newsletterPDF files
         if (printEdition.frontPage) {
             await deleteFile(printEdition.frontPage, userId);
@@ -252,7 +247,6 @@ const deletePrintEdition = async (printEditionId, userId) => {
             await deleteFile(printEdition.newsletterPDF, userId);
         };
 
-        await user.save();
         const delPrintEditionId = printEdition._id;
         const description = `${printEdition.date.toISOString().split('T')[0]} - ${printEdition.body}`;
         result = await printEdition.remove();

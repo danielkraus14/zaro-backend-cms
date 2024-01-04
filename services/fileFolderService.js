@@ -100,10 +100,11 @@ const deleteFileFolder = async (fileFolderSlug, userId) => {
         const fileFolder = await FileFolder.findOne({ slug: fileFolderSlug });
         if (!fileFolder) throw new Error('File folder not found');
 
-        for (const fileId of fileFolder.files) {
-            const file = await File.findById(fileId);
+        const files = await File.find({ fileFolder: fileFolder._id });
+
+        for (const file of files) {
             await deleteFileS3(file.filename);
-            await deleteFile(fileId, userId);
+            await deleteFile(file._id, userId);
         }
         await deleteDirectoryS3(fileFolder.slug);
         const delFileFolderId = fileFolder._id;
