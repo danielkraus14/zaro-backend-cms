@@ -1,5 +1,6 @@
 const dotenv = require('dotenv');
 const { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
+const { fromUtf8 } = require("@aws-sdk/util-utf8-node");
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner')
 
 const AWS_BUCKET_NAME=process.env.BUCKET_NAME_AWS
@@ -17,11 +18,22 @@ const s3 = new S3Client({
 
 const uploadFileS3 = async (file, filename) => {
     try {
-        const params = {
-            Bucket: AWS_BUCKET_NAME,
-            Key: filename,
-            Body: file.data
+        var params;
+        if (filename.split('.').pop() == 'json') {
+            params = {
+                Bucket: AWS_BUCKET_NAME,
+                Key: filename,
+                Body: fromUtf8(file),
+                ContentType: 'application/json'
+            };    
+        } else {
+            params = {
+                Bucket: AWS_BUCKET_NAME,
+                Key: filename,
+                Body: file.data
+            };
         };
+        
         const command = new PutObjectCommand(params);
         const response = await s3.send(command);
         console.log(`File uploaded successfully in bucket ${AWS_BUCKET_NAME}`);
