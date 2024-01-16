@@ -7,6 +7,7 @@ const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const fs = require('fs');
 const https = require('https');
+const { adServerCronTask } = require('./cronJobs');
 
 // Initial Setup
 const { createRoles, createInitialFileFolders } = require('./libs/initialSetup');
@@ -19,6 +20,7 @@ dotenv.config();
 const app = express();
 createRoles();
 createInitialFileFolders();
+adServerCronTask.start();
 
 // Cors
 app.use(cors(

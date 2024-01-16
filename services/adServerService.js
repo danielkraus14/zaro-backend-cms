@@ -5,6 +5,7 @@ const Record = require("../models/record");
 const positionTypes = require("../models/adServer").positionTypes;
 
 const { deleteFile } = require('../services/fileService');
+const { uploadFileS3 } = require('../s3');
 
 const { mongoose } = require("mongoose");
 
@@ -235,6 +236,10 @@ const createAdServer = async (
 
         result = (await adServer.save()).populate(paginateOptions.populate);
         await new Record({ description: adServer.title, operation: 'create', collectionName: 'adServer', objectId: adServer._id, user: userId }).save();
+
+        const adServers = await publicGetAdServers();
+        const filename = 'adServers.json';
+        await uploadFileS3(JSON.stringify(adServers, null, 2), filename);
     } catch (error) {
         throw error;
     }
@@ -310,6 +315,10 @@ const updateAdServer = async (
 
         result = (await adServer.save()).populate(paginateOptions.populate);
         await new Record({ description: adServer.title, operation: 'update', collectionName: 'adServer', objectId: adServer._id, user: userId, updatedProperties }).save();
+
+        const adServers = await publicGetAdServers();
+        const filename = 'adServers.json';
+        await uploadFileS3(JSON.stringify(adServers, null, 2), filename);
     } catch (error) {
         throw error;
     }
@@ -330,6 +339,10 @@ const deleteAdServer = async (adServerId, userId) => {
         const description = adServer.title;
         result = await adServer.remove();
         await new Record({ description, operation: 'delete', collectionName: 'adServer', objectId: delAdServerId, user: userId }).save();
+
+        const adServers = await publicGetAdServers();
+        const filename = 'adServers.json';
+        await uploadFileS3(JSON.stringify(adServers, null, 2), filename);
     } catch (error) {
         throw error;
     }
